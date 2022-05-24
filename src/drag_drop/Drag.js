@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Form} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 
 const Drag = ()  => {
