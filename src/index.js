@@ -10,7 +10,6 @@ import Drag from './drag_drop/Drag';
 const DragRouter = () => (
   <BrowserRouter>
     <div className="container">
-  
       <div className="main-content">
         <Switch>
           <Route component={Drag} path="/" exact={true} />
