@@ -10,9 +10,8 @@ function Table(props) {
 
   return (
     <React.Fragment>
-    <div className="Table" dangerouslySetInnerHTML={{__html: props.data}}>
-    </div>
-    <button onClick={handleOnSubmit}>Submit</button>
+      <div className="Table" dangerouslySetInnerHTML={{__html: props.data}} />
+      <button onClick={handleOnSubmit}>Submit</button>
     </React.Fragment>
   );
 
