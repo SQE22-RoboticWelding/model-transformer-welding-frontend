@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.scss';
@@ -19,7 +19,10 @@ const DragRouter = () => (
   </BrowserRouter>
 );
 
-ReactDOM.render(<DragRouter />, document.getElementById('root'));
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+
+root.render(<DragRouter />);
 
 /*import React from 'react';
 import ReactDOM from 'react-dom/client';
