@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import { read, write } from 'xlsx';
 
-import Table from './table/Table';
+import GenerateTable from './table/Table';
 
 function Drag() {
 
@@ -62,7 +62,7 @@ function Drag() {
         </div>
       </div>
       {previewSrc && (
-        <Table data = {previewSrc} />
+        <GenerateTable data = {previewSrc} />
       )}
     </React.Fragment>
   );
