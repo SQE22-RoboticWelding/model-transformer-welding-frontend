@@ -1,31 +1,36 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.upload-section {
+  display: flex;
+  height: 200px;
+  margin-bottom: 10px;
+
+  & > div {
+    width: 100%;
   }
-  .upload-section {
-    display: flex;
-    height: 200px;
-    margin-bottom: 10px;
-  
-    & > div {
-      width: 100%;
-    }
+}
+
+.drop-zone {
+  margin-bottom: 10px;
+  padding: 40px 10px;
+  height: inherit;
+  border: 2px dashed #e9ebeb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
   }
+}
+
+
   
-  .drop-zone {
-    margin-bottom: 10px;
-    padding: 40px 10px;
-    height: inherit;
-    border: 2px dashed #e9ebeb;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  
-    &:focus {
-      outline: none;
-    }
-  }
+
+
   
