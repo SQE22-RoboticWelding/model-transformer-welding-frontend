@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Dropzone from 'react-dropzone';
-import { read, write } from 'xlsx';
+import { read, write, utils } from 'xlsx';
 
 import GenerateTable from './table/Table';
 
@@ -19,6 +19,10 @@ function Drag() {
 
       var data = new Uint8Array(fileReader.result);
       var wb = read(data, { type:'array' });
+      var wsName = wb.SheetNames[0];
+      console.log("wsName: " + wsName)
+      var jsonSheet = utils.sheet_to_json(wb.Sheets[wsName]);
+      console.log(jsonSheet)
       var htmlStr = write(wb, { type:'binary', bookType:'html' })
       setPreviewSrc(htmlStr);
       
