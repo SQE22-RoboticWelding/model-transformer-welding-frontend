@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -6,38 +6,47 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 
 function GenerateTable(props) {
 
-  const [columnDefs] = useState([
-      { field: 'ID', rowDrag: true },
-      { field: 'X' },
-      { field: 'Y' },
-      { field: 'Z' },
-      { field: 'Roll' },
-      { field: 'Pitch' },
-      { field: 'Yaw' }
-  ]);
+  const gridRef = useRef();
 
-  const [rowData] = useState([
-    { ID: 'John', X: 28, Y: 'some where else', Z: '1', Roll: '1', Pitch: '1', Yaw: '1' },
-    { ID: 'Jack', X: 28, Y: 'some where', Z: '1', Roll: '1', Pitch: '1', Yaw: '1' },
-    { ID: 'Elice', X: 28, Y: 'some where', Z: '1', Roll: '1', Pitch: '1', Yaw: '1' },
-  ]);
+  const robots = ['R2-D2', 'C-3PO', 'BB-8', 'L3-37', 'K-2SO', 'IG-11']; // replace with backend endpoint
 
-  //var table = React.createRef();
+  const defaultColDef = {
+    editable: true,
+    resizable: true
+  }
+
+  const columnDefs = [
+      { field: 'ID', rowDrag: true, editable: false },
+      { field: 'x' },
+      { field: 'y' },
+      { field: 'z' },
+      { field: 'roll' },
+      { field: 'pitch' },
+      { field: 'yaw' },
+      { field: 'robot', cellEditor: 'agSelectCellEditor', singleClickEdit: true, cellEditorParams: { values: robots } }
+  ];
+
+  const rowData = props.data;
 
   function handleOnSubmit(){
-    //var doc = read(table, { type: 'string' })
-    //console.log(doc);
+    console.log(gridRef.current.api.getDataAsCsv());  // replace with backend endpoint that provides error message for invalid input
+  }
+
+  function onGridReady(){
+    gridRef.current.api.sizeColumnsToFit();
   }
 
   return (
     <React.Fragment>
-      <div className="GeneratedTable" dangerouslySetInnerHTML={{__html: props.data}} />
-      <div className="ag-theme-alpine-dark" style={{height: 400, width: '100%'}}>
-           <AgGridReact
-               rowData={rowData}
-               columnDefs={columnDefs}
-               rowDragManaged={true}>
-           </AgGridReact>
+      <div className="ag-theme-alpine-dark" style={{ width: '100%', height: 400 }}>
+          <AgGridReact
+              ref={gridRef}
+              rowData={rowData}
+              defaultColDef={defaultColDef}
+              columnDefs={columnDefs}
+              rowDragManaged={true}
+              onGridReady={onGridReady}
+          ></AgGridReact>
        </div>
       <button onClick={handleOnSubmit}>Submit</button>
     </React.Fragment>
