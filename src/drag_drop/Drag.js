@@ -44,7 +44,8 @@ function Drag() {
     <React.Fragment>
       <div className="upload-section" onSubmit={handleOnSubmit}> 
         <div>
-          <Dropzone onDrop={onDrop}
+          <Dropzone accept='.xlsx,.xls,.csv' multiple={false}
+          onDrop={onDrop}
                     onDragEnter={() => updateBorder('over')}
                     onDragLeave={() => updateBorder('leave')}
           >
