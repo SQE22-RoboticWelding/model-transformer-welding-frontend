@@ -16,18 +16,18 @@ reportWebVitals(); */
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.scss';
-
 import Drag from './drag_drop/Drag';
+
+
 
 const DragRouter = () => (
   <BrowserRouter>
     <div className="container">
       <div className="main-content">
         <Switch>
-          <Route component={Drag} path="/" exact={true} />
+          <Route component={Drag} path="/" exact={true} /> 
         </Switch>
       </div>
     </div>
