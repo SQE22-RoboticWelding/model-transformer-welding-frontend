@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import { read, utils } from 'xlsx';
 
-import GenerateTable from './table/Table';
+import GenerateTable from '../table/Table';
 
 function Drag() {
 
