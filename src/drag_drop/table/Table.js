@@ -32,10 +32,6 @@ function GenerateTable(props) {
     console.log(gridRef.current.api.getDataAsCsv());  // replace with backend endpoint that provides error message for invalid input
   }
 
-  function onGridReady(){
-    gridRef.current.api.sizeColumnsToFit();
-  }
-
   return (
     <React.Fragment>
       <div className="ag-theme-alpine-dark" style={{ width: '100%', height: 400 }}>
@@ -45,8 +41,8 @@ function GenerateTable(props) {
               defaultColDef={defaultColDef}
               columnDefs={columnDefs}
               rowDragManaged={true}
-              onGridReady={onGridReady}
-          ></AgGridReact>
+              onGridReady={(e) => e.api.sizeColumnsToFit()}
+          />
        </div>
       <button onClick={handleOnSubmit}>Submit</button>
     </React.Fragment>
