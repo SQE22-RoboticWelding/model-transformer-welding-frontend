@@ -28,6 +28,7 @@ const NavBar = () => {
             <LinkItem to="/create">Create Projects</LinkItem>
             <LinkItem to="/edit">Edit Projects</LinkItem>
             <LinkItem to="/generate">View Project</LinkItem>
+            <LinkItem to="/robot">Edit Robots</LinkItem>
         </NavBarRoot>
     );
 }
