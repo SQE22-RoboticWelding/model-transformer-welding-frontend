@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {Typography} from "@mui/material";
 
 export const Confirmation = styled.div`
   display: flex;
@@ -7,4 +8,8 @@ export const Confirmation = styled.div`
   margin: 6px;
   border-radius: 10px;
   background-color: #FFFFFF;
+`;
+
+export const TypographyTextCentered = styled(Typography)`
+  text-align: center;
 `;
