@@ -13,3 +13,10 @@ export const Confirmation = styled.div`
 export const TypographyTextCentered = styled(Typography)`
   text-align: center;
 `;
+
+export const CustomHr = styled.hr`
+  border: none;
+  height: ${props => props.height};
+  border-radius: ${props => `calc(${props.height} / 3)`};
+  background-color: rgba(0, 0, 0, 0.24);
+`;

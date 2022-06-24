@@ -14,20 +14,25 @@ const EMPTY_ROBOT_TYPE = {
     range: ""
 };
 
-const RobotPropertyEditor = ({onSubmit, submissionText, robotType = EMPTY_ROBOT_TYPE}) => {
-    const [name, setName] = useState(robotType?.name);
+const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType = EMPTY_ROBOT_TYPE}) => {
+    const [name, setName] = useState(robotType.name);
     const [nameHelper, setNameHelper] = useState(DEFAULT_NAME_HELPER);
 
     const [vendor, setVendor] = useState(robotType.vendor);
     const [vendorHelper, setVendorHelper] = useState(DEFAULT_VENDOR_HELPER);
 
-    const [capacity, setCapacity] = useState(robotType.capacity);
+    const [capacity, setCapacity] = useState(robotType.capacity_load_kg);
     const [capacityHelper, setCapacityHelper] = useState(DEFAULT_CAPACITY_HELPER);
 
-    const [range, setRange] = useState(robotType.range);
+    const [range, setRange] = useState(robotType.range_m);
     const [rangeHelper, setRangeHelper] = useState(DEFAULT_RANGE_HELPER);
 
-    const onValidatedSubmit = () => {
+    const stopBubble = (evt) => {
+        evt.stopPropagation();
+    };
+
+    const onValidatedSubmit = (evt) => {
+        evt.stopPropagation();
         let validated = true;
         if (!name) {
             setNameHelper("Name must be given");
@@ -41,13 +46,13 @@ const RobotPropertyEditor = ({onSubmit, submissionText, robotType = EMPTY_ROBOT_
         } else {
             setVendorHelper(DEFAULT_VENDOR_HELPER);
         }
-        if (isNaN(Number(capacity))) {
+        if (isNaN(Number(capacity)) && capacity !== undefined) {
             setCapacityHelper("Capacity must be a floating point number");
             validated = false;
         } else {
             setCapacityHelper(DEFAULT_CAPACITY_HELPER);
         }
-        if (isNaN(Number(range))) {
+        if (isNaN(Number(range)) && range !== undefined) {
             setRangeHelper("Range must be a floating point number");
             validated = false;
         } else {
@@ -60,7 +65,7 @@ const RobotPropertyEditor = ({onSubmit, submissionText, robotType = EMPTY_ROBOT_
     };
 
     return (
-        <List>
+        <List onClick={stopBubble}>
             <ListItem>
                 <Container>
                     <TextField
@@ -116,9 +121,13 @@ const RobotPropertyEditor = ({onSubmit, submissionText, robotType = EMPTY_ROBOT_
                 </Container>
             </ListItem>
             <ListItem>
-                <Container>
+                <Container style={{display: "flex", justifyContent: "space-between"}}>
                     <Button variant="outlined" onClick={onValidatedSubmit}>
                         {submissionText}
+                    </Button>
+
+                    <Button variant="text" onClick={onCancel}>
+                        Cancel
                     </Button>
                 </Container>
             </ListItem>
@@ -126,4 +135,4 @@ const RobotPropertyEditor = ({onSubmit, submissionText, robotType = EMPTY_ROBOT_
     );
 };
 
-export default RobotPropertyEditor;
+export default RobotTypePropertyEditor;
