@@ -15,9 +15,11 @@ import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
 import {CustomHr, TypographyTextCentered} from "../common/StyledComponents";
-import RobotCreator from "./RobotCreator";
+import RobotTypeCreator from "./RobotTypeCreator";
 import RobotTypeEditor from "./RobotTypeEditor";
 import RobotDisplay from "./RobotDisplay";
+import RobotCreator from "./RobotCreator";
+import RobotTypeDeletor from "./RobotTypeDeletor";
 
 
 const AccordionHeader = styled(Typography)`
@@ -61,7 +63,17 @@ const RobotTypePage = () => {
         FetchHandler.readingJson(fetch(Settings.robotPath, {method: "GET"}))
             .then(setRobots)
             .catch((err) => Notifications.notify(`Failed to retrieve Robots.\n${err}`, "error"))
-            .finally(() => setRobotTypeRetrievalState("idle"));
+            .finally(() => setRobotRetrievalState("idle"));
+    };
+
+    const refreshAll = () => {
+        retrieveRobotTypes();
+        retrieveRobots();
+    };
+
+    const onRobotCreated = (robotType) => {
+        retrieveRobots();
+        setOpenedRobotTypeId(robotType.id);
     };
 
     const toggleAccordion = (robotTypeId) => {
@@ -72,22 +84,18 @@ const RobotTypePage = () => {
         }
     };
 
-    const refreshAll = () => {
-        retrieveRobotTypes();
-        retrieveRobots();
-    };
-
     useEffect(() => {
         refreshAll();
     }, []);
 
     return (
         <Grid container direction="column" alignItems="center" rowGap="24px">
-            <RobotCreator onRequestRobotTypeRefresh={refreshAll}/>
+            <RobotTypeCreator onRequestRobotTypeRefresh={refreshAll}/>
 
             {(robotTypeRetrievalState === "idle" && robotTypes.length > 0) ? (
                 robotTypes.map((robotType) => (
                     <RobotTypeAccordion
+                        key={robotType.id}
                         expanded={openedRobotTypeId === robotType.id}
                         onChange={() => toggleAccordion(robotType.id)}
                     >
@@ -103,6 +111,8 @@ const RobotTypePage = () => {
                             </AccordionHeader>
 
                             <RobotTypeEditor onRequestRobotTypeRefresh={refreshAll} robotType={robotType}/>
+                            <RobotCreator robotTypeId={robotType.id} onRobotCreated={() => onRobotCreated(robotType)}/>
+                            <RobotTypeDeletor robotType={robotType} onRobotTypeDeleted={refreshAll}/>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Table width="min-content">
@@ -127,7 +137,14 @@ const RobotTypePage = () => {
                                 <CustomHr height="3px" />
                             }
 
-                            <RobotDisplay robots={robots.filter((robot) => robot.robot_type.id === robotType.id)}/>
+                            {robotRetrievalState === "idle" ? (
+                                <RobotDisplay
+                                    robots={robots.filter((robot) => robot.robot_type.id === robotType.id)}
+                                    onRobotDeleted={retrieveRobots}
+                                />
+                            ) : robotRetrievalState === "loading" && (
+                                <Typography>Loading...</Typography>
+                            )}
                         </AccordionDetails>
                     </RobotTypeAccordion>
                 ))

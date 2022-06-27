@@ -40,8 +40,7 @@ const RobotTypeEditor = ({onRequestRobotTypeRefresh, robotType}) => {
             .then(() => {
                 setDialogOpen(false);
                 onRequestRobotTypeRefresh();
-            })
-            .catch();
+            });
     };
 
     const onClickEdit = (evt) => {
@@ -49,20 +48,25 @@ const RobotTypeEditor = ({onRequestRobotTypeRefresh, robotType}) => {
         setDialogOpen(true)
     };
 
+    const onClose = (evt) => {
+        evt.stopPropagation();
+        setDialogOpen(false);
+    };
+
     return (
         <>
-            <IconButton variant="contained" onClick={onClickEdit}>
+            <IconButton onClick={onClickEdit}>
                 <EditIcon/>
             </IconButton>
 
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+            <Dialog open={dialogOpen} onClose={onClose}>
                 <DialogTitle>Update a Robot Type</DialogTitle>
 
                 <RobotTypePropertyEditor
                     onSubmit={onSubmit}
                     robotType={robotType}
                     submissionText="Update"
-                    onCancel={() => setDialogOpen(false)}
+                    onCancel={onClose}
                 />
             </Dialog>
         </>
