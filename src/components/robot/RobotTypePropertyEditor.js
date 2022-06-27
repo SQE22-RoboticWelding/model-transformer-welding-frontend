@@ -1,5 +1,6 @@
 import {Button, Container, InputAdornment, List, ListItem, TextField} from "@mui/material";
 import {useState} from "react";
+import {ListItemSpreadingChildren} from "../common/StyledComponents";
 
 
 const DEFAULT_NAME_HELPER = "Name";
@@ -120,17 +121,15 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
                     />
                 </Container>
             </ListItem>
-            <ListItem>
-                <Container style={{display: "flex", justifyContent: "space-between"}}>
-                    <Button variant="outlined" onClick={onValidatedSubmit}>
-                        {submissionText}
-                    </Button>
+            <ListItemSpreadingChildren>
+                <Button variant="outlined" onClick={onValidatedSubmit}>
+                    {submissionText}
+                </Button>
 
-                    <Button variant="text" onClick={onCancel}>
-                        Cancel
-                    </Button>
-                </Container>
-            </ListItem>
+                <Button variant="text" onClick={onCancel}>
+                    Cancel
+                </Button>
+            </ListItemSpreadingChildren>
         </List>
     );
 };

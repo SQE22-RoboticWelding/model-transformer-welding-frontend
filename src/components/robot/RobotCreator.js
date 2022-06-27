@@ -1,61 +1,88 @@
-import {Button, Dialog, DialogTitle} from "@mui/material";
+import {Button, Container, Dialog, DialogTitle, IconButton, List, ListItem, TextField} from "@mui/material";
 import {useState} from "react";
+import AddIcon from '@mui/icons-material/Add';
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
-import RobotTypePropertyEditor from "./RobotTypePropertyEditor";
+import {ListItemSpreadingChildren} from "../common/StyledComponents";
 
 
-const uploadRobotType = (robotType) => {
-    const requestBody = {
-        name: robotType.name,
-        vendor: robotType.vendor,
-        ...(robotType.capacity && {capacity: robotType.capacity}),
-        ...(robotType.range && {range: robotType.range})
-    };
+const DEFAULT_DESCRIPTION_HELPER = "Description";
+
+const uploadRobot = (robotTypeId, description) => {
     const fetchProps = {
         method: "POST",
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({robot_type_id: robotTypeId, description}),
         headers: {"Content-Type": "application/json"}
     };
-    return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(Settings.robotTypePath, fetchProps))
-            .then(() => {
-                Notifications.notify("Created Robot Type", "success");
-                resolve();
-            })
-            .catch((err) => {
-                Notifications.notify(`Unable to create robot type\n${err}`, "error");
-                reject();
-            });
-    });
+    return new Promise((resolve, reject) => FetchHandler.simple(fetch(Settings.robotPath, fetchProps))
+        .then(() => {
+            Notifications.notify("Created robot.", "success")
+            resolve();
+        })
+        .catch((err) => {
+            Notifications.notify(`Failed to create robot.\n${err}`, "error");
+            reject();
+        }));
 };
 
-const RobotCreator = ({onRequestRobotTypeRefresh}) => {
+const RobotCreator = ({robotTypeId, onRobotCreated}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [description, setDescription] = useState("");
 
-    const onSubmit = (creates) => {
-        uploadRobotType(creates)
+    const onClickCreate = (evt) => {
+        evt.stopPropagation();
+        setDialogOpen(true);
+    };
+
+    const stopBubble = (evt) => {
+        evt.stopPropagation();
+    };
+
+    const onClose = (evt) => {
+        stopBubble(evt);
+        setDialogOpen(false);
+    };
+
+    const onSubmit = () => {
+        uploadRobot(robotTypeId, description)
             .then(() => {
                 setDialogOpen(false);
-                onRequestRobotTypeRefresh();
+                onRobotCreated();
             });
     };
 
     return (
         <>
-            <Button variant="contained" onClick={() => setDialogOpen(true)}>
-                Create a new Robot Type
-            </Button>
+            <IconButton onClick={onClickCreate}>
+                <AddIcon/>
+            </IconButton>
 
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <DialogTitle>Create a Robot Type</DialogTitle>
+            <Dialog open={dialogOpen} onClose={onClose}>
+                <DialogTitle>Create a robot</DialogTitle>
+                <Container>
+                    <List onClick={stopBubble}>
+                        <ListItem>
+                            <TextField
+                                variant="outlined"
+                                helperText={DEFAULT_DESCRIPTION_HELPER}
+                                placeholder="Type description here ..."
+                                fullWidth
+                                value={description}
+                                onChange={(evt) => setDescription(evt.target.value)}
+                            />
+                        </ListItem>
+                        <ListItemSpreadingChildren>
+                            <Button variant="outlined" onClick={onSubmit}>
+                                Create
+                            </Button>
 
-                <RobotTypePropertyEditor
-                    onSubmit={onSubmit}
-                    submissionText="Create"
-                    onCancel={() => setDialogOpen(false)}
-                />
+                            <Button variant="text" onClick={onClose}>
+                                Cancel
+                            </Button>
+                        </ListItemSpreadingChildren>
+                    </List>
+                </Container>
             </Dialog>
         </>
     );
