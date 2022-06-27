@@ -6,60 +6,59 @@ import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, Tab
 
 const GeneratorPageRoot = styled('div')({
   width: '100%',
-  /*display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 
-  > * {
+  marginBottom: '16px',
+  /*> * {
     margin-bottom: 16px;
   }*/
 });
 
 const StyledTable = styled(Table)({
-  //color: 'darkslategray',
   width: '100%',
-  //border-collapse: collapse,
-  //box-shadow: 0 0 8px 0 #8E8E8E,
-  //border-radius: 8px,
+  borderCollapse: 'collapse',
+  boxShadow: '0 0 8px 0 #8E8E8E',
+  borderRadius: '8px',
 });
 const StyledTableHead = styled(TableHead)({
   width: '100%',
 });
 
 const StyledHeadTableRow = styled(TableRow)({
-  /*> * {
-    padding: 2em;
-    :nth-child(odd) {
-      background-color: #EFEFEF;
-    }
-    :nth-child(even) {
-      background-color: #DFDFDF;
-    }
-  }*/
+  padding: '2em',
+  ':nth-child(odd)': {
+    backgroundColor: '#EFEFEF',
+  },
+  ':nth-child(even)': {
+    backgroundColor: '#DFDFDF',
+  },
 });
 
 const StyledBodyTableRow = styled(TableRow)({
+  borderTop: '1px solid black',
   /*> * {
     border-top: 1px solid black;
   }*/
 });
 
 const StyledTableCell = styled(TableCell)({
-  //border-bottom: 2px solid black,
+  borderBottom: '2px solid black',
 });
 const StyledSingleTableCell = styled(StyledTableCell)({
-  width: '20%',
+  width: 'calc(100% / 7)',
 });
 const StyledDoubleTableCell = styled(StyledTableCell)({
-  width: '40%',
+  width: 'calc(100% / 7 * 2)',
 });
 
 const StyledButton = styled(Button)({
-  /*cursor: pointer,
-  width: 128px,
-  :hover {
-    background-color: #BFBFBF,
-  },*/
+  cursor: 'pointer',
+  width: '128px',
+  ':hover': {
+    backgroundColor: '#BFBFBF',
+  },
 });
 
 const GeneratorPage = () => {
@@ -86,8 +85,8 @@ const GeneratorPage = () => {
                             <StyledDoubleTableCell>Description</StyledDoubleTableCell>
                             <StyledSingleTableCell>Created</StyledSingleTableCell>
                             <StyledSingleTableCell>Last Modification</StyledSingleTableCell>
-                            <StyledSingleTableCell/>
-                            <StyledSingleTableCell/>
+                            <StyledSingleTableCell>Edit</StyledSingleTableCell>
+                            <StyledSingleTableCell>Generate</StyledSingleTableCell>
                         </StyledHeadTableRow>
                     </StyledTableHead>
 
@@ -98,12 +97,16 @@ const GeneratorPage = () => {
                             <StyledDoubleTableCell>{project.description}</StyledDoubleTableCell>
                             <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
-                            <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
-                                Edit
-                            </StyledButton>
-                            <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
-                                Generate
-                            </StyledButton>
+                            <StyledSingleTableCell>
+                              <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
+                                  Edit
+                              </StyledButton>
+                            </StyledSingleTableCell>
+                            <StyledSingleTableCell>
+                              <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
+                                  Generate
+                              </StyledButton>
+                            </StyledSingleTableCell>
                         </StyledBodyTableRow>
                     ))}
                     </TableBody>
