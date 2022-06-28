@@ -1,15 +1,13 @@
-import {Button, Container, Dialog, DialogTitle, IconButton, List, ListItem, TextField, Tooltip} from "@mui/material";
+import {Container, Dialog, DialogTitle, IconButton, Tooltip} from "@mui/material";
 import {useState} from "react";
 import AddIcon from '@mui/icons-material/Add';
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
-import {ListItemSpreadingChildren} from "../common/StyledComponents";
+import RobotPropertyEditor from "./RobotPropertyEditor";
 
 
-const DEFAULT_DESCRIPTION_HELPER = "Description";
-
-const uploadRobot = (robotTypeId, description) => {
+const uploadRobot = (robotTypeId, {description}) => {
     const fetchProps = {
         method: "POST",
         body: JSON.stringify({robot_type_id: robotTypeId, description}),
@@ -28,24 +26,18 @@ const uploadRobot = (robotTypeId, description) => {
 
 const RobotCreator = ({robotTypeId, onRobotCreated}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [description, setDescription] = useState("");
 
     const onClickCreate = (evt) => {
         evt.stopPropagation();
         setDialogOpen(true);
     };
 
-    const stopBubble = (evt) => {
-        evt.stopPropagation();
-    };
-
-    const onClose = (evt) => {
-        stopBubble(evt);
+    const onClose = () => {
         setDialogOpen(false);
     };
 
-    const onSubmit = () => {
-        uploadRobot(robotTypeId, description)
+    const onSubmit = (robot) => {
+        uploadRobot(robotTypeId, robot)
             .then(() => {
                 setDialogOpen(false);
                 onRobotCreated();
@@ -63,27 +55,11 @@ const RobotCreator = ({robotTypeId, onRobotCreated}) => {
             <Dialog open={dialogOpen} onClose={onClose}>
                 <DialogTitle>Create a robot</DialogTitle>
                 <Container>
-                    <List onClick={stopBubble}>
-                        <ListItem>
-                            <TextField
-                                variant="outlined"
-                                helperText={DEFAULT_DESCRIPTION_HELPER}
-                                placeholder="Type description here ..."
-                                fullWidth
-                                value={description}
-                                onChange={(evt) => setDescription(evt.target.value)}
-                            />
-                        </ListItem>
-                        <ListItemSpreadingChildren>
-                            <Button variant="outlined" onClick={onSubmit}>
-                                Create
-                            </Button>
-
-                            <Button variant="text" onClick={onClose}>
-                                Cancel
-                            </Button>
-                        </ListItemSpreadingChildren>
-                    </List>
+                    <RobotPropertyEditor
+                        onSubmit={onSubmit}
+                        onClose={onClose}
+                        submitText="Create"
+                    />
                 </Container>
             </Dialog>
         </>
