@@ -6,5 +6,5 @@ export const Confirmation = styled.div`
   padding: 14px;
   margin: 6px;
   border-radius: 10px;
-  background-color: #BBBBFF;
+  background-color: #FFFFFF;
 `;
