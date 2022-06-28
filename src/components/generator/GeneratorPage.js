@@ -10,10 +10,9 @@ const GeneratorPageRoot = styled('div')({
   flexDirection: 'column',
   alignItems: 'center',
 
-  marginBottom: '16px',
-  /*> * {
-    margin-bottom: 16px;
-  }*/
+  '> *': {
+    marginBottom: '16px',
+  }
 });
 
 const StyledTable = styled(Table)({
@@ -27,20 +26,23 @@ const StyledTableHead = styled(TableHead)({
 });
 
 const StyledHeadTableRow = styled(TableRow)({
-  padding: '2em',
-  ':nth-child(odd)': {
-    backgroundColor: '#EFEFEF',
-  },
-  ':nth-child(even)': {
-    backgroundColor: '#DFDFDF',
+  '> *': {
+    padding: '2em',
+    
+    ':nth-child(odd)': {
+      backgroundColor: '#EFEFEF',
+    },
+    
+    ':nth-child(even)': {
+      backgroundColor: '#DFDFDF',
+    },
   },
 });
 
 const StyledBodyTableRow = styled(TableRow)({
-  borderTop: '1px solid black',
-  /*> * {
-    border-top: 1px solid black;
-  }*/
+  '> *': {
+    borderTop: '1px solid black',
+  }
 });
 
 const StyledTableCell = styled(TableCell)({
@@ -56,6 +58,7 @@ const StyledDoubleTableCell = styled(StyledTableCell)({
 const StyledButton = styled(Button)({
   cursor: 'pointer',
   width: '128px',
+  
   ':hover': {
     backgroundColor: '#BFBFBF',
   },
