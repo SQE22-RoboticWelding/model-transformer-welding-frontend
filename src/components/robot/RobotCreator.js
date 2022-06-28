@@ -56,7 +56,7 @@ const RobotCreator = ({robotTypeId, onRobotCreated}) => {
         <>
             <Tooltip title="Create Robot">
                 <IconButton onClick={onClickCreate}>
-                    <AddIcon/>
+                    <AddIcon color="success"/>
                 </IconButton>
             </Tooltip>
 

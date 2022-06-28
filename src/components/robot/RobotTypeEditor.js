@@ -57,7 +57,7 @@ const RobotTypeEditor = ({onRequestRobotTypeRefresh, robotType}) => {
         <>
             <Tooltip title="Edit Robot Type">
                 <IconButton onClick={onClickEdit}>
-                    <EditIcon/>
+                    <EditIcon color="info"/>
                 </IconButton>
             </Tooltip>
 

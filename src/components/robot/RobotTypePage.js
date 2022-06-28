@@ -111,9 +111,15 @@ const RobotTypePage = () => {
                             </AccordionHeader>
 
                             <RobotCreator robotTypeId={robotType.id} onRobotCreated={() => onRobotCreated(robotType)}/>
+
                             <Divider orientation="vertical" flexItem={true} style={{margin: "6px"}}/>
+
                             <RobotTypeEditor onRequestRobotTypeRefresh={refreshAll} robotType={robotType}/>
-                            <RobotTypeDeletor robotType={robotType} onRobotTypeDeleted={refreshAll}/>
+                            <RobotTypeDeletor
+                                robotType={robotType}
+                                onRobotTypeDeleted={refreshAll}
+                                canDelete={robots.filter((robot) => robot.robot_type.id === robotType.id).length === 0}
+                            />
                         </AccordionSummary>
                         <AccordionDetails>
                             <Table width="min-content">
