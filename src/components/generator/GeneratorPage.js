@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
+import Editor from "../editor/Editor";
 import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 const GeneratorPageRoot = styled('div')({
@@ -58,15 +60,25 @@ const StyledDoubleTableCell = styled(StyledTableCell)({
 const StyledButton = styled(Button)({
   cursor: 'pointer',
   width: '128px',
-  
+
   ':hover': {
     backgroundColor: '#BFBFBF',
   },
 });
 
+const synchronizeProject = (weldingPoints) => {
+  return FetchHandler.simple(fetch(
+      `${Settings.weldingPointsPath}`,
+      {method: "PUT", body: JSON.stringify(weldingPoints), headers: {"Content-Type": "application/json"}}
+  ));
+};
+
 const GeneratorPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
+    const [selectedProject, setSelectedProject] = useState(undefined);
+    const [weldingPoints, setWeldingPoints] = useState([]);
+    const [robots, setRobots] = useState([]);
 
     useEffect(() => {
         setProjectRetrievalState("loading");
@@ -76,6 +88,16 @@ const GeneratorPage = () => {
                 setProjectRetrievalState("success");
             })
     }, []);
+
+    const onUpdate = () => synchronizeProject(weldingPoints)
+        .then(() => Notifications.notify("Synchronized project", "success"))
+        .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
+
+    useEffect(() => {
+        if (!selectedProject && availableProjects.length > 0) {
+            setSelectedProject(availableProjects[0]);
+        }
+    }, [availableProjects]);
 
     return (
         <GeneratorPageRoot>
@@ -101,8 +123,8 @@ const GeneratorPage = () => {
                             <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>
-                              <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
-                                  Edit
+                              <StyledButton onClick={() => setSelectedProject(project.id)}>
+                                    Edit
                               </StyledButton>
                             </StyledSingleTableCell>
                             <StyledSingleTableCell>
@@ -120,6 +142,14 @@ const GeneratorPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
+            {(selectedProject !== undefined) ? (
+              <Editor
+                project={selectedProject}
+                weldingPoints={weldingPoints}
+                setWeldingPoints={setWeldingPoints}
+                robots={robots}
+              />
+            ) : <p></p>}
         </GeneratorPageRoot>
     );
 };
