@@ -6,7 +6,7 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemText,
+    ListItemText, Tooltip,
     Typography
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -47,9 +47,11 @@ const RobotDeletor = ({robot, onRobotDeleted}) => {
 
     return (
         <>
-            <IconButton onClick={onClickDelete}>
-                <DeleteIcon/>
-            </IconButton>
+            <Tooltip title="Delete Robot">
+                <IconButton onClick={onClickDelete}>
+                    <DeleteIcon/>
+                </IconButton>
+            </Tooltip>
 
             <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
                 <DialogTitle>Delete Robot</DialogTitle>

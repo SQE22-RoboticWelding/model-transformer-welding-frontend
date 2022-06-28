@@ -1,4 +1,4 @@
-import {Dialog, DialogTitle, IconButton} from "@mui/material";
+import {Dialog, DialogTitle, IconButton, Tooltip} from "@mui/material";
 import {useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
@@ -55,9 +55,11 @@ const RobotTypeEditor = ({onRequestRobotTypeRefresh, robotType}) => {
 
     return (
         <>
-            <IconButton onClick={onClickEdit}>
-                <EditIcon/>
-            </IconButton>
+            <Tooltip title="Edit Robot Type">
+                <IconButton onClick={onClickEdit}>
+                    <EditIcon/>
+                </IconButton>
+            </Tooltip>
 
             <Dialog open={dialogOpen} onClose={onClose}>
                 <DialogTitle>Update a Robot Type</DialogTitle>

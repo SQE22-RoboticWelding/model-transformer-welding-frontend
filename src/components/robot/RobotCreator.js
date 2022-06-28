@@ -1,4 +1,4 @@
-import {Button, Container, Dialog, DialogTitle, IconButton, List, ListItem, TextField} from "@mui/material";
+import {Button, Container, Dialog, DialogTitle, IconButton, List, ListItem, TextField, Tooltip} from "@mui/material";
 import {useState} from "react";
 import AddIcon from '@mui/icons-material/Add';
 import FetchHandler from "../common/FetchHandler";
@@ -54,9 +54,11 @@ const RobotCreator = ({robotTypeId, onRobotCreated}) => {
 
     return (
         <>
-            <IconButton onClick={onClickCreate}>
-                <AddIcon/>
-            </IconButton>
+            <Tooltip title="Create Robot">
+                <IconButton onClick={onClickCreate}>
+                    <AddIcon/>
+                </IconButton>
+            </Tooltip>
 
             <Dialog open={dialogOpen} onClose={onClose}>
                 <DialogTitle>Create a robot</DialogTitle>
