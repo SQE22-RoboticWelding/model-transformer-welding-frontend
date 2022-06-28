@@ -67,9 +67,11 @@ const TemplatePage = () => {
                     >
                         <AccordionSummary>
                             <Grid container direction="row" justifyContent="space-between">
-                                <Grid item>
-                                    <Bold>Name:</Bold>
-                                    {template.name}
+                                <Grid item display="flex" alignItems="center">
+                                    <Typography>
+                                        <Bold>Name:</Bold>
+                                        {template.name}
+                                    </Typography>
                                 </Grid>
 
                                 <Grid item>
