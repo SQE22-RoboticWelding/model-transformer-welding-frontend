@@ -140,14 +140,14 @@ const RobotTypePage = () => {
                                 </TableBody>
                             </Table>
 
-                            {hasCapacity(robotType) && hasRange(robotType) &&
+                            {(hasCapacity(robotType) || hasRange(robotType)) &&
                                 <CustomHr height="3px" />
                             }
 
                             {robotRetrievalState === "idle" ? (
                                 <RobotDisplay
                                     robots={robots.filter((robot) => robot.robot_type.id === robotType.id)}
-                                    onRobotDeleted={retrieveRobots}
+                                    onRobotUpdated={retrieveRobots}
                                 />
                             ) : robotRetrievalState === "loading" && (
                                 <Typography>Loading...</Typography>
