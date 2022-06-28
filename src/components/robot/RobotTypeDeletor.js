@@ -2,7 +2,7 @@ import {
     Button,
     Container,
     Dialog,
-    DialogTitle,
+    DialogTitle, Icon,
     IconButton,
     List,
     ListItem,
@@ -36,7 +36,7 @@ const deleteRobotType = (id) => {
     });
 };
 
-const RobotTypeDeletor = ({robotType, onRobotTypeDeleted}) => {
+const RobotTypeDeletor = ({robotType, onRobotTypeDeleted, canDelete}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const stopBubble = (evt) => {
@@ -63,12 +63,19 @@ const RobotTypeDeletor = ({robotType, onRobotTypeDeleted}) => {
 
     return (
         <>
-            <Tooltip title="Delete Robot Type">
-                <IconButton onClick={onClickDelete}>
-                    <DeleteIcon/>
-                </IconButton>
-            </Tooltip>
-
+            {canDelete ? (
+                <Tooltip title="Delete Robot Type">
+                    <IconButton onClick={onClickDelete} color="error">
+                        <DeleteIcon/>
+                    </IconButton>
+                </Tooltip>
+            ) : (
+                <Tooltip title="Delete disabled for non-empty Robot Type">
+                    <Icon style={{margin: "8px"}} onClick={stopBubble}>
+                        <DeleteIcon color="disabled"/>
+                    </Icon>
+                </Tooltip>
+            )}
 
             <Dialog open={dialogOpen} onClose={onClose}>
                 <DialogTitle>Delete Robot Type <i>{robotType.name}</i></DialogTitle>
@@ -78,12 +85,6 @@ const RobotTypeDeletor = ({robotType, onRobotTypeDeleted}) => {
                         <ListItemText>
                             Are you sure you want to delete this robot type?
                         </ListItemText>
-
-                        <ListItem>
-                            <Typography style={{color: "red"}} variant="caption">
-                                This action will also remove all robots of the deleted type.
-                            </Typography>
-                        </ListItem>
 
                         <ListItem>
                             <Typography style={{color: "red"}} variant="caption">
