@@ -25,7 +25,7 @@ const uploadTemplate = (template) => {
     });
 };
 
-const TemplateCreator = () => {
+const TemplateCreator = ({onCreated}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const stopBubble = (evt) => {
@@ -39,7 +39,10 @@ const TemplateCreator = () => {
 
     const onSubmit = (template) => {
         uploadTemplate(template)
-            .then(() => setDialogOpen(false));
+            .then(() => {
+                setDialogOpen(false);
+                onCreated();
+            });
     };
 
     return (
