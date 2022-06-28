@@ -5,7 +5,6 @@ import FileUpload from "./upload/FileUpload";
 import EditorPage from "./editor/EditorPage";
 import GeneratorPage from "./generator/GeneratorPage";
 import RobotTypePage from "./robot/RobotTypePage";
-import TemplatePage from "./template/TemplatePage";
 
 
 const FrontPageRoot = styled.div`
@@ -28,7 +27,6 @@ const FrontPage = () => {
                     <Route path="/edit" element={<EditorPage/>}/>
                     <Route path="/generate" element={<GeneratorPage/>}/>
                     <Route path="/robot" element={<RobotTypePage/>}/>
-                    <Route path="/template" element={<TemplatePage/>}/>
                 </Routes>
             </BrowserRouter>
         </FrontPageRoot>
