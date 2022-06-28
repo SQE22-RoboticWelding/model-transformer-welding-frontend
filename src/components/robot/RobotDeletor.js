@@ -49,7 +49,7 @@ const RobotDeletor = ({robot, onRobotDeleted}) => {
         <>
             <Tooltip title="Delete Robot">
                 <IconButton onClick={onClickDelete}>
-                    <DeleteIcon/>
+                    <DeleteIcon color="error"/>
                 </IconButton>
             </Tooltip>
 
