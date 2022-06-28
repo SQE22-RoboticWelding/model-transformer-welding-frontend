@@ -6,6 +6,8 @@ import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
 import styled from "styled-components";
 import {TypographyTextCentered} from "../common/StyledComponents";
+import TemplateEditor from "./TemplateEditor";
+import TemplateDeletor from "./TemplateDeletor";
 
 
 const TemplateAccordion = styled(Accordion)`
@@ -64,8 +66,17 @@ const TemplatePage = () => {
                         onChange={() => toggleAccordion(template.id)}
                     >
                         <AccordionSummary>
-                            <Bold>Name:</Bold>
-                            {template.name}
+                            <Grid container direction="row" justifyContent="space-between">
+                                <Grid item>
+                                    <Bold>Name:</Bold>
+                                    {template.name}
+                                </Grid>
+
+                                <Grid item>
+                                    <TemplateEditor template={template} onTemplateUpdated={getTemplates}/>
+                                    <TemplateDeletor template={template} onTemplateDeleted={getTemplates}/>
+                                </Grid>
+                            </Grid>
                         </AccordionSummary>
                         <AccordionDetails>
                             {Boolean(template.description) && (
