@@ -6,7 +6,7 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemText,
+    ListItemText, Tooltip,
     Typography
 } from "@mui/material";
 import {useState} from "react";
@@ -63,9 +63,12 @@ const RobotTypeDeletor = ({robotType, onRobotTypeDeleted}) => {
 
     return (
         <>
-            <IconButton onClick={onClickDelete}>
-                <DeleteIcon/>
-            </IconButton>
+            <Tooltip title="Delete Robot Type">
+                <IconButton onClick={onClickDelete}>
+                    <DeleteIcon/>
+                </IconButton>
+            </Tooltip>
+
 
             <Dialog open={dialogOpen} onClose={onClose}>
                 <DialogTitle>Delete Robot Type <i>{robotType.name}</i></DialogTitle>

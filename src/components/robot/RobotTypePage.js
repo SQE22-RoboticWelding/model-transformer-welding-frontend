@@ -1,7 +1,7 @@
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary,
+    AccordionSummary, Divider,
     Grid,
     Table,
     TableBody,
@@ -110,8 +110,9 @@ const RobotTypePage = () => {
                                 {robotType.name}
                             </AccordionHeader>
 
-                            <RobotTypeEditor onRequestRobotTypeRefresh={refreshAll} robotType={robotType}/>
                             <RobotCreator robotTypeId={robotType.id} onRobotCreated={() => onRobotCreated(robotType)}/>
+                            <Divider orientation="vertical" flexItem={true} style={{margin: "6px"}}/>
+                            <RobotTypeEditor onRequestRobotTypeRefresh={refreshAll} robotType={robotType}/>
                             <RobotTypeDeletor robotType={robotType} onRobotTypeDeleted={refreshAll}/>
                         </AccordionSummary>
                         <AccordionDetails>
