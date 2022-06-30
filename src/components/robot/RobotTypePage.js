@@ -6,7 +6,7 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableRow,
+    TableRow, TextField,
     Typography
 } from "@mui/material";
 import styled from "styled-components";
@@ -27,7 +27,7 @@ const AccordionHeader = styled(Typography)`
   min-width: min-content;
   display: flex;
   align-items: center;
-  
+
   > :first-child {
     margin-right: 4px;
   }
@@ -37,12 +37,13 @@ const RobotTypeAccordion = styled(Accordion)`
   width: 100%;
 `;
 
-const StyledTableCell = (props) => <TableCell {...props} sx={{borderBottom: "none"}} />
+const StyledTableCell = (props) => <TableCell {...props} sx={{borderBottom: "none"}}/>
 
 const hasCapacity = (robotType) => !isNaN(robotType.capacity_load_kg) && robotType.capacity_load_kg !== null;
 const hasRange = (robotType) => !isNaN(robotType.range_m) && robotType.range_m !== null;
 
 const RobotTypePage = () => {
+    const [projectNameFilter, setProjectNameFilter] = useState("");
     const [projects, setProjects] = useState([]);
     const [robotTypeRetrievalState, setRobotTypeRetrievalState] = useState("idle");
     const [robotTypes, setRobotTypes] = useState([]);
@@ -100,74 +101,96 @@ const RobotTypePage = () => {
         <Grid container direction="column" alignItems="center" rowGap="24px">
             <RobotTypeCreator onRequestRobotTypeRefresh={refreshAll}/>
 
+            <TextField
+                value={projectNameFilter}
+                onChange={(evt) => setProjectNameFilter(evt.target.value)}
+                style={{alignSelf: "start"}}
+                fullWidth
+                helperText="Filter project by name"
+                placeholder="Type here ..."
+            />
+
             {(robotTypeRetrievalState === "idle" && robotTypes.length > 0) ? (
-                robotTypes.map((robotType) => (
-                    <RobotTypeAccordion
-                        key={robotType.id}
-                        expanded={openedRobotTypeId === robotType.id}
-                        onChange={() => toggleAccordion(robotType.id)}
-                    >
-                        <AccordionSummary>
-                            <AccordionHeader>
-                                <b>Vendor:</b>
-                                {robotType.vendor}
-                            </AccordionHeader>
+                robotTypes
+                    .filter((robotType) => robots
+                        .filter((robot) => robot.robot_type_id === robotType.id)
+                        .length > 0)
+                    .map((robotType) => (
+                        <RobotTypeAccordion
+                            key={robotType.id}
+                            expanded={openedRobotTypeId === robotType.id}
+                            onChange={() => toggleAccordion(robotType.id)}
+                        >
+                            <AccordionSummary>
+                                <AccordionHeader>
+                                    <b>Vendor:</b>
+                                    {robotType.vendor}
+                                </AccordionHeader>
 
-                            <AccordionHeader>
-                                <b>Name:</b>
-                                {robotType.name}
-                            </AccordionHeader>
+                                <AccordionHeader>
+                                    <b>Name:</b>
+                                    {robotType.name}
+                                </AccordionHeader>
 
-                            <RobotCreator
-                                robotTypeId={robotType.id}
-                                onRobotCreated={() => onRobotCreated(robotType)}
-                                projects={projects}
-                            />
-
-                            <Divider orientation="vertical" flexItem={true} style={{margin: "6px"}}/>
-
-                            <RobotTypeEditor onRequestRobotTypeRefresh={refreshAll} robotType={robotType}/>
-                            <RobotTypeDeletor
-                                robotType={robotType}
-                                onRobotTypeDeleted={refreshAll}
-                                canDelete={robots.filter((robot) => robot.robot_type.id === robotType.id).length === 0}
-                            />
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Table width="min-content">
-                                <TableBody>
-                                    {hasCapacity(robotType) &&
-                                        <TableRow>
-                                            <StyledTableCell><b>Capacity:</b></StyledTableCell>
-                                            <StyledTableCell>{robotType.capacity_load_kg} kg</StyledTableCell>
-                                        </TableRow>
-                                    }
-
-                                    {hasRange(robotType) &&
-                                        <TableRow>
-                                            <StyledTableCell><b>Range:</b></StyledTableCell>
-                                            <StyledTableCell>{robotType.range_m} m</StyledTableCell>
-                                        </TableRow>
-                                    }
-                                </TableBody>
-                            </Table>
-
-                            {(hasCapacity(robotType) || hasRange(robotType)) &&
-                                <CustomHr height="3px" />
-                            }
-
-                            {robotRetrievalState === "idle" ? (
-                                <RobotDisplay
-                                    robots={robots.filter((robot) => robot.robot_type.id === robotType.id)}
-                                    onRobotUpdated={retrieveRobots}
+                                <RobotCreator
+                                    robotTypeId={robotType.id}
+                                    onRobotCreated={() => onRobotCreated(robotType)}
                                     projects={projects}
                                 />
-                            ) : robotRetrievalState === "loading" && (
-                                <Typography>Loading...</Typography>
-                            )}
-                        </AccordionDetails>
-                    </RobotTypeAccordion>
-                ))
+
+                                <Divider orientation="vertical" flexItem={true} style={{margin: "6px"}}/>
+
+                                <RobotTypeEditor onRequestRobotTypeRefresh={refreshAll} robotType={robotType}/>
+                                <RobotTypeDeletor
+                                    robotType={robotType}
+                                    onRobotTypeDeleted={refreshAll}
+                                    canDelete={robots.filter((robot) => robot.robot_type.id === robotType.id).length === 0}
+                                />
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Table width="min-content">
+                                    <TableBody>
+                                        {hasCapacity(robotType) &&
+                                            <TableRow>
+                                                <StyledTableCell><b>Capacity:</b></StyledTableCell>
+                                                <StyledTableCell>{robotType.capacity_load_kg} kg</StyledTableCell>
+                                            </TableRow>
+                                        }
+
+                                        {hasRange(robotType) &&
+                                            <TableRow>
+                                                <StyledTableCell><b>Range:</b></StyledTableCell>
+                                                <StyledTableCell>{robotType.range_m} m</StyledTableCell>
+                                            </TableRow>
+                                        }
+                                    </TableBody>
+                                </Table>
+
+                                {(hasCapacity(robotType) || hasRange(robotType)) &&
+                                    <CustomHr height="3px"/>
+                                }
+
+                                {robotRetrievalState === "idle" ? (
+                                    <RobotDisplay
+                                        robots={robots
+                                            .filter((robot) => robot.robot_type.id === robotType.id)
+                                            .map((robot) => ({
+                                                ...robot,
+                                                projectName: projects
+                                                    .find((project) => project.id === robot.project_id)
+                                                    ?.name
+                                            }))
+                                            .filter((robot) => robot.projectName
+                                                ?.includes(projectNameFilter))}
+                                        onRobotUpdated={retrieveRobots}
+                                        projects={projects}
+                                    />
+                                ) : robotRetrievalState === "loading" && (
+                                    <Typography>Loading...</Typography>
+                                )}
+                            </AccordionDetails>
+                        </RobotTypeAccordion>
+                    ))
             ) : robotTypeRetrievalState === "idle" ? (
                 <TypographyTextCentered>There are no robot types yet!</TypographyTextCentered>
             ) : robotTypeRetrievalState === "loading" &&
