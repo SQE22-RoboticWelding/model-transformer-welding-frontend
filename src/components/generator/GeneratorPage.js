@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
@@ -31,11 +30,11 @@ const StyledHeadTableRow = styled(TableRow)({
   '> *': {
     padding: '2em',
     
-    ':nth-child(odd)': {
+    ':nth-of-type(odd)': {
       backgroundColor: '#EFEFEF',
     },
     
-    ':nth-child(even)': {
+    ':nth-of-type(even)': {
       backgroundColor: '#DFDFDF',
     },
   },
@@ -94,9 +93,11 @@ const GeneratorPage = () => {
         .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
 
     useEffect(() => {
+      if(selectedProject) {
         if (!selectedProject && availableProjects.length > 0) {
             setSelectedProject(availableProjects[0]);
         }
+      }
     }, [availableProjects]);
 
     return (
@@ -123,7 +124,7 @@ const GeneratorPage = () => {
                             <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>
-                              <StyledButton onClick={() => setSelectedProject(project.id)}>
+                              <StyledButton onClick={() => setSelectedProject(project)}>
                                     Edit
                               </StyledButton>
                             </StyledSingleTableCell>
