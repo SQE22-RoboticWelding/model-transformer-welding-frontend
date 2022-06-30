@@ -94,8 +94,10 @@ const GeneratorPage = () => {
         .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
 
     useEffect(() => {
-        if (!selectedProject && availableProjects.length > 0) {
-            setSelectedProject(availableProjects[0]);
+        if (selectedProject) {
+            if (!selectedProject && availableProjects.length > 0) {
+                setSelectedProject(availableProjects[0]);
+            }
         }
     }, [availableProjects]);
 
@@ -123,7 +125,7 @@ const GeneratorPage = () => {
                             <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>
-                              <StyledButton onClick={() => setSelectedProject(project.id)}>
+                              <StyledButton onClick={() => setSelectedProject(project)}>
                                     Edit
                               </StyledButton>
                             </StyledSingleTableCell>
