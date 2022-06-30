@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
-import Notifications from "../common/Notifications";
-import Editor from "../editor/Editor";
-import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import EditDialog from "./EditDialog";
+import GenerateDialog from "./GenerateDialog";
 
 const GeneratorPageRoot = styled('div')({
   width: '100%',
@@ -65,19 +65,13 @@ const StyledButton = styled(Button)({
   },
 });
 
-const synchronizeProject = (weldingPoints) => {
-  return FetchHandler.simple(fetch(
-      `${Settings.weldingPointsPath}`,
-      {method: "PUT", body: JSON.stringify(weldingPoints), headers: {"Content-Type": "application/json"}}
-  ));
-};
-
 const GeneratorPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(undefined);
-    const [weldingPoints, setWeldingPoints] = useState([]);
-    const [robots, setRobots] = useState([]);
+    const [generate, setGenerate] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         setProjectRetrievalState("loading");
@@ -88,17 +82,17 @@ const GeneratorPage = () => {
             })
     }, []);
 
-    const onUpdate = () => synchronizeProject(weldingPoints)
-        .then(() => Notifications.notify("Synchronized project", "success"))
-        .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
+    const onEdit = (project) => {
+      setSelectedProject(project);
+      setEdit(true);
+      setOpen(true);
+    };
 
-    useEffect(() => {
-      if(selectedProject) {
-        if (!selectedProject && availableProjects.length > 0) {
-            setSelectedProject(availableProjects[0]);
-        }
-      }
-    }, [availableProjects]);
+    const onGenerate = (project) => {
+      setSelectedProject(project);
+      setGenerate(true);
+      setOpen(true);
+    };
 
     return (
         <GeneratorPageRoot>
@@ -124,12 +118,12 @@ const GeneratorPage = () => {
                             <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>
-                              <StyledButton onClick={() => setSelectedProject(project)}>
+                              <StyledButton to="/generate/edit/{project.id}" onClick={() => onEdit(project)}>
                                     Edit
                               </StyledButton>
                             </StyledSingleTableCell>
                             <StyledSingleTableCell>
-                              <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
+                              <StyledButton onClick={() => onGenerate(project)}>
                                   Generate
                               </StyledButton>
                             </StyledSingleTableCell>
@@ -143,14 +137,24 @@ const GeneratorPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
-            {(selectedProject !== undefined) ? (
-              <Editor
-                project={selectedProject}
-                weldingPoints={weldingPoints}
-                setWeldingPoints={setWeldingPoints}
-                robots={robots}
+            {(edit === true) ? (
+              <EditDialog
+                setEdit={setEdit}
+                open={open}
+                setOpen={setOpen}
+                selectedProject={selectedProject}
+                setSelectedProject={setSelectedProject}
               />
-            ) : <p></p>}
+            ) : <div></div>}
+            {(generate === true) ? (
+              <GenerateDialog
+                setGenerate={setGenerate}
+                open={open}
+                setOpen={setOpen}
+                selectedProject={selectedProject}
+                setSelectedProject={setSelectedProject}
+              />
+            ) : <div></div>}
         </GeneratorPageRoot>
     );
 };
