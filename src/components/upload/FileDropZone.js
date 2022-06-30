@@ -1,5 +1,6 @@
-import { color } from "@mui/system";
-import DropZone from "react-dropzone";
+
+/*import DropZone from "react-dropzone";*/
+import { DropzoneAreaBase } from 'material-ui-dropzone';
 import {styled} from '@mui/system';
 
 const DropZoneRoot = styled('div')({
@@ -36,8 +37,9 @@ const FileDropZone = ({file, onFile}) => {
         }
     };
 
+
     return (
-        <DropZone accept={ACCEPTED_FILETYPES} multiple={false} onDrop={onDrop}>
+        <DropzoneAreaBase acceptedFiles = {[".xls", ".xlsx",".csv"]} filesLimit= {1} onDrop={onDrop} showFileNames = {true} >
             {(state) => (
                 <DropZoneRoot {...state.getRootProps()}>
                     <input {...state.getInputProps()}/>
@@ -47,7 +49,7 @@ const FileDropZone = ({file, onFile}) => {
                     }
                 </DropZoneRoot>
             )}
-        </DropZone>
+        </DropzoneAreaBase>
     );
 };
 
