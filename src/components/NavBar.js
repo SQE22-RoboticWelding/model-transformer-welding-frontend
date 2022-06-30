@@ -1,12 +1,16 @@
 import {Link as RouterLink} from "react-router-dom";
 import Drawer from '@mui/material/Drawer';
-import {List, ListItem, ListItemButton, ListItemText} from "@mui/material";
+import {List, ListItem, ListItemButton, ListItemText, styled} from "@mui/material";
 
+
+const StyledDrawer = styled(List)({
+    backgroundColor: "whitesmoke"
+});
 
 const NavBar = () => {
     return (
         <Drawer anchor="left" variant="permanent">
-            <List>
+            <StyledDrawer>
                 <ListItem>
                     <ListItemButton component={RouterLink} to="/create">
                         <ListItemText primary="Create Projects"/>
@@ -36,7 +40,7 @@ const NavBar = () => {
                         <ListItemText primary="Templates"/>
                     </ListItemButton>
                 </ListItem>
-            </List>
+            </StyledDrawer>
         </Drawer>
     );
 }
