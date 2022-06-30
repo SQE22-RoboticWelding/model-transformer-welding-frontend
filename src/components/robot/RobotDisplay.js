@@ -2,7 +2,7 @@ import {List, ListItem, Table, TableBody, TableCell, TableHead, TableRow} from "
 import RobotDeletor from "./RobotDeletor";
 import RobotEditor from "./RobotEditor";
 
-const RobotDisplay = ({robots, onRobotUpdated}) => {
+const RobotDisplay = ({robots, onRobotUpdated, projects}) => {
     return (
         <List>
             {robots.map((robot) => (
@@ -21,7 +21,7 @@ const RobotDisplay = ({robots, onRobotUpdated}) => {
                                 <TableCell>{robot.id}</TableCell>
                                 <TableCell>{robot.description}</TableCell>
                                 <TableCell width={1}>
-                                    <RobotEditor robot={robot} onRobotUpdated={onRobotUpdated}/>
+                                    <RobotEditor robot={robot} onRobotUpdated={onRobotUpdated} projects={projects}/>
                                 </TableCell>
                                 <TableCell width={1}>
                                     <RobotDeletor robot={robot} onRobotDeleted={onRobotUpdated}/>

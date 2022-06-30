@@ -7,10 +7,10 @@ import Notifications from "../common/Notifications";
 import RobotPropertyEditor from "./RobotPropertyEditor";
 
 
-const uploadRobot = (robotTypeId, {description}) => {
+const uploadRobot = (robotTypeId, robot) => {
     const fetchProps = {
         method: "POST",
-        body: JSON.stringify({robot_type_id: robotTypeId, description}),
+        body: JSON.stringify({robot_type_id: robotTypeId, ...robot}),
         headers: {"Content-Type": "application/json"}
     };
     return new Promise((resolve, reject) => FetchHandler.simple(fetch(Settings.robotPath, fetchProps))
@@ -24,7 +24,7 @@ const uploadRobot = (robotTypeId, {description}) => {
         }));
 };
 
-const RobotCreator = ({robotTypeId, onRobotCreated}) => {
+const RobotCreator = ({robotTypeId, onRobotCreated, projects}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const onClickCreate = (evt) => {
@@ -32,7 +32,10 @@ const RobotCreator = ({robotTypeId, onRobotCreated}) => {
         setDialogOpen(true);
     };
 
-    const onClose = () => {
+    const stopBubble = (evt) => evt.stopPropagation();
+
+    const onClose = (evt) => {
+        stopBubble(evt);
         setDialogOpen(false);
     };
 
@@ -53,12 +56,15 @@ const RobotCreator = ({robotTypeId, onRobotCreated}) => {
             </Tooltip>
 
             <Dialog open={dialogOpen} onClose={onClose}>
-                <DialogTitle>Create a robot</DialogTitle>
-                <Container>
+                <DialogTitle onClick={stopBubble}>
+                    Create a robot
+                </DialogTitle>
+                <Container onClick={stopBubble}>
                     <RobotPropertyEditor
                         onSubmit={onSubmit}
                         onClose={onClose}
                         submitText="Create"
+                        projects={projects}
                     />
                 </Container>
             </Dialog>

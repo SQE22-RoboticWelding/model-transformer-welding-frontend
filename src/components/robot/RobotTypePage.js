@@ -43,12 +43,19 @@ const hasCapacity = (robotType) => !isNaN(robotType.capacity_load_kg) && robotTy
 const hasRange = (robotType) => !isNaN(robotType.range_m) && robotType.range_m !== null;
 
 const RobotTypePage = () => {
+    const [projects, setProjects] = useState([]);
     const [robotTypeRetrievalState, setRobotTypeRetrievalState] = useState("idle");
     const [robotTypes, setRobotTypes] = useState([]);
     const [openedRobotTypeId, setOpenedRobotTypeId] = useState(undefined);
 
     const [robotRetrievalState, setRobotRetrievalState] = useState("idle");
     const [robots, setRobots] = useState([]);
+
+    const retrieveProjects = () => {
+        FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
+            .then(setProjects)
+            .catch((err) => Notifications.notify(`Failed to retrieve Projects.\n${err}`, "error"));
+    };
 
     const retrieveRobotTypes = () => {
         setRobotTypeRetrievalState("loading");
@@ -69,6 +76,7 @@ const RobotTypePage = () => {
     const refreshAll = () => {
         retrieveRobotTypes();
         retrieveRobots();
+        retrieveProjects();
     };
 
     const onRobotCreated = (robotType) => {
@@ -110,7 +118,11 @@ const RobotTypePage = () => {
                                 {robotType.name}
                             </AccordionHeader>
 
-                            <RobotCreator robotTypeId={robotType.id} onRobotCreated={() => onRobotCreated(robotType)}/>
+                            <RobotCreator
+                                robotTypeId={robotType.id}
+                                onRobotCreated={() => onRobotCreated(robotType)}
+                                projects={projects}
+                            />
 
                             <Divider orientation="vertical" flexItem={true} style={{margin: "6px"}}/>
 
@@ -148,6 +160,7 @@ const RobotTypePage = () => {
                                 <RobotDisplay
                                     robots={robots.filter((robot) => robot.robot_type.id === robotType.id)}
                                     onRobotUpdated={retrieveRobots}
+                                    projects={projects}
                                 />
                             ) : robotRetrievalState === "loading" && (
                                 <Typography>Loading...</Typography>
