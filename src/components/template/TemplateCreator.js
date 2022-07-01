@@ -51,7 +51,7 @@ const TemplateCreator = ({onCreated}) => {
                 Create new Code Generation Template
             </Button>
 
-            <Dialog open={dialogOpen} onClose={onClose}>
+            <Dialog open={dialogOpen} onClose={onClose} fullWidth>
                 <DialogTitle>Create a Code Generation Template</DialogTitle>
 
                 <Container>

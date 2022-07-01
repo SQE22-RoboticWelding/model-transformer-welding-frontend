@@ -12,6 +12,14 @@ const EMPTY_TEMPLATE = {
     content: ""
 };
 
+const TemplateContentPreviewInputProps = {
+    style: {
+        fontFamily: "monospace",
+        fontSize: 11,
+        minWidth: "max-content"
+    }
+};
+
 const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = EMPTY_TEMPLATE}) => {
     const [name, setName] = useState(template.name);
     const [description, setDescription] = useState(template.description);
@@ -70,7 +78,9 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
                     variant="outlined"
                     error={DEFAULT_CONTENT_HELPER !== contentHelper}
                     helperText={contentHelper}
-                    placeholder="Type description here ..."
+                    placeholder="Type template content here ..."
+                    InputProps={TemplateContentPreviewInputProps}
+                    multiline
                     fullWidth
                     value={content}
                     onChange={(evt) => setContent(evt.target.value)}

@@ -4,24 +4,27 @@ import {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
-import styled from "styled-components";
 import {TypographyTextCentered} from "../common/StyledComponents";
 import TemplateEditor from "./TemplateEditor";
 import TemplateDeletor from "./TemplateDeletor";
+import {styled} from "@mui/material";
 
 
-const TemplateAccordion = styled(Accordion)`
-  width: 100%;
-`;
+const TemplateAccordion = styled(Accordion)({
+    width: "100%"
+});
 
-const Bold = styled.b`
-  margin-right: 8px;
-`;
+const Bold = styled(Typography)({
+    marginRight: "8px",
+    fontWeight: "bold"
+});
 
-const CodeBlock = styled(Paper)`
-  margin: 12px 24px;
-  padding: 1em;
-`;
+const CodeBlock = styled(Paper)({
+    margin: "12px 24px",
+    padding: "1em",
+    fontFamily: "monospace",
+    whiteSpace: "pre-line"
+});
 
 const retrieveTemplates = () => new Promise((resolve, reject) => {
     FetchHandler.readingJson(fetch(Settings.templatePath), {method: "GET"})
@@ -92,9 +95,7 @@ const TemplatePage = () => {
                                 <Bold>Content:</Bold>
                             </Typography>
                             <CodeBlock elevation={6} variant="outlined">
-                                <Typography fontFamily="Monospace">
-                                    {template.content}
-                                </Typography>
+                                {template.content}
                             </CodeBlock>
                         </AccordionDetails>
                     </TemplateAccordion>
