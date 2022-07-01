@@ -41,6 +41,18 @@ const StyledTableCell = (props) => <TableCell {...props} sx={{borderBottom: "non
 
 const hasCapacity = (robotType) => !isNaN(robotType.capacity_load_kg) && robotType.capacity_load_kg !== null;
 const hasRange = (robotType) => !isNaN(robotType.range_m) && robotType.range_m !== null;
+const hasGenerationTemplate = (robotType) => !isNaN(robotType.generation_template_id) && robotType.generation_template_id !== null;
+
+const robotHasMatchingProjectName = (robot, projects, projectNameMatch) => {
+    if (projectNameMatch) {
+        return projects
+            .find((project) => robot.project_id === project.id)
+            .name.toLowerCase()
+            .includes(projectNameMatch.toLowerCase());
+    } else {
+        return true;  // match all
+    }
+};
 
 const RobotTypePage = () => {
     const [projectNameFilter, setProjectNameFilter] = useState("");
@@ -51,6 +63,13 @@ const RobotTypePage = () => {
 
     const [robotRetrievalState, setRobotRetrievalState] = useState("idle");
     const [robots, setRobots] = useState([]);
+
+    const matchRobot = (robot) => robotHasMatchingProjectName(robot, projects, projectNameFilter);
+    const matchRobotType = (robotType) => !projectNameFilter  // show all robot types if filter is empty
+        || robots
+            .filter((robot) => robotType.id === robot.robot_type_id)
+            .filter(matchRobot)
+            .length > 0;
 
     const retrieveProjects = () => {
         FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
@@ -112,9 +131,7 @@ const RobotTypePage = () => {
 
             {(robotTypeRetrievalState === "idle" && robotTypes.length > 0) ? (
                 robotTypes
-                    .filter((robotType) => robots
-                        .filter((robot) => robot.robot_type_id === robotType.id)
-                        .length > 0)
+                    .filter(matchRobotType)
                     .map((robotType) => (
                         <RobotTypeAccordion
                             key={robotType.id}
@@ -163,10 +180,18 @@ const RobotTypePage = () => {
                                                 <StyledTableCell>{robotType.range_m} m</StyledTableCell>
                                             </TableRow>
                                         }
+
+                                        {hasGenerationTemplate(robotType) &&
+                                            <TableRow>
+                                                <StyledTableCell><b>Generation Template:</b></StyledTableCell>
+                                                <StyledTableCell>{robotType.generation_template.name}</StyledTableCell>
+                                            </TableRow>
+                                        }
                                     </TableBody>
                                 </Table>
 
-                                {(hasCapacity(robotType) || hasRange(robotType)) &&
+
+                                {(hasCapacity(robotType) || hasRange(robotType) || hasGenerationTemplate(robotType)) &&
                                     <CustomHr height="3px"/>
                                 }
 
@@ -174,14 +199,7 @@ const RobotTypePage = () => {
                                     <RobotDisplay
                                         robots={robots
                                             .filter((robot) => robot.robot_type.id === robotType.id)
-                                            .map((robot) => ({
-                                                ...robot,
-                                                projectName: projects
-                                                    .find((project) => project.id === robot.project_id)
-                                                    ?.name
-                                            }))
-                                            .filter((robot) => robot.projectName
-                                                ?.includes(projectNameFilter))}
+                                            .filter(matchRobot)}
                                         onRobotUpdated={retrieveRobots}
                                         projects={projects}
                                     />

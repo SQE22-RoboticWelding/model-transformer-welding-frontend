@@ -181,7 +181,9 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
                             label={projectHelper}
                         >
                             {projects.map((project) => (
-                                <MenuItem value={project.id}>[{project.id}] {project.name}</MenuItem>
+                                <MenuItem key={project.id} value={project.id}>
+                                    [{project.id}] {project.name}
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
