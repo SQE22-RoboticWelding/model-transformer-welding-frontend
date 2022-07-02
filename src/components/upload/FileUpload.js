@@ -1,17 +1,20 @@
 import FileDropZone from "./FileDropZone";
-import {useState} from "react";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
 import {Confirmation} from "../common/StyledComponents";
 import FetchHandler from "../common/FetchHandler";
 import {styled} from '@mui/system';
-import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import UploadIcon from '@mui/icons-material/Upload';
-
+import {useEffect, useState} from "react";
+import Editor from "../editor/Editor";
+import EditorPage from "../editor/EditorPage";
+import RobotLegend from "../editor/RobotLegend";
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import * as React from 'react';
+import {Button,Container,TextField,Dialog} from '@mui/material';
+import TablePageRoot from "../editor/EditorPage"
+import ProjectChooser from "../editor/ProjectChooser";
 
   const UploadButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -43,7 +46,6 @@ const uploadProjectFile = (projectName, projectFile) => {
         fetch(`${Settings.uploadPath}?${query}`, {method: "POST", body})
     );
 };
-
 const FileUpload = () => {
     const [state, setState] = useState("idle");
     const [projectFile, setProjectFile] = useState();
@@ -55,6 +57,12 @@ const FileUpload = () => {
             .then(() => {
                 Notifications.notify("Project created.", "success")
                 setState("idle");
+                return (
+                   <Dialog>
+                       <Container>
+                          <EditorPage></EditorPage>
+                      </Container>
+                   </Dialog>);
             })
             .catch((err) => {
                 Notifications.notify(`Failed to create project.\n${err}`, "error")
