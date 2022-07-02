@@ -6,47 +6,22 @@ import { Button, Dialog, DialogContent, DialogTitle, IconButton, styled } from '
 import CloseIcon from '@mui/icons-material/Close';
 
 const StyledButton = styled(Button)({
-  cursor: 'pointer',
-  width: '128px',
+    cursor: 'pointer',
+    width: '128px',
+    display: 'flex',
 
-  ':hover': {
-    backgroundColor: '#BFBFBF',
-  },
+    ':hover': {
+      backgroundColor: '#BFBFBF',
+    },
 });
 
-const synchronizeProject = (weldingPoints) => {
-  return FetchHandler.simple(fetch(
-      `${Settings.weldingPointsPath}`,
-      {method: "PUT", body: JSON.stringify(weldingPoints), headers: {"Content-Type": "application/json"}}
-  ));
-};
+const StyledIconButton = styled(IconButton)({
+    position: 'absolute',
+    top: 10,
+    right: 0,
+  });
 
 const EditDialog = ({setGenerate ,open, setOpen, selectedProject, setSelectedProject}) => {
-    const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
-    const [availableProjects, setAvailableProjects] = useState([]);
-    const [weldingPoints, setWeldingPoints] = useState([]);
-    const [robots, setRobots] = useState([]);
-
-    useEffect(() => {
-        setProjectRetrievalState("loading");
-        FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
-            .then((projects) => {
-                setAvailableProjects(projects);
-                setProjectRetrievalState("success");
-            })
-    }, []);
-
-    const onUpdate = () => synchronizeProject(weldingPoints)
-        .then(() => Notifications.notify("Synchronized project", "success"))
-        .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
-
-    useEffect(() => {
-      if(selectedProject) {
-        if (!selectedProject && availableProjects.length > 0) {
-            setSelectedProject(availableProjects[0]);
-        }
-      }
-    }, [availableProjects]);
 
     const closeGenerate = () => {
       setSelectedProject(undefined);
@@ -58,16 +33,16 @@ const EditDialog = ({setGenerate ,open, setOpen, selectedProject, setSelectedPro
         <Dialog
         open={open}
         onClose={closeGenerate}
-        maxWidth={'lg'}
+        maxWidth={'xs'}
         fullWidth={true}
         >
           <DialogTitle>
             <h1>{selectedProject.name}</h1>
-            <IconButton onClick={closeGenerate}>
+            <StyledIconButton onClick={closeGenerate}>
               <CloseIcon />
-            </IconButton>
+            </StyledIconButton>
           </DialogTitle>
-          <DialogContent>
+          <DialogContent dividers>
             <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
               Download
             </StyledButton>

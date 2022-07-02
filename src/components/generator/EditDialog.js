@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
@@ -15,6 +15,12 @@ const StyledButton = styled(Button)({
   },
 });
 
+const StyledIconButton = styled(IconButton)({
+    position: 'absolute',
+    top: 10,
+    right: 0,
+  });
+
 const synchronizeProject = (weldingPoints) => {
   return FetchHandler.simple(fetch(
       `${Settings.weldingPointsPath}`,
@@ -23,31 +29,12 @@ const synchronizeProject = (weldingPoints) => {
 };
 
 const EditDialog = ({setEdit ,open, setOpen, selectedProject, setSelectedProject}) => {
-    const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
-    const [availableProjects, setAvailableProjects] = useState([]);
     const [weldingPoints, setWeldingPoints] = useState([]);
     const [robots, setRobots] = useState([]);
-
-    useEffect(() => {
-        setProjectRetrievalState("loading");
-        FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
-            .then((projects) => {
-                setAvailableProjects(projects);
-                setProjectRetrievalState("success");
-            })
-    }, []);
 
     const onUpdate = () => synchronizeProject(weldingPoints)
         .then(() => Notifications.notify("Synchronized project", "success"))
         .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
-
-    useEffect(() => {
-      if(selectedProject) {
-        if (!selectedProject && availableProjects.length > 0) {
-            setSelectedProject(availableProjects[0]);
-        }
-      }
-    }, [availableProjects]);
 
     const closeEdit = () => {
       setSelectedProject(undefined);
@@ -64,9 +51,9 @@ const EditDialog = ({setEdit ,open, setOpen, selectedProject, setSelectedProject
         >
           <DialogTitle>
             <h1>{selectedProject.name}</h1>
-            <IconButton onClick={closeEdit}>
+            <StyledIconButton onClick={closeEdit}>
               <CloseIcon />
-            </IconButton>
+            </StyledIconButton>
           </DialogTitle>
           <DialogContent dividers>
             <Editor
@@ -77,7 +64,7 @@ const EditDialog = ({setEdit ,open, setOpen, selectedProject, setSelectedProject
             />
           </DialogContent>
           <DialogActions>
-            <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
+            <StyledButton onClick={onUpdate}>
               Update project!
             </StyledButton>
           </DialogActions>
