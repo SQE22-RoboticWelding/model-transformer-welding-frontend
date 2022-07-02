@@ -8,7 +8,10 @@ class Settings {
 
     static weldingPointsPath = `${Settings.backendBase}/weldingpoint`;
 
+    static robotTypePath = `${Settings.backendBase}/robottype`;
     static robotPath = `${Settings.backendBase}/robot`;
+
+    static templatePath = `${Settings.backendBase}/generationtemplate`;
 }
 
 export default Settings;
