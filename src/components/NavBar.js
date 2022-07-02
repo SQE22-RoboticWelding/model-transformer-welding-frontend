@@ -1,34 +1,47 @@
-import styled from "styled-components";
-import {Link} from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
+import Drawer from '@mui/material/Drawer';
+import {List, ListItem, ListItemButton, ListItemText, styled} from "@mui/material";
 
 
-const NavBarRoot = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  background-color: #C0C0C0;
-  border-radius: 10px;
-  margin-right: 10px;
-`;
-
-const LinkItem = styled(Link)`
-  margin: 6px 3px;
-  padding: 1em;
-  border-radius: 4px;
-  background-color: white;
-  text-decoration: none;
-  :hover {
-    background-color: #DADADA;
-  }
-`;
+const StyledDrawer = styled(List)({
+    backgroundColor: "whitesmoke"
+});
 
 const NavBar = () => {
     return (
-        <NavBarRoot>
-            <LinkItem to="/create">Create Projects</LinkItem>
-            <LinkItem to="/edit">Edit Projects</LinkItem>
-            <LinkItem to="/generate">View Project</LinkItem>
-        </NavBarRoot>
+        <Drawer anchor="left" variant="permanent">
+            <StyledDrawer>
+                <ListItem>
+                    <ListItemButton component={RouterLink} to="/create">
+                        <ListItemText primary="Create Projects"/>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton component={RouterLink} to="/edit">
+                        <ListItemText primary="Edit Projects"/>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton component={RouterLink} to="/generate">
+                        <ListItemText primary="View Project"/>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton component={RouterLink} to="/robot">
+                        <ListItemText primary="Robots"/>
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem>
+                    <ListItemButton component={RouterLink} to="/template">
+                        <ListItemText primary="Templates"/>
+                    </ListItemButton>
+                </ListItem>
+            </StyledDrawer>
+        </Drawer>
     );
 }
 
