@@ -1,27 +1,26 @@
 import FileDropZone from "./FileDropZone";
 import Settings from "../common/settings";
-import Notifications from "../common/Notifications";
 import {Confirmation} from "../common/StyledComponents";
 import FetchHandler from "../common/FetchHandler";
 import {styled} from '@mui/system';
 import Input from '@mui/material/Input';
 import UploadIcon from '@mui/icons-material/Upload';
-import {useEffect, useState} from "react";
-import Editor from "../editor/Editor";
+import {useState} from "react";
 import EditorPage from "../editor/EditorPage";
-import RobotLegend from "../editor/RobotLegend";
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import {Button,Container,TextField,Dialog} from '@mui/material';
-import TablePageRoot from "../editor/EditorPage"
-import ProjectChooser from "../editor/ProjectChooser";
+import {Button,TextField,Dialog} from '@mui/material';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
+/*
   const UploadButton = styled(Button)({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     borderRadius: 3,
     height: 48,
     padding: '0 30px',
-  });
+  }); */
   const FileUploadRoot = styled('div')({
     alignItems: "center",
     boxShadow: '0 3px 5px 2px ',
@@ -35,9 +34,7 @@ import ProjectChooser from "../editor/ProjectChooser";
     margin:'none',
     width: 'auto',
     required : true,
-  });
-
-  
+  }); 
 const uploadProjectFile = (projectName, projectFile) => {
     const query = new URLSearchParams({name: projectName});
     const body = new FormData();
@@ -46,29 +43,46 @@ const uploadProjectFile = (projectName, projectFile) => {
         fetch(`${Settings.uploadPath}?${query}`, {method: "POST", body})
     );
 };
+
 const FileUpload = () => {
     const [state, setState] = useState("idle");
     const [projectFile, setProjectFile] = useState();
     const [projectName, setProjectName] = useState("");
+    const [open,setOpen] = React.useState(false);
+    const handleClose = () => {
+        setOpen(false);
+      };
 
-    const onSubmit = () => {
+      const onSubmit = () => {
+        setOpen(true);
+        uploadProjectFile(projectName, projectFile)
+      };
+    /*const onSubmit = () => {
         setState("uploading");
         uploadProjectFile(projectName, projectFile)
             .then(() => {
                 Notifications.notify("Project created.", "success")
                 setState("idle");
+                setOpen(true);
                 return (
-                   <Dialog>
-                       <Container>
-                          <EditorPage></EditorPage>
-                      </Container>
-                   </Dialog>);
+                    <Dialog
+                    open={open}
+                    onClose={handleClose}>
+                     <DialogTitle> Edit projects </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                 <EditorPage></EditorPage>
+                            </DialogContentText>
+                        </DialogContent>
+               </Dialog>
+                );
             })
             .catch((err) => {
                 Notifications.notify(`Failed to create project.\n${err}`, "error")
                 setState("idle");
             })
-    };
+    };*/
+
     return (
         <FileUploadRoot>
             <FileDropZone
@@ -85,14 +99,20 @@ const FileUpload = () => {
                     onChange={(e) => { setProjectName(e.target.value)}}>
                     <TextField id="outlined-basic" label="Outlined" variant="outlined" />
                 </ProjectName>
-                <UploadButton
-                    onClick={onSubmit}
-                    disabled={!projectName || !projectFile || state === "uploading"}
-                    fontSize = "inherit"
-                    endIcon={<UploadIcon />}
-                >
-                    Upload file
-                </UploadButton>
+                <Button variant="contained" 
+                        onClick={onSubmit}  endIcon={<UploadIcon />}>Upload file
+                        
+                </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}>
+                     <DialogTitle> Edit projects </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                 <EditorPage></EditorPage>
+                            </DialogContentText>
+                        </DialogContent>
+               </Dialog>
                 </Box>
             </Confirmation>
         </FileUploadRoot>
