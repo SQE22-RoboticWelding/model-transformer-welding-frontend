@@ -60,7 +60,7 @@ const RobotEditor = ({template, onTemplateUpdated}) => {
                 </IconButton>
             </Tooltip>
 
-            <Dialog open={dialogOpen} onClose={onClose}>
+            <Dialog open={dialogOpen} onClose={onClose} fullWidth>
                 <DialogTitle onClick={stopBubble}>
                     Update Template
                 </DialogTitle>
