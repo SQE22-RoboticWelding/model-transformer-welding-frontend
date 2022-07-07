@@ -3,7 +3,6 @@ import Settings from "../common/settings";
 import {Confirmation} from "../common/StyledComponents";
 import FetchHandler from "../common/FetchHandler";
 import {styled} from '@mui/system';
-import Input from '@mui/material/Input';
 import UploadIcon from '@mui/icons-material/Upload';
 import {useState} from "react";
 import EditorPage from "../editor/EditorPage";
@@ -31,11 +30,16 @@ import { Routes,Route } from "react-router-dom";
     
   });
   
-  const ProjectName = styled(Input)({
-    height: 50,
+  const ProjectName = styled(TextField)({
+    height: 45,
     margin:'none',
-    width: 'auto',
+    width: 30,
     required : true,
+  }); 
+  const Projectdecription= styled(TextField)({
+    marginTop:20 ,
+    required : true,
+    width : 450
   }); 
 const uploadProjectFile = (projectName, projectFile) => {
     const query = new URLSearchParams({name: projectName});
@@ -66,20 +70,8 @@ const FileUpload = () => {
             Notifications.notify("Project created.", "success")
             setState("idle");
             setOpen(true);
-            return (
-                <Dialog
-                open={open}
-                onClose={handleClose}>
-                 <DialogTitle> Edit projects </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                             <Routes>
-                                <Route path="/edit" element={<EditorPage/>}/>
-                            </Routes>
-                        </DialogContentText>
-                    </DialogContent>
-           </Dialog>
-            );
+            
+        
         })
         .catch((err) => {
             Notifications.notify(`Failed to create project.\n`, "error")
@@ -128,16 +120,32 @@ const FileUpload = () => {
             <Confirmation>
                <Box  component="form"  sx={{ '& > :not(style)': { m: 1, width: '25ch' },  }}
                      noValidate autoComplete="off" >
-                <ProjectName
-                    placeholder="Project name"
+                <ProjectName id="outlined-basic" label="Project name" variant="outlined"
                     value={projectName}
                     onChange={handleInpuChange}>
-                    <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+                     
                 </ProjectName>
-                <Button variant="contained" 
+                <Button variant="contained" href = {'/edit'} 
                         onClick={onSubmit}  endIcon={<UploadIcon  disabled={!projectName} />}>Upload file
-                        
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}>
+                                  <DialogTitle> Edit projects </DialogTitle>
+                                  <DialogContent>
+                                      <DialogContentText>
+                                             <EditorPage></EditorPage>
+                                      </DialogContentText>
+                                  </DialogContent>
+                       </Dialog>         
                 </Button>
+            
+                <div>
+                <Projectdecription
+                       id="outlined-multiline-static"
+                       label="project decription"
+                       multiline
+                       rows={4}/>
+                </div>
                 </Box>
             </Confirmation>
         </FileUploadRoot>
