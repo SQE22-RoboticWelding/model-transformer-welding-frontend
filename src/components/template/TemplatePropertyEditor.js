@@ -86,7 +86,7 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
 
     const onValidatedSubmit = () => {
         if (validate()) {
-            onSubmit({name, description, language, fileExtension, version, content});
+            onSubmit({name, description, language, file_extension: fileExtension, version, content});
         }
     };
 
