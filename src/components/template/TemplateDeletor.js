@@ -19,9 +19,8 @@ import Notifications from "../common/Notifications";
 
 
 const deleteTemplate = (id) => {
-    const urlParams = new URLSearchParams({_id: id});
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.templatePath}/:id?${urlParams}`, {method: "DELETE"}))
+        FetchHandler.simple(fetch(`${Settings.templatePath}/${id}`, {method: "DELETE"}))
             .then(() => {
                 Notifications.notify("Removed template.", "success");
                 resolve();

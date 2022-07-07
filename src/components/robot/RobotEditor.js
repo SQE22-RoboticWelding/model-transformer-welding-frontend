@@ -8,14 +8,13 @@ import RobotPropertyEditor from "./RobotPropertyEditor";
 
 
 const updateRobot = (id, robot) => {
-    const urlParams = new URLSearchParams({_id: id});
     const fetchProps = {
         method: "PUT",
         body: JSON.stringify(robot),
         headers: {"Content-Type": "application/json"}
     };
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.robotPath}/:id?${urlParams}`, fetchProps))
+        FetchHandler.simple(fetch(`${Settings.robotPath}/${id}`, fetchProps))
             .then(() => {
                 Notifications.notify("Updated robot.", "success");
                 resolve();

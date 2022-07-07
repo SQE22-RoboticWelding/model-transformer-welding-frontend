@@ -19,9 +19,8 @@ const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateI
         body: JSON.stringify(requestBody),
         headers: {"Content-Type": "application/json"}
     };
-    const urlParams = new URLSearchParams({_id: id});
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.robotTypePath}/:id/?${urlParams}`, fetchProps))
+        FetchHandler.simple(fetch(`${Settings.robotTypePath}/${id}`, fetchProps))
             .then(() => {
                 Notifications.notify("Updated Robot Type", "success");
                 resolve();
