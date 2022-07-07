@@ -49,7 +49,10 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
         setFileExtension(template.file_extension);
         setVersion(template.version);
         setContent(template.content);
-        setTimeout(validate, 100);
+        setNameHelper(DEFAULT_NAME_HELPER);
+        setLanguageHelper(DEFAULT_LANGUAGE_HELPER);
+        setVersionHelper(DEFAULT_VERSION_HELPER);
+        setContentHelper(DEFAULT_CONTENT_HELPER);
     };
 
     const validate = () => {
