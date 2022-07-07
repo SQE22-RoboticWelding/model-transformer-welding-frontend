@@ -13,6 +13,8 @@ import {Button,TextField,Dialog} from '@mui/material';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Notifications from "../common/Notifications";
+import { Routes,Route } from "react-router-dom";
 
 /*
   const UploadButton = styled(Button)({
@@ -44,19 +46,52 @@ const uploadProjectFile = (projectName, projectFile) => {
     );
 };
 
+
+
 const FileUpload = () => {
     const [state, setState] = useState("idle");
     const [projectFile, setProjectFile] = useState();
     const [projectName, setProjectName] = useState("");
     const [open,setOpen] = React.useState(false);
+    const [enableButton] = useState("");
     const handleClose = () => {
         setOpen(false);
       };
 
-      const onSubmit = () => {
+      const onSubmit = (e) => {
         setOpen(true);
+        e.preventDefault();
         uploadProjectFile(projectName, projectFile)
+        .then(() => {
+            Notifications.notify("Project created.", "success")
+            setState("idle");
+            setOpen(true);
+            return (
+                <Dialog
+                open={open}
+                onClose={handleClose}>
+                 <DialogTitle> Edit projects </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                             <Routes>
+                                <Route path="/edit" element={<EditorPage/>}/>
+                            </Routes>
+                        </DialogContentText>
+                    </DialogContent>
+           </Dialog>
+            );
+        })
+        .catch((err) => {
+            Notifications.notify(`Failed to create project.\n`, "error")
+            setState("idle");
+            alert('please enter the project name or upload the data file');
+        })
       };
+
+      const handleInpuChange = (e) => {
+        setProjectName(e.target.value);
+          enableButton(e.target.value);
+    };
     /*const onSubmit = () => {
         setState("uploading");
         uploadProjectFile(projectName, projectFile)
@@ -96,23 +131,13 @@ const FileUpload = () => {
                 <ProjectName
                     placeholder="Project name"
                     value={projectName}
-                    onChange={(e) => { setProjectName(e.target.value)}}>
+                    onChange={handleInpuChange}>
                     <TextField id="outlined-basic" label="Outlined" variant="outlined" />
                 </ProjectName>
                 <Button variant="contained" 
-                        onClick={onSubmit}  endIcon={<UploadIcon />}>Upload file
+                        onClick={onSubmit}  endIcon={<UploadIcon  disabled={!projectName} />}>Upload file
                         
                 </Button>
-                <Dialog
-                    open={open}
-                    onClose={handleClose}>
-                     <DialogTitle> Edit projects </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                 <EditorPage></EditorPage>
-                            </DialogContentText>
-                        </DialogContent>
-               </Dialog>
                 </Box>
             </Confirmation>
         </FileUploadRoot>
