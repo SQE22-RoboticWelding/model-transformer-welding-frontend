@@ -8,14 +8,13 @@ import TemplatePropertyEditor from "./TemplatePropertyEditor";
 
 
 const updateTemplate = (id, template) => {
-    const urlParams = new URLSearchParams({_id: id});
     const fetchProps = {
         method: "PUT",
         body: JSON.stringify(template),
         headers: {"Content-Type": "application/json"}
     };
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.templatePath}/:id?${urlParams}`, fetchProps))
+        FetchHandler.simple(fetch(`${Settings.templatePath}/${id}`, fetchProps))
             .then(() => {
                 Notifications.notify("Updated template.", "success");
                 resolve();

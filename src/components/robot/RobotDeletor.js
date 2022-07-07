@@ -18,9 +18,8 @@ import {ListItemSpreadingChildren} from "../common/StyledComponents";
 
 
 const deleteRobot = (id) => {
-    const urlParams = new URLSearchParams({_id: id});
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.robotPath}/:id?${urlParams}`, {method: "DELETE"}))
+        FetchHandler.simple(fetch(`${Settings.robotPath}/${id}`, {method: "DELETE"}))
             .then(() => {
                 Notifications.notify("Removed robot.", "success");
                 resolve();
