@@ -6,12 +6,13 @@ import Notifications from "../common/Notifications";
 import RobotTypePropertyEditor from "./RobotTypePropertyEditor";
 
 
-const uploadRobotType = ({name, vendor, capacity, range}) => {
+const uploadRobotType = ({name, vendor, capacity, range, generationTemplateId}) => {
     const requestBody = {
         name,
         vendor,
         capacity_load_kg: capacity === "" ? null : capacity,
-        range_m: range === "" ? null : range
+        range_m: range === "" ? null : range,
+        generation_template_id: generationTemplateId === "" ? null : generationTemplateId
     };
     const fetchProps = {
         method: "POST",

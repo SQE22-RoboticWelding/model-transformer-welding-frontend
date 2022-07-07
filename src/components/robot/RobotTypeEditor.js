@@ -7,11 +7,12 @@ import RobotTypePropertyEditor from "./RobotTypePropertyEditor";
 import EditIcon from "@mui/icons-material/Edit";
 
 
-const updateRobotType = ({id, name, vendor, capacity, range}) => {
+const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateId}) => {
     const requestBody = {
         id, name, vendor,
         capacity_load_kg: capacity === "" ? null : capacity,
-        range_m: range === "" ? null : range
+        range_m: range === "" ? null : range,
+        generation_template_id: generationTemplateId === "" ? null : generationTemplateId
     };
     const fetchProps = {
         method: "PUT",

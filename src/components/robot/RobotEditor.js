@@ -27,7 +27,7 @@ const updateRobot = (id, robot) => {
     });
 };
 
-const RobotEditor = ({robot, onRobotUpdated}) => {
+const RobotEditor = ({robot, onRobotUpdated, projects}) => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const onSubmit = (updatedRobot) => {
@@ -58,6 +58,8 @@ const RobotEditor = ({robot, onRobotUpdated}) => {
                         onSubmit={onSubmit}
                         onClose={onClose}
                         submitText="Update"
+                        projects={projects}
+                        robot={robot}
                     />
                 </Container>
             </Dialog>

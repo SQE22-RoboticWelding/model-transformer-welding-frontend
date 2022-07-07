@@ -1,4 +1,4 @@
-import {Button, List, ListItem, TextField} from "@mui/material";
+import {Button, List, ListItem, ListItemText, TextField} from "@mui/material";
 import {useState} from "react";
 import {ListItemSpreadingChildren} from "../common/StyledComponents";
 
@@ -12,10 +12,19 @@ const EMPTY_TEMPLATE = {
     content: ""
 };
 
+const TemplateContentPreviewInputProps = {
+    style: {
+        fontFamily: "monospace",
+        fontSize: 11,
+        minWidth: "max-content"
+    }
+};
+
 const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = EMPTY_TEMPLATE}) => {
     const [name, setName] = useState(template.name);
     const [description, setDescription] = useState(template.description);
     const [content, setContent] = useState(template.content);
+    const [fileName, setFileName] = useState("");
 
     const [contentHelper, setContentHelper] = useState(DEFAULT_CONTENT_HELPER);
     const [nameHelper, setNameHelper] = useState(DEFAULT_NAME_HELPER);
@@ -37,6 +46,22 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
 
         if (validated) {
             onSubmit({name, description, content});
+        }
+    };
+
+    const handleFileUpload = (evt) => {
+        if (evt.target.files?.length > 0) {
+            const file = evt.target.files[0];
+            setFileName(file.name);
+
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const data = evt?.target?.result;
+                if (data) {
+                    setContent(data);
+                }
+            };
+            reader.readAsText(file);
         }
     };
 
@@ -66,11 +91,28 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
             </ListItem>
 
             <ListItem>
+                <Button component="label" variant="outlined" fullWidth>
+                    Upload Template
+                    <input type="file" accept=".jinja" hidden onChange={handleFileUpload}/>
+                </Button>
+            </ListItem>
+
+            {!!fileName &&
+            <ListItem>
+                <ListItemText>
+                    File name: <i>{fileName}</i>
+                </ListItemText>
+            </ListItem>
+            }
+
+            <ListItem>
                 <TextField
                     variant="outlined"
                     error={DEFAULT_CONTENT_HELPER !== contentHelper}
                     helperText={contentHelper}
-                    placeholder="Type description here ..."
+                    placeholder="Type template content here ..."
+                    InputProps={TemplateContentPreviewInputProps}
+                    multiline
                     fullWidth
                     value={content}
                     onChange={(evt) => setContent(evt.target.value)}
