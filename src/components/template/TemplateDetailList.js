@@ -1,40 +1,27 @@
-import {List, ListItem, ListItemText, styled} from "@mui/material";
+import {Table, TableCell, TableRow} from "@mui/material";
 
-const Text = styled(ListItemText)({
-    "> span": {
-        fontSize: "12px"
-    }
-});
 
 const TemplateDetailList = ({template}) => {
+
     return (
-        <List>
-            <ListItem>
-                <Text>
-                    Language:
-                </Text>
-                <Text>
-                    {template.language}
-                </Text>
-            </ListItem>
-            <ListItem>
-                <Text>
-                    Description:
-                </Text>
-                <Text>
-                    {template.description}
-                </Text>
-            </ListItem>
-            <ListItem>
-                <Text>
-                    File extension:
-                </Text>
-                <Text>
-                    {template.file_extension}
-                </Text>
-            </ListItem>
-        </List>
+        <Table>
+            <TableRow>
+                <TableCell>Language:</TableCell>
+                <TableCell>{template.language}</TableCell>
+            </TableRow>
+
+            <TableRow>
+                <TableCell>Description:</TableCell>
+                <TableCell>{template.description}</TableCell>
+            </TableRow>
+
+            <TableRow>
+                <TableCell>File extension:</TableCell>
+                <TableCell>{template.file_extension}</TableCell>
+            </TableRow>
+        </Table>
     );
 };
 
 export default TemplateDetailList;
+
