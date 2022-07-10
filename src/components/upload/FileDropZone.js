@@ -35,7 +35,6 @@ const FileDropZone = ({file, onFile}) => {
             onFile(e[0]);
         }
     };
-
     return (
         <DropZone accept={ACCEPTED_FILETYPES} multiple={false} onDrop={onDrop}>
             {(state) => (
