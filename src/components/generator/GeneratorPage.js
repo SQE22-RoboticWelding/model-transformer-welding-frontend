@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import EditDialog from "./EditDialog";
+import {Link, Outlet} from "react-router-dom";
 import GenerateDialog from "./GenerateDialog";
 
 const GeneratorPageRoot = styled('div')({
@@ -65,12 +65,15 @@ const StyledButton = styled(Button)({
   },
 });
 
+const StyledLink = styled(Link)({
+  textDecoration: "none",
+});
+
 const GeneratorPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(undefined);
     const [generate, setGenerate] = useState(false);
-    const [edit, setEdit] = useState(false);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -81,12 +84,6 @@ const GeneratorPage = () => {
                 setProjectRetrievalState("success");
             })
     }, []);
-
-    const onEdit = (project) => {
-      setSelectedProject(project);
-      setEdit(true);
-      setOpen(true);
-    };
 
     const onGenerate = (project) => {
       setSelectedProject(project);
@@ -118,9 +115,11 @@ const GeneratorPage = () => {
                             <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                             <StyledSingleTableCell>
-                              <StyledButton to="/generate/edit/{project.id}" onClick={() => onEdit(project)}>
-                                    Edit
-                              </StyledButton>
+                              <StyledLink to={`${project.id}`}>
+                                <StyledButton>
+                                  Edit
+                                </StyledButton>
+                              </StyledLink>
                             </StyledSingleTableCell>
                             <StyledSingleTableCell>
                               <StyledButton onClick={() => onGenerate(project)}>
@@ -137,15 +136,6 @@ const GeneratorPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
-            {(edit === true) ? (
-              <EditDialog
-                setEdit={setEdit}
-                open={open}
-                setOpen={setOpen}
-                selectedProject={selectedProject}
-                setSelectedProject={setSelectedProject}
-              />
-            ) : <div></div>}
             {(generate === true) ? (
               <GenerateDialog
                 setGenerate={setGenerate}
@@ -155,6 +145,8 @@ const GeneratorPage = () => {
                 setSelectedProject={setSelectedProject}
               />
             ) : <div></div>}
+
+            <Outlet/>
         </GeneratorPageRoot>
     );
 };
