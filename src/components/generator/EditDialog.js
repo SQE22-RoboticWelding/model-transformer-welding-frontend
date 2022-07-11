@@ -41,8 +41,6 @@ const synchronizeProject = (weldingPoints) => {
 };
 
 const EditDialog = () => {
-    let { id } = useParams();
-
     const [projectRetrievalState, setProjectRetrievalState] = useState("loading");
     const [selectedProject, setSelectedProject] = useState(undefined);
     const [weldingPoints, setWeldingPoints] = useState([]);
@@ -50,6 +48,7 @@ const EditDialog = () => {
     const [open, setOpen] = useState(true);
 
     let navigate = useNavigate();
+    let { id } = useParams();
 
     useEffect(() => {
       FetchHandler.readingJson(fetch(Settings.projectPath + id, {method: "GET"}))
