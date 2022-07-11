@@ -26,6 +26,10 @@ const StyledButton = styled(Button)({
     },
 });
 
+const StyledA = styled('a')({
+  textDecoration: "none",
+});
+
 const StyledIconButton = styled(IconButton)({
     position: 'absolute',
     top: 10,
@@ -73,11 +77,11 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
                 </DialogTitle>
                 <StyledDialogContent dividers>
                     {(projectRetrievalState === "success") ? (
-                        <a href={`${Settings.generatePath + selectedProject.id}`} download>
+                        <StyledA href={`${Settings.generatePath + selectedProject.id}`} download>
                             <StyledButton>
                                 Download
                             </StyledButton>
-                        </a>
+                        </StyledA>
                     ) : projectRetrievalState === "failed" ? (
                         <p>
                             Failed to retrieve data.
