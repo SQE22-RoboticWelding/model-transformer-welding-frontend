@@ -42,7 +42,7 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
 
     useEffect(() => {
         FetchHandler.readingJson(fetch(Settings.generatePath + selectedProject.id, {method: "GET"}))
-            .then((project) => {
+            .then(() => {
                 setProjectRetrievalState("success");
             })
             .catch((err) => {
