@@ -60,7 +60,7 @@ const EditDialog = () => {
               Notifications.notify(`Failed to retrieve projects\n${err}`, "error");
               setProjectRetrievalState("failed");
           });
-      }, [id]);
+    }, [id]);
 
       useEffect(() => {
         FetchHandler.readingJson(fetch(Settings.robotPath, {method: "GET"}))

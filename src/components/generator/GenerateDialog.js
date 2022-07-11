@@ -1,6 +1,9 @@
 import Notifications from "../common/Notifications";
 import {Button, Dialog, DialogContent, DialogTitle, IconButton, styled} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import Settings from "../common/settings";
+import { useEffect, useState } from "react";
+import FetchHandler from "../common/FetchHandler";
 
 const GenerateDialogRoot = styled('div')({
   width: '100%',
@@ -35,6 +38,19 @@ const StyledDialogContent = styled(DialogContent)({
 });
 
 const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedProject}) => {
+    const [projectRetrievalState, setProjectRetrievalState] = useState("loading");
+
+    useEffect(() => {
+        FetchHandler.readingJson(fetch(Settings.generatePath + selectedProject.id, {method: "GET"}))
+            .then((project) => {
+                setProjectRetrievalState("success");
+            })
+            .catch((err) => {
+                Notifications.notify(`Failed to retrieve data\n${err}`, "error");
+                setProjectRetrievalState("failed");
+            });
+      }, [selectedProject]);
+
     const closeGenerate = () => {
         setSelectedProject(undefined);
         setOpen(false);
@@ -56,9 +72,19 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
                     </StyledIconButton>
                 </DialogTitle>
                 <StyledDialogContent dividers>
-                    <StyledButton onClick={() => Notifications.notify("Not implemented yet", "warning")}>
-                        Download
-                    </StyledButton>
+                    {(projectRetrievalState === "success") ? (
+                        <a href={`${Settings.generatePath + selectedProject.id}`} download>
+                            <StyledButton>
+                                Download
+                            </StyledButton>
+                        </a>
+                    ) : projectRetrievalState === "failed" ? (
+                        <p>
+                            Failed to retrieve data.
+                        </p>
+                    ) : projectRetrievalState === "loading" &&
+                        <p>Loading...</p>
+                    }
                 </StyledDialogContent>
             </Dialog>
         </GenerateDialogRoot>
