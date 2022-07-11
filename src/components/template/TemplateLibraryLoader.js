@@ -1,9 +1,23 @@
-import {Button, Dialog, DialogTitle, Divider, List, ListItem, Tooltip, Typography} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Tooltip,
+    Typography
+} from "@mui/material";
 import {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
-import TemplateDetailList from "./TemplateDetailList";
+import TemplateDetails from "./TemplateDetails";
+import CheckIcon from '@mui/icons-material/Check';
 
 
 const retrieveLibraryTemplates = () => new Promise((resolve, reject) => {
@@ -42,28 +56,42 @@ const TemplateLibraryLoader = ({onTemplateChosen}) => {
                 <DialogTitle>
                     Choose pre-defined template
                 </DialogTitle>
-                {retrievalState === "idle" ? (
-                    <List>
-                        {libraryTemplates
-                            .sort((template) => `${template.id}${template.version}`)
-                            .map((template, idx, array) => (
-                                <>
-                                    {idx > 0 && array[idx - 1].id === template.id &&
-                                        <Divider/>
-                                    }
-                                    <ListItem key={template.id}>
-                                        <Tooltip title={<TemplateDetailList template={template}/>} placement="right">
-                                            <Button variant="contained" onClick={() => onChoose(template)}>
-                                                {template.name} {template.version}
-                                            </Button>
+                <DialogContent>
+                    {retrievalState === "idle" ? (
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>File Extension</TableCell>
+                                    <TableCell>Language</TableCell>
+                                    <TableCell>Version</TableCell>
+                                    <TableCell/>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {libraryTemplates
+                                    .sort((template) => `${template.id}${template.version}`)
+                                    .map((template) => (
+                                        <Tooltip title={<TemplateDetails template={template}/>} placement="left">
+                                            <TableRow key={template.id}>
+                                                <TableCell>{template.name}</TableCell>
+                                                <TableCell>{template.file_extension}</TableCell>
+                                                <TableCell>{template.language}</TableCell>
+                                                <TableCell>{template.version.toFixed(2)}</TableCell>
+                                                <TableCell>
+                                                    <IconButton onClick={() => onChoose(template)}>
+                                                        <CheckIcon/>
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
                                         </Tooltip>
-                                    </ListItem>
-                                </>
-                            ))}
-                    </List>
-                ) : retrievalState === "loading" &&
-                    <Typography>Loading...</Typography>
-                }
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    ) : retrievalState === "loading" &&
+                        <Typography>Loading...</Typography>
+                    }
+                </DialogContent>
             </Dialog>
         </>
     );

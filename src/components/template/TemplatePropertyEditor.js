@@ -173,7 +173,7 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
 
             <ListItem>
                 <Button component="label" variant="outlined" fullWidth>
-                    Upload Template
+                    Upload Local Template File
                     <input type="file" hidden onChange={handleFileUpload}/>
                 </Button>
             </ListItem>
