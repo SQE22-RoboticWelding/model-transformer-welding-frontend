@@ -61,7 +61,19 @@ const EditDialog = () => {
               Notifications.notify(`Failed to retrieve projects\n${err}`, "error");
               setProjectRetrievalState("failed");
           });
-  }, []);
+      }, []);
+
+      useEffect(() => {
+        FetchHandler.readingJson(fetch(Settings.robotPath, {method: "GET"}))
+            .then((robots) => {
+                setRobots(robots);
+                setProjectRetrievalState("success");
+            })
+            .catch((err) => {
+                Notifications.notify(`Failed to retrieve robots\n${err}`, "error");
+                setProjectRetrievalState("failed");
+            });
+      }, []);
 
     const onUpdate = () => synchronizeProject(weldingPoints)
         .then(() => Notifications.notify("Synchronized project", "success"))
@@ -82,7 +94,7 @@ const EditDialog = () => {
             fullWidth={true}
           >
             <DialogTitle>
-              <h1>{selectedProject.name}</h1>
+              <b>{selectedProject.name}</b>
               <Link to="/generate">
                 <StyledIconButton>
                   <CloseIcon />

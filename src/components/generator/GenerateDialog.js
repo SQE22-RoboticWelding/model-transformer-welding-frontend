@@ -50,7 +50,7 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
                 fullWidth={true}
             >
                 <DialogTitle>
-                    <h1>{selectedProject.name}</h1>
+                    <b>{selectedProject.name}</b>
                     <StyledIconButton onClick={closeGenerate}>
                         <CloseIcon/>
                     </StyledIconButton>
