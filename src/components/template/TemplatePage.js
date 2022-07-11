@@ -101,7 +101,7 @@ const TemplatePage = () => {
                     </TemplateAccordion>
                 ))
             ) : templateRetrievalState === "idle" ? (
-                <TypographyTextCentered>There are no templts yet!</TypographyTextCentered>
+                <TypographyTextCentered>There are no templates yet!</TypographyTextCentered>
             ) : (
                 <TypographyTextCentered>Loading...</TypographyTextCentered>
             )}
