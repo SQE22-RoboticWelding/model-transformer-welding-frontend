@@ -61,7 +61,7 @@ const FileUpload = () => {
             Notifications.notify("Project created.", "success")
             setState("idle");
             setOpen(true);
-            navigate("/generate/edit", { replace: true });
+            navigate("/edit", { replace: true });
         } else {
             Notifications.notify(`Failed to create project.\n`, "error")
             setState("idle"); 
