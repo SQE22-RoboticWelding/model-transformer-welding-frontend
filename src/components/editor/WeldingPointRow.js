@@ -80,10 +80,10 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots}) => {
                     />
                 ))}
                 <RobotTypeCellValue
-                    value={weldingPoint.robot_id}
-                    onChange={(evt) => updateValue("robot_id", evt.target.value)}
+                    value={weldingPoint.robot_id === null ? "" : weldingPoint.robot_id}
+                    onChange={(evt) => updateValue("robot_id", evt.target.value === "" ? null : evt.target.value)}
                 >
-                    <option value={-1}/>
+                    <option value=""/>
                     {robots.map((robot) => (
                         <option
                             key={robot.id}
