@@ -12,6 +12,7 @@ class Settings {
     static robotPath = `${Settings.backendBase}/robot`;
 
     static templatePath = `${Settings.backendBase}/generationtemplate`;
+    static templateLibraryPath = `${Settings.templatePath}/librarytemplates`
 }
 
 export default Settings;
