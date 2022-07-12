@@ -4,6 +4,7 @@ import {SortableKnob, SortableItem} from "react-easy-sort";
 
 
 const PointRow = styled.div`
+  z-index: 999999999999;
   padding: 8px;
   margin-top: 6px;
   background-color: #E5E5E5;
