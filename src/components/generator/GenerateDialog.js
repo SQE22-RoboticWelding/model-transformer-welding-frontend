@@ -45,7 +45,7 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
     const [projectRetrievalState, setProjectRetrievalState] = useState("loading");
 
     useEffect(() => {
-        FetchHandler.readingJson(fetch(Settings.generatePath + selectedProject.id, {method: "GET"}))
+        FetchHandler.simple(fetch(Settings.generatePath + selectedProject.id, {method: "GET"}))
             .then(() => {
                 setProjectRetrievalState("success");
             })
