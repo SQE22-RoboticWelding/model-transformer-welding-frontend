@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
+import { Button } from "@mui/material";
 
 
 const PointRow = styled.div`
@@ -58,7 +59,7 @@ const RobotTypeCellValue = styled.select`
   border: none;
 `;
 
-const WeldingPointRow = ({weldingPoint, updateValue, robots}) => {
+const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
     return (
         <SortableItem>
             <PointRow>
@@ -94,6 +95,13 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots}) => {
                         </option>
                     ))}
                 </RobotTypeCellValue>
+
+                <Button
+                  key={"Delete"}
+                  onClick={() => {onDelete(weldingPoint.id)}}
+                >
+                    Delete
+                </Button>
             </PointRow>
         </SortableItem>
     );

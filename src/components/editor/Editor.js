@@ -5,6 +5,52 @@ import styled from "styled-components";
 import WeldingPointRow from "./WeldingPointRow";
 import FetchHandler from "../common/FetchHandler";
 import Notifications from "../common/Notifications";
+import { Button } from "@mui/material";
+
+
+const PointRow = styled.div`
+  z-index: 999999999999;
+  padding: 8px;
+  margin-top: 6px;
+  background-color: #E5E5E5;
+  border-radius: 8px;
+  
+  > :not(:first-child) {
+    border-right: 2px solid #8E8E8E;
+  }
+`;
+
+const CellName = styled.input`
+  display: inline-block;
+  width: calc(100% * 3 / 11 - 0px);
+  border: none;
+  background: none;
+
+  :focus {
+    outline: none;
+    background-color: #F8F8F8;
+  }
+`;
+const CellValue = styled.input`
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% * 1 / 11 - 16px);
+  border: none;
+  background: none;
+
+  :focus {
+    outline: none;
+    background-color: #F8F8F8;
+  }
+`;
+
+const RobotTypeCellValue = styled.select`
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% * 1 / 11 - 16px);
+  background: none;
+  border: none;
+`;
 
 
 const PointTable = styled.div`
@@ -64,15 +110,32 @@ const retrieveWeldingPoints = (projectId, onWeldingPoints, setState) => {
 
 const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
     const [pointRetrievalState, setPointRetrievalState] = useState("init");
+    var addWeldingPoint = {
+        "project_id": project.id,
+        "robot_id": null,
+        "welding_order": null,
+        "name": "Name",
+        "description": null,
+        "x_original": null,
+        "y_original": null,
+        "z_original": null,
+        "x": null,
+        "y": null,
+        "z": null,
+        "roll": null,
+        "pitch": null,
+        "yaw": null,
+        "tolerance": null
+    };
 
-    useEffect(() => retrieveWeldingPoints(project.id, setWeldingPoints, setPointRetrievalState), [project.id]);
+    useEffect(() => retrieveWeldingPoints(project.id, setWeldingPoints, setPointRetrievalState), [project.id, setWeldingPoints]);
     useEffect(() => {
     }, []);
 
     const onSortEnd = (oldIndex, newIndex) => {
         setWeldingPoints(arrayMove(oldIndex, newIndex, weldingPoints))
     };
-
+    
     const updateValue = (weldingPoint, field, value) => {
         const idx = weldingPoints.indexOf(weldingPoint);
         setWeldingPoints([
@@ -80,6 +143,30 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
             {...weldingPoint, [field]: value === "" ? null : value},
             ...weldingPoints.slice(idx + 1)
         ]);
+    };
+
+    const onDelete = (id) => {
+        FetchHandler.simple(fetch(Settings.weldingPointsPath + "/" + id, {method: "DELETE"}))
+                .then(() => {
+                    setWeldingPoints(weldingPoints.filter(weldingPoint => weldingPoint.id !== id));
+                })
+                .catch((err) => {
+                    Notifications.notify(`Failed to retrieve data\n${err}`, "error");
+                });
+    };
+
+    const onAdd = () => {
+        setWeldingPoints(weldingPoints => [...weldingPoints, addWeldingPoint]);
+
+        return FetchHandler.simple(fetch(
+            `${Settings.weldingPointsPath}`,
+            {method: "PUT", body: JSON.stringify(weldingPoints), headers: {"Content-Type": "application/json"}}
+        ))
+        .then(() => {
+        })
+        .catch((err) => {
+            Notifications.notify(`Failed to retrieve data\n${err}`, "error");
+        });
     };
 
     return (
@@ -96,6 +183,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                         <CellValueHeader>Yaw</CellValueHeader>
                         <CellValueHeader>Tolerance</CellValueHeader>
                         <CellValueHeader>Robot</CellValueHeader>
+                        <CellValueHeader>Delete</CellValueHeader>
                         <SortableList onSortEnd={onSortEnd}>
                             {weldingPoints
                                 .sort((a, b) => a.welding_order > b.welding_order)
@@ -105,9 +193,63 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                         weldingPoint={weldingPoint}
                                         updateValue={(field, value) => updateValue(weldingPoint, field, value)}
                                         robots={robots}
+                                        onDelete={onDelete}
                                     />
                                 ))}
                         </SortableList>
+                        <PointRow>
+                            <CellName
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["name"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["x"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["y"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["z"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["roll"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["pitch"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["yaw"] = evt.target.value}}
+                            />
+                            <CellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["tolerance"] = evt.target.value}}
+                            />
+                            <RobotTypeCellValue
+                                value={null}
+                                onChange={(evt) => {addWeldingPoint["robot_id"] = evt.target.value}}
+                            >
+                            <option value=""/>
+                                {robots.map((robot) => (
+                                    <option
+                                        key={robot.id}
+                                        value={robot.id}
+                                    >
+                                        [{robot.id}]: {robot.description}
+                                    </option>
+                                ))}
+                            </RobotTypeCellValue>
+                            <Button
+                                onClick={() => {onAdd()}}
+                            >
+                                Add
+                            </Button>
+                        </PointRow>
                     </PointTable>
                 ) : (
                     <p>Project has no welding points.</p>
