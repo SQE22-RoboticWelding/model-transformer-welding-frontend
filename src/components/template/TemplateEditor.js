@@ -16,11 +16,11 @@ const updateTemplate = (id, template) => {
     return new Promise((resolve, reject) => {
         FetchHandler.simple(fetch(`${Settings.templatePath}/${id}`, fetchProps))
             .then(() => {
-                Notifications.notify("Updated template.", "success");
+                Notifications.notify("Saved template.", "success");
                 resolve();
             })
             .catch((err) => {
-                Notifications.notify(`Failed to update template.\n${err}`, "error");
+                Notifications.notify(`Failed to save template.\n${err}`, "error");
                 reject();
             });
     });
@@ -69,7 +69,7 @@ const RobotEditor = ({template, onTemplateUpdated}) => {
                         template={template}
                         onSubmit={onSubmit}
                         onCancel={onClose}
-                        submissionText="Update"
+                        submissionText="Save"
                     />
                 </Container>
             </Dialog>

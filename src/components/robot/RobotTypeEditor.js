@@ -22,11 +22,11 @@ const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateI
     return new Promise((resolve, reject) => {
         FetchHandler.simple(fetch(`${Settings.robotTypePath}/${id}`, fetchProps))
             .then(() => {
-                Notifications.notify("Updated Robot Type", "success");
+                Notifications.notify("Saved Robot Type", "success");
                 resolve();
             })
             .catch((err) => {
-                Notifications.notify(`Unable to update robot type\n${err}`, "error");
+                Notifications.notify(`Unable to save robot type\n${err}`, "error");
                 reject();
             });
     });
@@ -62,12 +62,12 @@ const RobotTypeEditor = ({onRequestRobotTypeRefresh, robotType}) => {
             </Tooltip>
 
             <Dialog open={dialogOpen} onClose={onClose}>
-                <DialogTitle>Update a Robot Type</DialogTitle>
+                <DialogTitle>Update Robot Type</DialogTitle>
 
                 <RobotTypePropertyEditor
                     onSubmit={onSubmit}
                     robotType={robotType}
-                    submissionText="Update"
+                    submissionText="Save"
                     onCancel={onClose}
                 />
             </Dialog>

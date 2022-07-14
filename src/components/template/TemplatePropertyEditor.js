@@ -165,7 +165,7 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
                     helperText={versionHelper}
                     placeholder="Type version here ..."
                     fullWidth
-                    value={version}
+                    value={Number(version).toFixed(2)}
                     inputProps={{type: "number", step: 0.01}}
                     onChange={(evt) => setVersion(Number(evt.target.value).toFixed(2))}
                 />
