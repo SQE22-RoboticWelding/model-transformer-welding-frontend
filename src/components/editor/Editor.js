@@ -200,34 +200,42 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                         <PointRow>
                             <CellName
                                 value={null}
+                                placeholder="Name"
                                 onChange={(evt) => {addWeldingPoint["name"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="X"
                                 onChange={(evt) => {addWeldingPoint["x"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="Y"
                                 onChange={(evt) => {addWeldingPoint["y"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="Z"
                                 onChange={(evt) => {addWeldingPoint["z"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="Roll"
                                 onChange={(evt) => {addWeldingPoint["roll"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="Pitch"
                                 onChange={(evt) => {addWeldingPoint["pitch"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="Yaw"
                                 onChange={(evt) => {addWeldingPoint["yaw"] = evt.target.value}}
                             />
                             <CellValue
                                 value={null}
+                                placeholder="Tolerance"
                                 onChange={(evt) => {addWeldingPoint["tolerance"] = evt.target.value}}
                             />
                             <RobotTypeCellValue
