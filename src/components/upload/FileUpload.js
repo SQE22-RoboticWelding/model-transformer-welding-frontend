@@ -1,36 +1,41 @@
-import styled from "styled-components";
 import FileDropZone from "./FileDropZone";
-import {useState} from "react";
 import Settings from "../common/settings";
-import Notifications from "../common/Notifications";
 import {Confirmation} from "../common/StyledComponents";
 import FetchHandler from "../common/FetchHandler";
+import {styled} from '@mui/system';
+import UploadIcon from '@mui/icons-material/Upload';
+import {useState} from "react";
+import EditorPage from "../editor/EditorPage";
+import Box from '@mui/material/Box';
+import * as React from 'react';
+import {Button,TextField,Dialog} from '@mui/material';
+import Notifications from "../common/Notifications";
+import { useNavigate } from "react-router-dom";
 
 
-const FileUploadRoot = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Input = styled.input`
-  height: 2em;
-  border-radius: 4px;
-  border: none;
-  margin-right: 20px;
-`;
-
-const UploadButton = styled.button`
-  height: 2em;
-  width: 10em;
-`;
-
+  const FileUploadRoot = styled('div')({
+    alignItems: "center",
+    boxShadow: '0 3px 5px 2px ',
+    background: '#FFFFFF',
+    padding: '0 20px',
+    
+  });
+  
+  const ProjectName = styled(TextField)({
+    height: 45,
+    margin:'none',
+    width: 30,
+    required : true,
+  }); 
+  const Projectdecription= styled(TextField)({
+    marginTop:20 ,
+    required : true,
+    width : 450
+  }); 
 const uploadProjectFile = (projectName, projectFile) => {
     const query = new URLSearchParams({name: projectName});
-
     const body = new FormData();
     body.append("file", projectFile);
-
     return FetchHandler.simple(
         fetch(`${Settings.uploadPath}?${query}`, {method: "POST", body})
     );
@@ -40,40 +45,61 @@ const FileUpload = () => {
     const [state, setState] = useState("idle");
     const [projectFile, setProjectFile] = useState();
     const [projectName, setProjectName] = useState("");
+    const [open,setOpen] = React.useState(false);
+    const [enableButton] = useState("");
+    const navigate = useNavigate();
+    const handleClose = () => {
+        setOpen(false);
+      };
+    
 
-    const onSubmit = () => {
-        setState("uploading");
+    const onSubmit = (e) => {
+        setOpen(true);
+        e.preventDefault();
         uploadProjectFile(projectName, projectFile)
-            .then(() => {
-                Notifications.notify("Project created.", "success")
-                setState("idle");
-            })
-            .catch((err) => {
-                Notifications.notify(`Failed to create project.\n${err}`, "error")
-                setState("idle");
-            })
-    };
+         if (projectName && projectFile) {
+            Notifications.notify("Project created.", "success")
+            setState("idle");
+            setOpen(true);
+            navigate("/edit", { replace: true });
+        } else {
+            Notifications.notify(`Failed to create project.\n`, "error")
+            setState("idle"); 
+            alert('please enter the project name or upload the data file');
+        }
+      };
 
+      const handleInpuChange = (e) => {
+        setProjectName(e.target.value);
+        enableButton(e.target.value);
+    };
+    
     return (
         <FileUploadRoot>
             <FileDropZone
                 file={projectFile}
                 onFile={setProjectFile}
             />
-
+                
             <Confirmation>
-                <Input
-                    placeholder="Project name"
+               <Box  component="form"  sx={{ '& > :not(style)': { m: 1, width: '25ch' },  }}
+                     noValidate autoComplete="off" >
+                <ProjectName id="outlined-basic" label="Project name" variant="outlined"
                     value={projectName}
-                    onChange={(e) => setProjectName(e.target.value)}
-                />
-
-                <UploadButton
-                    onClick={onSubmit}
-                    disabled={!projectName || !projectFile || state === "uploading"}
-                >
-                    Upload file
-                </UploadButton>
+                    onChange={handleInpuChange}>
+                     
+                </ProjectName>
+                <Button variant="contained" 
+                        onClick={onSubmit}  endIcon={<UploadIcon />} >Upload file        
+                </Button>
+                <div>
+                <Projectdecription
+                       id="outlined-multiline-static"
+                       label="project decription"
+                       multiline
+                       rows={4}/>
+                </div>
+                </Box>
             </Confirmation>
         </FileUploadRoot>
     );
