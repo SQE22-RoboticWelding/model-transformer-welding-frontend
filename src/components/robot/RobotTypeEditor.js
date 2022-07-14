@@ -7,11 +7,13 @@ import RobotTypePropertyEditor from "./RobotTypePropertyEditor";
 import EditIcon from "@mui/icons-material/Edit";
 
 
-const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateId}) => {
+const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateId, modelFileName, modelFileContent}) => {
     const requestBody = {
         id, name, vendor,
-        capacity_load_kg: capacity === "" ? null : capacity,
-        range_m: range === "" ? null : range,
+        model_file_name: modelFileName || null,
+        model_file: modelFileContent || null,
+        capacity_load_kg: capacity === "" ? null : capacity,  // cannot use || here because 0 is valid too
+        range_m: range === "" ? null : range,  // cannot use || here because 0 is valid too
         generation_template_id: generationTemplateId === "" ? null : generationTemplateId
     };
     const fetchProps = {
