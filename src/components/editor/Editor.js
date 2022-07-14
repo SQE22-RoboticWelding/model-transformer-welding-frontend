@@ -5,36 +5,29 @@ import styled from "styled-components";
 import WeldingPointRow from "./WeldingPointRow";
 import FetchHandler from "../common/FetchHandler";
 import Notifications from "../common/Notifications";
-import { Button } from "@mui/material";
+import {Button, Container} from "@mui/material";
 
 
 const PointRow = styled.div`
-  z-index: 999999999999;
-  padding: 8px;
+  padding: 8px 8px 8px 26px;
   margin-top: 6px;
   background-color: #E5E5E5;
   border-radius: 8px;
-  
-  > :not(:first-child) {
-    border-right: 2px solid #8E8E8E;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > :not(:nth-child(1), :last-child) {
+    border-left: 2px solid #8E8E8E;
   }
 `;
 
-const CellName = styled.input`
-  display: inline-block;
-  width: calc(100% * 3 / 11 - 0px);
-  border: none;
-  background: none;
-
-  :focus {
-    outline: none;
-    background-color: #F8F8F8;
-  }
-`;
-const CellValue = styled.input`
+const ValueInput = styled.input`
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
+  width: 100%;
+  padding: 0;
   border: none;
   background: none;
 
@@ -43,11 +36,16 @@ const CellValue = styled.input`
     background-color: #F8F8F8;
   }
 `;
+const Cell = (props) => (
+    <Container style={{padding: "0", display: "inline", width: "calc(100% * 1 / 9 - 16px)", margin: "0"}}>
+        <ValueInput {...props}/>
+    </Container>
+);
 
 const RobotTypeCellValue = styled.select`
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
+  width: calc(100% * 1 / 9 - 16px);
   background: none;
   border: none;
 `;
@@ -57,18 +55,11 @@ const PointTable = styled.div`
   user-select: none;
 `;
 
-const CellNameHeader = styled.div`
-  margin-left: 24px;
-  display: inline-block;
-  text-align: center;
-  width: calc(100% * 3 / 11 - 16px);
-`;
-
-const CellValueHeader = styled.div`
+const HeaderCell = styled.div`
   display: inline-block;
   text-align: center;
   vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
+  width: calc(100% * 1 / 9 - 16px);
   border: none;
   background: none;
 `;
@@ -174,16 +165,16 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
             {pointRetrievalState === "success" ? (
                 weldingPoints.length > 0 ? (
                     <PointTable>
-                        <CellNameHeader>Name</CellNameHeader>
-                        <CellValueHeader>X</CellValueHeader>
-                        <CellValueHeader>Y</CellValueHeader>
-                        <CellValueHeader>Z</CellValueHeader>
-                        <CellValueHeader>Roll</CellValueHeader>
-                        <CellValueHeader>Pitch</CellValueHeader>
-                        <CellValueHeader>Yaw</CellValueHeader>
-                        <CellValueHeader>Tolerance</CellValueHeader>
-                        <CellValueHeader>Robot</CellValueHeader>
-                        <CellValueHeader>Delete</CellValueHeader>
+                        <HeaderCell>Name</HeaderCell>
+                        <HeaderCell>X</HeaderCell>
+                        <HeaderCell>Y</HeaderCell>
+                        <HeaderCell>Z</HeaderCell>
+                        <HeaderCell>Roll</HeaderCell>
+                        <HeaderCell>Pitch</HeaderCell>
+                        <HeaderCell>Yaw</HeaderCell>
+                        <HeaderCell>Tolerance</HeaderCell>
+                        <HeaderCell>Robot</HeaderCell>
+                        <HeaderCell>Delete</HeaderCell>
                         <SortableList onSortEnd={onSortEnd}>
                             {weldingPoints
                                 .sort((a, b) => a.welding_order > b.welding_order)
@@ -198,35 +189,35 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                 ))}
                         </SortableList>
                         <PointRow>
-                            <CellName
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["name"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["x"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["y"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["z"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["roll"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["pitch"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["yaw"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={null}
                                 onChange={(evt) => {addWeldingPoint["tolerance"] = evt.target.value}}
                             />
@@ -245,6 +236,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                 ))}
                             </RobotTypeCellValue>
                             <Button
+                                style={{width: "84px"}}
                                 onClick={() => {onAdd()}}
                             >
                                 Add
