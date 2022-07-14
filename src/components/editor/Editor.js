@@ -156,13 +156,14 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
     };
 
     const onAdd = () => {
-        setWeldingPoints(weldingPoints => [...weldingPoints, addWeldingPoint]);
+        addWeldingPoint["welding_order"] = weldingPoints.at(-1)["welding_order"] + 1;
 
-        return FetchHandler.simple(fetch(
+        FetchHandler.simple(fetch(
             `${Settings.weldingPointsPath}`,
-            {method: "PUT", body: JSON.stringify(weldingPoints), headers: {"Content-Type": "application/json"}}
+            {method: "POST", body: JSON.stringify(addWeldingPoint), headers: {"Content-Type": "application/json"}}
         ))
         .then(() => {
+            setWeldingPoints(weldingPoints => [...weldingPoints, addWeldingPoint]);
         })
         .catch((err) => {
             Notifications.notify(`Failed to retrieve data\n${err}`, "error");
@@ -206,17 +207,26 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                             <CellValue
                                 value={null}
                                 placeholder="X"
-                                onChange={(evt) => {addWeldingPoint["x"] = evt.target.value}}
+                                onChange={(evt) => {
+                                    addWeldingPoint["x_original"] = evt.target.value;
+                                    addWeldingPoint["x"] = evt.target.value;
+                                }}
                             />
                             <CellValue
                                 value={null}
                                 placeholder="Y"
-                                onChange={(evt) => {addWeldingPoint["y"] = evt.target.value}}
+                                onChange={(evt) => {
+                                    addWeldingPoint["y_original"] = evt.target.value;
+                                    addWeldingPoint["y"] = evt.target.value;
+                                }}
                             />
                             <CellValue
                                 value={null}
                                 placeholder="Z"
-                                onChange={(evt) => {addWeldingPoint["z"] = evt.target.value}}
+                                onChange={(evt) => {
+                                    addWeldingPoint["z_original"] = evt.target.value;
+                                    addWeldingPoint["z"] = evt.target.value;
+                                }}
                             />
                             <CellValue
                                 value={null}
