@@ -18,12 +18,6 @@ const NavBar = () => {
                 </ListItem>
 
                 <ListItem>
-                    <ListItemButton component={RouterLink} to="/edit">
-                        <ListItemText primary="Edit Projects"/>
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem>
                     <ListItemButton component={RouterLink} to="/generate">
                         <ListItemText primary="View Project"/>
                     </ListItemButton>

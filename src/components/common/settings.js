@@ -6,7 +6,7 @@ class Settings {
     static projectsPath = `${Settings.backendBase}/project`;
     static projectPath = `${Settings.backendBase}/project/`;
     static uploadPath = `${Settings.projectsPath}/upload`;
-    static generatePath = `${Settings.projectsPath}/{id}/generate?_id=`;
+    static generatePath = (project_id) => `${Settings.projectsPath}/${project_id}/generate`;
 
     static weldingPointsPath = `${Settings.backendBase}/weldingpoint`;
 

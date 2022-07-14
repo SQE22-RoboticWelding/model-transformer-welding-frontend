@@ -1,9 +1,7 @@
-import Notifications from "../common/Notifications";
 import {Button, Dialog, DialogContent, DialogTitle, IconButton, styled} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Settings from "../common/settings";
-import { useEffect, useState } from "react";
-import FetchHandler from "../common/FetchHandler";
+import {useEffect, useState} from "react";
 
 const GenerateDialogRoot = styled('div')({
   width: '100%',
@@ -42,17 +40,17 @@ const StyledDialogContent = styled(DialogContent)({
 });
 
 const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedProject}) => {
-    const [projectRetrievalState, setProjectRetrievalState] = useState("loading");
+    const [projectRetrievalState, setProjectRetrievalState] = useState("success");
 
     useEffect(() => {
-        FetchHandler.simple(fetch(Settings.generatePath + selectedProject.id, {method: "GET"}))
-            .then(() => {
-                setProjectRetrievalState("success");
-            })
-            .catch((err) => {
-                Notifications.notify(`Failed to retrieve data\n${err}`, "error");
-                setProjectRetrievalState("failed");
-            });
+        // FetchHandler.simple(fetch(Settings.generatePath(selectedProject.id), {method: "GET"}))
+        //     .then(() => {
+        //         setProjectRetrievalState("success");
+        //     })
+        //     .catch((err) => {
+        //         Notifications.notify(`Failed to retrieve data\n${err}`, "error");
+        //         setProjectRetrievalState("failed");
+        //     });
       }, [selectedProject]);
 
     const closeGenerate = () => {
@@ -77,7 +75,7 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
                 </DialogTitle>
                 <StyledDialogContent dividers>
                     {(projectRetrievalState === "success") ? (
-                        <StyledA href={`${Settings.generatePath + selectedProject.id}`} download>
+                        <StyledA href={Settings.generatePath(selectedProject.id)} download>
                             <StyledButton>
                                 Download
                             </StyledButton>
