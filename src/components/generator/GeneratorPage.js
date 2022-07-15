@@ -74,7 +74,6 @@ const GeneratorPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(undefined);
-    const [generate, setGenerate] = useState(false);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -88,7 +87,6 @@ const GeneratorPage = () => {
 
     const onGenerate = (project) => {
       setSelectedProject(project);
-      setGenerate(true);
       setOpen(true);
     };
 
@@ -153,15 +151,14 @@ const GeneratorPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
-            {(generate === true) ? (
+            {selectedProject && (
               <GenerateDialog
-                setGenerate={setGenerate}
                 open={open}
                 setOpen={setOpen}
                 selectedProject={selectedProject}
                 setSelectedProject={setSelectedProject}
               />
-            ) : <div></div>}
+            )}
 
             <Outlet/>
         </GeneratorPageRoot>
