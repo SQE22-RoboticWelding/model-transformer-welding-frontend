@@ -11,8 +11,12 @@ const PointRow = styled.div`
   background-color: #E5E5E5;
   border-radius: 8px;
   
-  > :not(:first-child) {
-    border-right: 2px solid #8E8E8E;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  > :not(:nth-child(1), :nth-child(2), :last-child) {
+    border-left: 2px solid #8E8E8E;
   }
 `;
 
@@ -21,21 +25,10 @@ const StyledIconDrag = styled(IconDrag)`
   height: 14px;
 `;
 
-const CellName = styled.input`
-  display: inline-block;
-  width: calc(100% * 3 / 11 - 16px);
-  border: none;
-  background: none;
-
-  :focus {
-    outline: none;
-    background-color: #F8F8F8;
-  }
-`;
-const CellValue = styled.input`
+const Cell = styled.input`
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
+  width: calc(100% * 1 / 9 - 16px);
   border: none;
   background: none;
 
@@ -54,7 +47,7 @@ const CellKnob = styled.div`
 const RobotTypeCellValue = styled.select`
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
+  width: calc(100% * 1 / 9 - 16px);
   background: none;
   border: none;
 `;
@@ -69,13 +62,13 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                     </CellKnob>
                 </SortableKnob>
 
-                <CellName
+                <Cell
                     value={weldingPoint.name}
                     onChange={(evt) => updateValue("name", evt.target.value)}
                 />
 
                 {["x", "y", "z", "roll", "pitch", "yaw", "tolerance"].map((field) => (
-                    <CellValue
+                    <Cell
                         key={field}
                         value={weldingPoint[field] === null ? "" : weldingPoint[field]}
                         onChange={(evt) => updateValue(field, evt.target.value)}
@@ -98,6 +91,7 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
 
                 <Button
                   key={"Delete"}
+                  style={{width: "84px"}}
                   onClick={() => {onDelete(weldingPoint.id)}}
                 >
                     Delete
