@@ -16,11 +16,11 @@ const updateRobot = (id, robot) => {
     return new Promise((resolve, reject) => {
         FetchHandler.simple(fetch(`${Settings.robotPath}/${id}`, fetchProps))
             .then(() => {
-                Notifications.notify("Updated robot.", "success");
+                Notifications.notify("Saved robot.", "success");
                 resolve();
             })
             .catch((err) => {
-                Notifications.notify(`Failed to update robot.\n${err}`, "error");
+                Notifications.notify(`Failed to save robot.\n${err}`, "error");
                 reject();
             });
     });
@@ -56,7 +56,7 @@ const RobotEditor = ({robot, onRobotUpdated, projects}) => {
                     <RobotPropertyEditor
                         onSubmit={onSubmit}
                         onClose={onClose}
-                        submitText="Update"
+                        submitText="Save"
                         projects={projects}
                         robot={robot}
                     />
