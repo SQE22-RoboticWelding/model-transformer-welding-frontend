@@ -190,12 +190,12 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                 ))}
                         </SortableList>
                         <PointRow>
-                            <CellName
+                            <Cell
                                 value={undefined}
                                 placeholder="Name"
                                 onChange={(evt) => {addWeldingPoint["name"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="X"
                                 onChange={(evt) => {
@@ -203,7 +203,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                     addWeldingPoint["x"] = evt.target.value;
                                 }}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="Y"
                                 onChange={(evt) => {
@@ -211,7 +211,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                     addWeldingPoint["y"] = evt.target.value;
                                 }}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="Z"
                                 onChange={(evt) => {
@@ -219,22 +219,22 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                     addWeldingPoint["z"] = evt.target.value;
                                 }}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="Roll"
                                 onChange={(evt) => {addWeldingPoint["roll"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="Pitch"
                                 onChange={(evt) => {addWeldingPoint["pitch"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="Yaw"
                                 onChange={(evt) => {addWeldingPoint["yaw"] = evt.target.value}}
                             />
-                            <CellValue
+                            <Cell
                                 value={undefined}
                                 placeholder="Tolerance"
                                 onChange={(evt) => {addWeldingPoint["tolerance"] = evt.target.value}}
