@@ -30,10 +30,9 @@ const StyledA = styled('a')({
   textDecoration: "none",
 });
 
-const StyledIconButton = styled(IconButton)({
-    position: 'absolute',
-    top: 10,
-    right: 0,
+const StyledDialogTitle = styled(DialogTitle)({
+    display: "flex",
+    justifyContent: "space-between"
 });
 
 const StyledDialogContent = styled(DialogContent)({
@@ -41,11 +40,11 @@ const StyledDialogContent = styled(DialogContent)({
     justifyContent: "center"
 });
 
-const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedProject}) => {
+const EditDialog = ({open, setOpen, selectedProject, setSelectedProject}) => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("loading");
 
     useEffect(() => {
-        FetchHandler.simple(fetch(Settings.generatePath + selectedProject.id, {method: "GET"}))
+        FetchHandler.simple(fetch(Settings.generatePath(selectedProject.id), {method: "GET"}))
             .then(() => {
                 setProjectRetrievalState("success");
             })
@@ -58,7 +57,6 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
     const closeGenerate = () => {
         setSelectedProject(undefined);
         setOpen(false);
-        setGenerate(false);
     };
 
     return (
@@ -66,18 +64,18 @@ const EditDialog = ({setGenerate, open, setOpen, selectedProject, setSelectedPro
             <Dialog
                 open={open}
                 onClose={closeGenerate}
-                maxWidth={'xs'}
+                maxWidth="xs"
                 fullWidth={true}
             >
-                <DialogTitle>
+                <StyledDialogTitle>
                     <b>{selectedProject.name}</b>
-                    <StyledIconButton onClick={closeGenerate}>
+                    <IconButton onClick={closeGenerate}>
                         <CloseIcon/>
-                    </StyledIconButton>
-                </DialogTitle>
+                    </IconButton>
+                </StyledDialogTitle>
                 <StyledDialogContent dividers>
                     {(projectRetrievalState === "success") ? (
-                        <StyledA href={`${Settings.generatePath + selectedProject.id}`} download>
+                        <StyledA href={`${Settings.generatePath(selectedProject.id)}`} download>
                             <StyledButton>
                                 Download
                             </StyledButton>

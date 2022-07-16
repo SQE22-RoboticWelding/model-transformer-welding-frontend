@@ -19,7 +19,6 @@ const EditDialogRoot = styled('div')({
 });
 
 const StyledButton = styled(Button)({
-  cursor: 'pointer',
   width: '128px',
 
   ':hover': {
@@ -27,11 +26,10 @@ const StyledButton = styled(Button)({
   },
 });
 
-const StyledIconButton = styled(IconButton)({
-    position: 'absolute',
-    top: 10,
-    right: 0,
-  });
+const StyledDialogTitle = styled(DialogTitle)({
+  display: "flex",
+  justifyContent: "space-between"
+});
 
 const synchronizeProject = (weldingPoints) => {
   return FetchHandler.simple(fetch(
@@ -89,17 +87,17 @@ const EditDialog = () => {
           <Dialog
             open={open}
             onClose={closeEdit}
-            maxWidth={'lg'}
+            maxWidth="lg"
             fullWidth={true}
           >
-            <DialogTitle>
+            <StyledDialogTitle>
               <b>{selectedProject.name}</b>
               <Link to="/generate">
-                <StyledIconButton>
+                <IconButton>
                   <CloseIcon />
-                </StyledIconButton>
+                </IconButton>
               </Link>
-            </DialogTitle>
+            </StyledDialogTitle>
             <DialogContent dividers>
               <Editor
                 project={selectedProject}
