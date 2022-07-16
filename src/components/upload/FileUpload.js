@@ -5,28 +5,18 @@ import FetchHandler from "../common/FetchHandler";
 import {styled} from '@mui/system';
 import UploadIcon from '@mui/icons-material/Upload';
 import {useState} from "react";
-import EditorPage from "../editor/EditorPage";
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import {Button,TextField,Dialog} from '@mui/material';
+import {Button,TextField} from '@mui/material';
 import Notifications from "../common/Notifications";
 import { useNavigate } from "react-router-dom";
-
 
   const FileUploadRoot = styled('div')({
     alignItems: "center",
     boxShadow: '0 3px 5px 2px ',
-    background: '#FFFFFF',
+
     padding: '0 20px',
-    
   });
-  
-  const ProjectName = styled(TextField)({
-    height: 45,
-    margin:'none',
-    width: 30,
-    required : true,
-  }); 
   const Projectdecription= styled(TextField)({
     marginTop:20 ,
     required : true,
@@ -48,12 +38,8 @@ const FileUpload = () => {
     const [open,setOpen] = React.useState(false);
     const [enableButton] = useState("");
     const navigate = useNavigate();
-    const handleClose = () => {
-        setOpen(false);
-      };
-    
 
-    const onSubmit = (e) => {
+       const onSubmit = (e) => {
         setOpen(true);
         e.preventDefault();
         uploadProjectFile(projectName, projectFile)
@@ -62,18 +48,24 @@ const FileUpload = () => {
             setState("idle");
             setOpen(true);
             navigate("/edit", { replace: true });
-        } else {
+        } else if (!projectName && projectFile){
             Notifications.notify(`Failed to create project.\n`, "error")
             setState("idle"); 
-            alert('please enter the project name or upload the data file');
-        }
+            alert('please enter the project name');
+        } else if (projectName && !projectFile){
+          Notifications.notify(`Failed to create project.\n`, "error")
+          setState("idle"); 
+          alert('please upload the project file');
+      }  else {
+           Notifications.notify(`Failed to create project.\n`, "error")
+           setState("idle"); 
+           alert('please upload the project file and enter the project name');
+      }
       };
-
-      const handleInpuChange = (e) => {
+      const handleInputChange = (e) => {
         setProjectName(e.target.value);
         enableButton(e.target.value);
     };
-    
     return (
         <FileUploadRoot>
             <FileDropZone
@@ -82,15 +74,14 @@ const FileUpload = () => {
             />
                 
             <Confirmation>
-               <Box  component="form"  sx={{ '& > :not(style)': { m: 1, width: '25ch' },  }}
-                     noValidate autoComplete="off" >
-                <ProjectName id="outlined-basic" label="Project name" variant="outlined"
+               <Box sx={{ '& > :not(style)': { m: 1, width: '25ch' },  }}>
+                <TextField label="Project name" variant="standard" placeholder="Project name"
                     value={projectName}
-                    onChange={handleInpuChange}>
+                    onChange={handleInputChange}>
                      
-                </ProjectName>
-                <Button variant="contained" 
-                        onClick={onSubmit}  endIcon={<UploadIcon />} >Upload file        
+                </TextField>
+                <Button variant="contained" onClick={onSubmit}  endIcon={<UploadIcon />} >
+                  Upload file        
                 </Button>
                 <div>
                 <Projectdecription

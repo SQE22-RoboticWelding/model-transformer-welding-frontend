@@ -1,23 +1,15 @@
-import { color } from "@mui/system";
 import DropZone from "react-dropzone";
 import {styled} from '@mui/system';
 
 const DropZoneRoot = styled('div')({
      width : '100%',
-     height: 200,
-     border: 4 ,
-     borderStyle : 'dashed' ,
-     borderColor : '#AFAFAF',
+     height: '200px',
+     border: '4px dashed #AFAFAF',
      display : "flex",
      flexDirection : "column",
      justifyContent : "space-between",
      alignItems : "center",
-     cursor : "pointer", 
-     '&:hover' : {
-        background: '#FFFFFF',
-        border: 4 ,
-        borderColor : '#AFAFAF'
-     }
+     cursor : "pointer"
 
   });
   const FileNameDisplay = styled('div')({
