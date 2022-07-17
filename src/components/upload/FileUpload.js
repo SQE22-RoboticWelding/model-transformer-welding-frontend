@@ -12,15 +12,17 @@ import Notifications from "../common/Notifications";
 import { useNavigate } from "react-router-dom";
 
   const FileUploadRoot = styled('div')({
-    alignItems: "center",
     boxShadow: '0 3px 5px 2px ',
-
     padding: '0 20px',
   });
-  const Projectdecription= styled(TextField)({
-    marginTop:20 ,
-    required : true,
-    width : 450
+  const ProjectDecription = styled(TextField)({
+    marginTop: '20px',
+    required: true,
+    width: '450px'
+  }); 
+
+  const UploadBox= styled(Box)({
+     '& > :not(style)': { m: 1, width: '25ch' } 
   }); 
 const uploadProjectFile = (projectName, projectFile) => {
     const query = new URLSearchParams({name: projectName});
@@ -32,39 +34,27 @@ const uploadProjectFile = (projectName, projectFile) => {
 };
 
 const FileUpload = () => {
-    const [state, setState] = useState("idle");
     const [projectFile, setProjectFile] = useState();
     const [projectName, setProjectName] = useState("");
-    const [open,setOpen] = React.useState(false);
-    const [enableButton] = useState("");
     const navigate = useNavigate();
 
-       const onSubmit = (e) => {
-        setOpen(true);
-        e.preventDefault();
-        uploadProjectFile(projectName, projectFile)
+       const onSubmit = () => {
          if (projectName && projectFile) {
-            Notifications.notify("Project created.", "success")
-            setState("idle");
-            setOpen(true);
-            navigate("/generate", { replace: true });
+            uploadProjectFile(projectName, projectFile)
+                .then(() => {
+                    Notifications.notify("Successfully uploaded project.", "success");
+                    navigate("/generate", { replace: true });
+                });
         } else if (!projectName && projectFile){
-            Notifications.notify(`Failed to create project.\n`, "error")
-            setState("idle"); 
-            alert('please enter the project name');
+            Notifications.notify(`Please enter the project name`, "error");
         } else if (projectName && !projectFile){
-          Notifications.notify(`Failed to create project.\n`, "error")
-          setState("idle"); 
-          alert('please upload the project file');
+            Notifications.notify(`Please upload the project file`, "error");
       }  else {
-           Notifications.notify(`Failed to create project.\n`, "error")
-           setState("idle"); 
-           alert('please upload the project file and enter the project name');
+            Notifications.notify(`Please upload the project file and enter the project name`, "error");
       }
       };
       const handleInputChange = (e) => {
         setProjectName(e.target.value);
-        enableButton(e.target.value);
     };
     return (
         <FileUploadRoot>
@@ -74,23 +64,22 @@ const FileUpload = () => {
             />
                 
             <Confirmation>
-               <Box sx={{ '& > :not(style)': { m: 1, width: '25ch' },  }}>
+               <UploadBox>
                 <TextField label="Project name" variant="standard" placeholder="Project name"
                     value={projectName}
                     onChange={handleInputChange}>
                      
                 </TextField>
-                <Button variant="contained" onClick={onSubmit}  endIcon={<UploadIcon />} >
+                <Button variant="contained" onClick={onSubmit} endIcon={<UploadIcon />} >
                   Upload file        
                 </Button>
                 <div>
-                <Projectdecription
-                       id="outlined-multiline-static"
-                       label="project decription"
+                <ProjectDecription
+                       label="Project Description"
                        multiline
                        rows={4}/>
                 </div>
-                </Box>
+                </UploadBox>
             </Confirmation>
         </FileUploadRoot>
     );

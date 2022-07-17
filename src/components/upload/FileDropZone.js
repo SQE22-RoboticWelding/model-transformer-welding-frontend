@@ -13,8 +13,8 @@ const DropZoneRoot = styled('div')({
 
   });
   const FileNameDisplay = styled('div')({
-     color : '#888888'
-  });
+    color : '#888888'
+ });
 
 const ACCEPTED_FILETYPES = {
     "text/xls": [".xls", ".xlsx"],
