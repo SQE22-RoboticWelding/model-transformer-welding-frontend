@@ -57,7 +57,13 @@ const PointTable = styled("div")({
     userSelect: "none"
 });
 
-const HeaderCell = styled({
+const HeaderRow = styled("div")({
+    display: "flex",
+    justifyContent: "space-between",
+    margin: "0 8px 0 24px"
+});
+
+const HeaderCell = styled("div")({
     display: "inline-block",
     textAlign: "center",
     verticalAlign: "middle",
@@ -169,16 +175,18 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
             {pointRetrievalState === "idle" ? (
                 weldingPoints.length > 0 ? (
                     <PointTable>
-                        <HeaderCell>Name</HeaderCell>
-                        <HeaderCell>X</HeaderCell>
-                        <HeaderCell>Y</HeaderCell>
-                        <HeaderCell>Z</HeaderCell>
-                        <HeaderCell>Roll</HeaderCell>
-                        <HeaderCell>Pitch</HeaderCell>
-                        <HeaderCell>Yaw</HeaderCell>
-                        <HeaderCell>Tolerance</HeaderCell>
-                        <HeaderCell>Robot</HeaderCell>
-                        <HeaderCell>Delete</HeaderCell>
+                        <HeaderRow>
+                            <HeaderCell>Name</HeaderCell>
+                            <HeaderCell>X</HeaderCell>
+                            <HeaderCell>Y</HeaderCell>
+                            <HeaderCell>Z</HeaderCell>
+                            <HeaderCell>Roll</HeaderCell>
+                            <HeaderCell>Pitch</HeaderCell>
+                            <HeaderCell>Yaw</HeaderCell>
+                            <HeaderCell>Tolerance</HeaderCell>
+                            <HeaderCell>Robot</HeaderCell>
+                            <HeaderCell>Delete</HeaderCell>
+                        </HeaderRow>
                         <SortableList onSortEnd={onSortEnd}>
                             {weldingPoints
                                 .sort((a, b) => a.welding_order > b.welding_order)

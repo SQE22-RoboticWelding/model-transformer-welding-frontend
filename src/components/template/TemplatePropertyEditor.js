@@ -2,6 +2,7 @@ import {Button, List, ListItem, ListItemText, TextField} from "@mui/material";
 import {useState} from "react";
 import {ListItemSpreadingChildren} from "../common/StyledComponents";
 import TemplateLibraryLoader from "./TemplateLibraryLoader";
+import FileUtils from "../common/FileUtils";
 
 
 const DEFAULT_NAME_HELPER = "Name";
@@ -90,21 +91,11 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
         }
     };
 
-    const handleFileUpload = (evt) => {
-        if (evt.target.files?.length > 0) {
-            const file = evt.target.files[0];
-            setFileName(file.name);
-
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const data = evt?.target?.result;
-                if (data) {
-                    setContent(data);
-                }
-            };
-            reader.readAsText(file);
-        }
-    };
+    const handleFileUpload = (evt) => FileUtils.handleFileUpload(evt)
+        .then(({name, content}) => {
+            setFileName(name);
+            setContent(content);
+        });
 
     return (
         <List>
@@ -165,7 +156,7 @@ const TemplatePropertyEditor = ({submissionText, onSubmit, onCancel, template = 
                     helperText={versionHelper}
                     placeholder="Type version here ..."
                     fullWidth
-                    value={version}
+                    value={Number(version).toFixed(2)}
                     inputProps={{type: "number", step: 0.01}}
                     onChange={(evt) => setVersion(Number(evt.target.value).toFixed(2))}
                 />
