@@ -2,19 +2,19 @@ import DropZone from "react-dropzone";
 import {styled} from '@mui/system';
 
 const DropZoneRoot = styled('div')({
-     width : '100%',
-     height: '200px',
-     border: '4px dashed #AFAFAF',
-     display : "flex",
-     flexDirection : "column",
-     justifyContent : "space-between",
-     alignItems : "center",
-     cursor : "pointer"
+    width: '100%',
+    height: '200px',
+    border: '4px dashed #AFAFAF',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    cursor: "pointer"
 
-  });
-  const FileNameDisplay = styled('div')({
-    color : '#888888'
- });
+});
+const FileNameDisplay = styled('div')({
+    color: '#888888'
+});
 
 const ACCEPTED_FILETYPES = {
     "text/xls": [".xls", ".xlsx"],
