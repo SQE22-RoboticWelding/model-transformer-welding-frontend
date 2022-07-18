@@ -1,56 +1,55 @@
-import styled from "styled-components";
 import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
-import { Button } from "@mui/material";
+import {Button, styled} from "@mui/material";
 
 
-const PointRow = styled.div`
-  z-index: 999999999999;
-  padding: 8px;
-  margin-top: 6px;
-  background-color: #E5E5E5;
-  border-radius: 8px;
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  > :not(:nth-child(1), :nth-child(2), :last-child) {
-    border-left: 2px solid #8E8E8E;
-  }
-`;
+const PointRow = styled("div")({
+    zIndex: "999999999999",
+    padding: "8px",
+    marginTop: "6px",
+    backgroundColor: "#E5E5E5",
+    borderRadius: "8px",
 
-const StyledIconDrag = styled(IconDrag)`
-  width: 14px;
-  height: 14px;
-`;
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
 
-const Cell = styled.input`
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% * 1 / 9 - 16px);
-  border: none;
-  background: none;
+    "> :not(:nth-child(1), :nth-child(2), :last-child)": {
+        borderLeft: "2px solid #8E8E8E"
+    }
+});
 
-  :focus {
-    outline: none;
-    background-color: #F8F8F8;
-  }
-`;
+const StyledIconDrag = styled(IconDrag)({
+    width: "14px",
+    height: "14px"
+});
 
-const CellKnob = styled.div`
-  display: inline-block;
-  vertical-align: middle;
-  width: 16px;
-  cursor: grab;
-`;
-const RobotTypeCellValue = styled.select`
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% * 1 / 9 - 16px);
-  background: none;
-  border: none;
-`;
+const CommonCellStyle = {
+    display: "inline-block",
+    verticalAlign: "middle",
+    width: "calc(100% * 1 / 9 - 16px)",
+    border: "none",
+    background: "none"
+};
+
+const Cell = styled("input")({
+    ...CommonCellStyle,
+    ":focus": {
+        outline: "none",
+        backgroundColor: "#F8F8F8"
+    }
+});
+
+const CellKnob = styled("div")({
+    display: "inline-block",
+    verticalAlign: "middle",
+    width: "16px",
+    cursor: "grab"
+});
+
+const RobotTypeCellValue = styled("select")(CommonCellStyle);
+
+const WELDING_POINT_PROPERTIES = ["x", "y", "z", "roll", "pitch", "yaw", "tolerance"];
 
 const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
     return (
@@ -62,12 +61,9 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                     </CellKnob>
                 </SortableKnob>
 
-                <Cell
-                    value={weldingPoint.name}
-                    onChange={(evt) => updateValue("name", evt.target.value)}
-                />
+                <Cell value={weldingPoint.name} onChange={(evt) => updateValue("name", evt.target.value)}/>
 
-                {["x", "y", "z", "roll", "pitch", "yaw", "tolerance"].map((field) => (
+                {WELDING_POINT_PROPERTIES.map((field) => (
                     <Cell
                         key={field}
                         value={weldingPoint[field] === null ? "" : weldingPoint[field]}
@@ -84,15 +80,15 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                             key={robot.id}
                             value={robot.id}
                         >
-                            [{robot.id}]: {robot.description}
+                            [{robot.id}]: {robot.name}
                         </option>
                     ))}
                 </RobotTypeCellValue>
 
                 <Button
-                  key={"Delete"}
-                  style={{width: "84px"}}
-                  onClick={() => {onDelete(weldingPoint.id)}}
+                    key="Delete"
+                    style={{width: "84px"}}
+                    onClick={() => onDelete(weldingPoint.id)}
                 >
                     Delete
                 </Button>

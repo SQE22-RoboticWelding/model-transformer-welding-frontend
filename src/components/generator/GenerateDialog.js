@@ -5,29 +5,25 @@ import Settings from "../common/settings";
 import { useEffect, useState } from "react";
 import FetchHandler from "../common/FetchHandler";
 
-const GenerateDialogRoot = styled('div')({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+const GenerateDialogRoot = styled("div")({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 
-  '> *': {
-    marginBottom: '16px',
+  "> *": {
+    marginBottom: "16px",
   }
 });
 
 const StyledButton = styled(Button)({
-    cursor: 'pointer',
-    width: '128px',
-    display: 'flex',
+    cursor: "pointer",
+    width: "128px",
+    display: "flex",
 
-    ':hover': {
-        backgroundColor: '#BFBFBF',
+    ":hover": {
+        backgroundColor: "#BFBFBF",
     },
-});
-
-const StyledA = styled('a')({
-  textDecoration: "none",
 });
 
 const StyledDialogTitle = styled(DialogTitle)({
@@ -41,16 +37,14 @@ const StyledDialogContent = styled(DialogContent)({
 });
 
 const EditDialog = ({open, setOpen, selectedProject, setSelectedProject}) => {
-    const [projectRetrievalState, setProjectRetrievalState] = useState("loading");
+    const [validated, setValidated] = useState(false);
 
     useEffect(() => {
-        FetchHandler.simple(fetch(Settings.generatePath(selectedProject.id), {method: "GET"}))
-            .then(() => {
-                setProjectRetrievalState("success");
-            })
+        FetchHandler.simple(fetch(Settings.validateGeneratePath(selectedProject.id), {method: "GET"}))
+            .then(() => setValidated(true))
             .catch((err) => {
-                Notifications.notify(`Failed to retrieve data\n${err}`, "error");
-                setProjectRetrievalState("failed");
+                Notifications.notify(`Generation validation failed\n${err}`, "error");
+                setValidated(false);
             });
       }, [selectedProject]);
 
@@ -74,19 +68,15 @@ const EditDialog = ({open, setOpen, selectedProject, setSelectedProject}) => {
                     </IconButton>
                 </StyledDialogTitle>
                 <StyledDialogContent dividers>
-                    {(projectRetrievalState === "success") ? (
-                        <StyledA href={`${Settings.generatePath(selectedProject.id)}`} download>
-                            <StyledButton>
-                                Download
-                            </StyledButton>
-                        </StyledA>
-                    ) : projectRetrievalState === "failed" ? (
-                        <p>
-                            Failed to retrieve data.
-                        </p>
-                    ) : projectRetrievalState === "loading" &&
-                        <p>Loading...</p>
-                    }
+                    {validated ? (
+                        <StyledButton download href={Settings.generatePath(selectedProject.id)}>
+                            Download
+                        </StyledButton>
+                    ) : (
+                        <StyledButton disabled>
+                            Download
+                        </StyledButton>
+                    )}
                 </StyledDialogContent>
             </Dialog>
         </GenerateDialogRoot>

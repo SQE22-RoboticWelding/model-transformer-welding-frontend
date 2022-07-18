@@ -1,68 +1,70 @@
 import SortableList from "react-easy-sort";
 import {useEffect, useState} from "react";
 import Settings from "../common/settings";
-import styled from "styled-components";
 import WeldingPointRow from "./WeldingPointRow";
 import FetchHandler from "../common/FetchHandler";
 import Notifications from "../common/Notifications";
-import {Button, Container} from "@mui/material";
+import {Button, Container, styled} from "@mui/material";
 
 
-const PointRow = styled.div`
-  padding: 8px 8px 8px 26px;
-  margin-top: 6px;
-  background-color: #E5E5E5;
-  border-radius: 8px;
+const PointRow = styled("div")({
+    padding: "8px 8px 8px 26px",
+    marginTop: "6px",
+    backgroundColor: "#E5E5E5",
+    borderRadius: "8px",
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
 
-  > :not(:nth-child(1), :last-child) {
-    border-left: 2px solid #8E8E8E;
-  }
-`;
+    "> :not(:nth-child(1), :last-child)": {
+        borderLeft: "2px solid #8E8E8E"
+    }
+});
 
-const ValueInput = styled.input`
-  display: inline-block;
-  vertical-align: middle;
-  width: 100%;
-  padding: 0;
-  border: none;
-  background: none;
+const ValueInput = styled("input")({
+    display: "inline-block",
+    verticalAlign: "middle",
+    width: "100%",
+    padding: "0",
+    border: "none",
+    background: "none",
 
-  :focus {
-    outline: none;
-    background-color: #F8F8F8;
-  }
-`;
-const Cell = (props) => (
-    <Container style={{padding: "0", display: "inline", width: "calc(100% * 1 / 9 - 16px)", margin: "0"}}>
-        <ValueInput {...props}/>
-    </Container>
-);
+    ":focus": {
+        outline: "none",
+        backgroundColor: "#F8F8F8"
+    }
+});
 
-const RobotTypeCellValue = styled.select`
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% * 1 / 9 - 16px);
-  background: none;
-  border: none;
-`;
+const StyledCell = styled(Container)({
+    padding: "0",
+    display: "inline",
+    width: "calc(100% * 1 / 9 - 16px)",
+    margin: "0"
+});
 
+const Cell = (props) => <StyledCell><ValueInput {...props}/></StyledCell>;
 
-const PointTable = styled.div`
-  user-select: none;
-`;
+const RobotTypeCellValue = styled("select")({
+    display: "inline-block",
+    verticalAlign: "middle",
+    width: "calc(100 % * 1 / 9 - 16px)",
+    background: "none",
+    border: "none"
+});
 
-const HeaderCell = styled.div`
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  width: calc(100% * 1 / 9 - 16px);
-  border: none;
-  background: none;
-`;
+const PointTable = styled("div")({
+    userSelect: "none"
+});
+
+const HeaderCell = styled({
+    display: "inline-block",
+    textAlign: "center",
+    verticalAlign: "middle",
+    width: "calc(100% * 1 / 9 - 16px)",
+    border: "none",
+    background: "none"
+});
 
 const arrayMove = (oldIndex, newIndex, array) => {
     if (oldIndex < newIndex) {
@@ -82,51 +84,66 @@ const arrayMove = (oldIndex, newIndex, array) => {
     }
 };
 
-const retrieveWeldingPoints = (projectId, onWeldingPoints, setState) => {
-    FetchHandler.simple(fetch(`${Settings.weldingPointsPath}/${projectId}`, {method: "GET"}))
-        .then((response) => response.json()
-            .then((points) => {
-                onWeldingPoints(points);
-                setState("success");
-            })
+const retrieveWeldingPoints = (projectId) => {
+    return new Promise((resolve, reject) => {
+        FetchHandler.readingJson(fetch(`${Settings.weldingPointsPath}/${projectId}`, {method: "GET"}))
+            .then(resolve)
             .catch((err) => {
-                setState("failed");
-                Notifications.notify(`Failed to show welding points\n${err}`, "error");
-            }))
+                Notifications.notify(`Failed to retrieve welding points\n${err}`, "error");
+                reject();
+            });
+    });
+};
+
+const createWeldingPoint = (weldingPoint) => new Promise((resolve, reject) => {
+    const requestProps = {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(weldingPoint)
+    };
+
+    FetchHandler.readingJson(fetch(`${Settings.weldingPointsPath}`, requestProps))
+        .then(resolve)
         .catch((err) => {
-            setState("failed");
-            Notifications.notify(`Failed to retrieve welding points\n${err}`, "error");
+            Notifications.notify(`Failed to create welding point\n${err}`, "error");
+            reject();
         });
+});
+
+const EMPTY_WELDING_POINT = {
+    "robot_id": null,
+    "welding_order": null,
+    "name": "Name",
+    "description": null,
+    "x_original": null,
+    "y_original": null,
+    "z_original": null,
+    "x": null,
+    "y": null,
+    "z": null,
+    "roll": null,
+    "pitch": null,
+    "yaw": null,
+    "tolerance": null
 };
 
 const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
-    const [pointRetrievalState, setPointRetrievalState] = useState("init");
-    var addWeldingPoint = {
-        "project_id": project.id,
-        "robot_id": null,
-        "welding_order": null,
-        "name": "Name",
-        "description": null,
-        "x_original": null,
-        "y_original": null,
-        "z_original": null,
-        "x": null,
-        "y": null,
-        "z": null,
-        "roll": null,
-        "pitch": null,
-        "yaw": null,
-        "tolerance": null
-    };
+    const [pointRetrievalState, setPointRetrievalState] = useState("idle");
+    const [newWeldingPoint, setNewWeldingPoint] = useState({...EMPTY_WELDING_POINT, project_id: project.id});
 
-    useEffect(() => retrieveWeldingPoints(project.id, setWeldingPoints, setPointRetrievalState), [project.id, setWeldingPoints]);
+    const mergeToNewWeldingPoint = (additions) => setNewWeldingPoint({
+        ...newWeldingPoint, ...additions
+    });
+
     useEffect(() => {
-    }, []);
+        setPointRetrievalState("loading");
+        retrieveWeldingPoints(project.id)
+            .then(setWeldingPoints)
+            .finally(() => setPointRetrievalState("idle"));
+    }, [project.id]);
 
-    const onSortEnd = (oldIndex, newIndex) => {
-        setWeldingPoints(arrayMove(oldIndex, newIndex, weldingPoints))
-    };
-    
+    const onSortEnd = (oldIndex, newIndex) => setWeldingPoints(arrayMove(oldIndex, newIndex, weldingPoints));
+
     const updateValue = (weldingPoint, field, value) => {
         const idx = weldingPoints.indexOf(weldingPoint);
         setWeldingPoints([
@@ -138,32 +155,18 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
 
     const onDelete = (id) => {
         FetchHandler.simple(fetch(Settings.weldingPointsPath + "/" + id, {method: "DELETE"}))
-                .then(() => {
-                    setWeldingPoints(weldingPoints.filter(weldingPoint => weldingPoint.id !== id));
-                })
-                .catch((err) => {
-                    Notifications.notify(`Failed to retrieve data\n${err}`, "error");
-                });
+            .then(() => setWeldingPoints(weldingPoints.filter(weldingPoint => weldingPoint.id !== id)))
+            .catch((err) => Notifications.notify(`Failed to delete welding point\n${err}`, "error"));
     };
 
     const onAdd = () => {
-        addWeldingPoint["welding_order"] = weldingPoints.at(-1)["welding_order"] + 1;
-
-        FetchHandler.simple(fetch(
-            `${Settings.weldingPointsPath}`,
-            {method: "POST", body: JSON.stringify(addWeldingPoint), headers: {"Content-Type": "application/json"}}
-        ))
-        .then(() => {
-            setWeldingPoints(weldingPoints => [...weldingPoints, addWeldingPoint]);
-        })
-        .catch((err) => {
-            Notifications.notify(`Failed to retrieve data\n${err}`, "error");
-        });
+        createWeldingPoint({...newWeldingPoint, welding_order: weldingPoints.at(-1)["welding_order"] + 1})
+            .then((createdWeldingPoint) => setWeldingPoints([...weldingPoints, createdWeldingPoint]));
     };
 
     return (
         <div>
-            {pointRetrievalState === "success" ? (
+            {pointRetrievalState === "idle" ? (
                 weldingPoints.length > 0 ? (
                     <PointTable>
                         <HeaderCell>Name</HeaderCell>
@@ -193,80 +196,75 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                             <Cell
                                 value={undefined}
                                 placeholder="Name"
-                                onChange={(evt) => {addWeldingPoint["name"] = evt.target.value}}
+                                onChange={(evt) => mergeToNewWeldingPoint({name: evt.target.value})}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="X"
-                                onChange={(evt) => {
-                                    addWeldingPoint["x_original"] = evt.target.value;
-                                    addWeldingPoint["x"] = evt.target.value;
-                                }}
+                                onChange={(evt) => mergeToNewWeldingPoint({
+                                    x: evt.target.value,
+                                    x_original: evt.target.value
+                                })}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="Y"
-                                onChange={(evt) => {
-                                    addWeldingPoint["y_original"] = evt.target.value;
-                                    addWeldingPoint["y"] = evt.target.value;
-                                }}
+                                onChange={(evt) => mergeToNewWeldingPoint({
+                                    y: evt.target.value,
+                                    y_original: evt.target.value
+                                })}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="Z"
-                                onChange={(evt) => {
-                                    addWeldingPoint["z_original"] = evt.target.value;
-                                    addWeldingPoint["z"] = evt.target.value;
-                                }}
+                                onChange={(evt) => mergeToNewWeldingPoint({
+                                    z: evt.target.value,
+                                    z_original: evt.target.value
+                                })}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="Roll"
-                                onChange={(evt) => {addWeldingPoint["roll"] = evt.target.value}}
+                                onChange={(evt) => mergeToNewWeldingPoint({roll: evt.target.value})}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="Pitch"
-                                onChange={(evt) => {addWeldingPoint["pitch"] = evt.target.value}}
+                                onChange={(evt) => mergeToNewWeldingPoint({pitch: evt.target.value})}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="Yaw"
-                                onChange={(evt) => {addWeldingPoint["yaw"] = evt.target.value}}
+                                onChange={(evt) => mergeToNewWeldingPoint({yaw: evt.target.value})}
                             />
                             <Cell
                                 value={undefined}
                                 placeholder="Tolerance"
-                                onChange={(evt) => {addWeldingPoint["tolerance"] = evt.target.value}}
+                                onChange={(evt) => mergeToNewWeldingPoint({tolerance: evt.target.value})}
                             />
                             <RobotTypeCellValue
                                 value={undefined}
-                                onChange={(evt) => {addWeldingPoint["robot_id"] = evt.target.value}}
+                                onChange={(evt) => mergeToNewWeldingPoint({robot_id: evt.target.value})}
                             >
-                            <option value=""/>
+                                <option value=""/>
                                 {robots.map((robot) => (
                                     <option
                                         key={robot.id}
                                         value={robot.id}
                                     >
-                                        [{robot.id}]: {robot.description}
+                                        [{robot.id}]: {robot.name}
                                     </option>
                                 ))}
                             </RobotTypeCellValue>
-                            <Button
-                                style={{width: "84px"}}
-                                onClick={() => {onAdd()}}
-                            >
+                            <Button style={{width: "84px"}} onClick={onAdd}>
                                 Add
                             </Button>
                         </PointRow>
                     </PointTable>
                 ) : (
-                    <p>Project has no welding points.</p>
+                    <p>No welding points to show.</p>
                 )
-            ) : pointRetrievalState === "failed" ? (
-                <p>Failed to retrieve welding points.</p>
-            ) : pointRetrievalState === "init" &&
+            ) : pointRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
         </div>
