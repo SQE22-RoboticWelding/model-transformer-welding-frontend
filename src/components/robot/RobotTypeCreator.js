@@ -6,10 +6,12 @@ import Notifications from "../common/Notifications";
 import RobotTypePropertyEditor from "./RobotTypePropertyEditor";
 
 
-const uploadRobotType = ({name, vendor, capacity, range, generationTemplateId}) => {
+const uploadRobotType = ({name, vendor, capacity, range, generationTemplateId, modelFileName, modelFileContent}) => {
     const requestBody = {
         name,
         vendor,
+        model_file_name: modelFileName,
+        model_file: modelFileContent,
         capacity_load_kg: capacity === "" ? null : capacity,
         range_m: range === "" ? null : range,
         generation_template_id: generationTemplateId === "" ? null : generationTemplateId
