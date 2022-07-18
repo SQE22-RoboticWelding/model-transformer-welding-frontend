@@ -4,6 +4,7 @@ import Settings from "../common/settings";
 import { Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import {Link, Outlet} from "react-router-dom";
 import GenerateDialog from "./GenerateDialog";
+import Notifications from "../common/Notifications";
 
 const GeneratorPageRoot = styled('div')({
   width: '100%',
@@ -50,10 +51,10 @@ const StyledTableCell = styled(TableCell)({
   borderBottom: '2px solid black',
 });
 const StyledSingleTableCell = styled(StyledTableCell)({
-  width: 'calc(100% / 7)',
+  width: 'calc(100% / 8)',
 });
 const StyledDoubleTableCell = styled(StyledTableCell)({
-  width: 'calc(100% / 7 * 2)',
+  width: 'calc(100% / 8 * 2)',
 });
 
 const StyledButton = styled(Button)({
@@ -73,7 +74,6 @@ const GeneratorPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(undefined);
-    const [generate, setGenerate] = useState(false);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -87,8 +87,17 @@ const GeneratorPage = () => {
 
     const onGenerate = (project) => {
       setSelectedProject(project);
-      setGenerate(true);
       setOpen(true);
+    };
+
+    const onDelete = (id) => {
+      FetchHandler.simple(fetch(Settings.projectPath + id, {method: "DELETE"}))
+              .then(() => {
+                setAvailableProjects(availableProjects.filter(project => project.id !== id));
+              })
+              .catch((err) => {
+                  Notifications.notify(`Failed to retrieve data\n${err}`, "error");
+              });
     };
 
     return (
@@ -104,6 +113,7 @@ const GeneratorPage = () => {
                             <StyledSingleTableCell>Last Modification</StyledSingleTableCell>
                             <StyledSingleTableCell>Edit</StyledSingleTableCell>
                             <StyledSingleTableCell>Generate</StyledSingleTableCell>
+                            <StyledSingleTableCell>Delete</StyledSingleTableCell>
                         </StyledHeadTableRow>
                     </StyledTableHead>
 
@@ -126,6 +136,11 @@ const GeneratorPage = () => {
                                   Generate
                               </StyledButton>
                             </StyledSingleTableCell>
+                            <StyledSingleTableCell>
+                              <StyledButton onClick={() => onDelete(project.id)}>
+                                  Delete
+                              </StyledButton>
+                            </StyledSingleTableCell>
                         </StyledBodyTableRow>
                     ))}
                     </TableBody>
@@ -136,15 +151,14 @@ const GeneratorPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
-            {(generate === true) ? (
+            {selectedProject && (
               <GenerateDialog
-                setGenerate={setGenerate}
                 open={open}
                 setOpen={setOpen}
                 selectedProject={selectedProject}
                 setSelectedProject={setSelectedProject}
               />
-            ) : <div></div>}
+            )}
 
             <Outlet/>
         </GeneratorPageRoot>
