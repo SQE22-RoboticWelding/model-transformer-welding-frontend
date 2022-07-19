@@ -93,7 +93,7 @@ const EditDialog = () => {
                 >
                     <StyledDialogTitle>
                         <b>{selectedProject.name}</b>
-                        <Link to="/generate">
+                        <Link to="/view">
                             <IconButton>
                                 <CloseIcon/>
                             </IconButton>
