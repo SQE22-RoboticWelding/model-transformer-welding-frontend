@@ -2,10 +2,10 @@ import styled from "styled-components";
 import NavBar from "./NavBar";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import FileUpload from "./upload/FileUpload";
-import EditorPage from "./editor/EditorPage";
 import GeneratorPage from "./generator/GeneratorPage";
 import RobotTypePage from "./robot/RobotTypePage";
 import TemplatePage from "./template/TemplatePage";
+import EditDialog from "./generator/EditDialog";
 
 
 const FrontPageRoot = styled.div`
@@ -25,8 +25,9 @@ const FrontPage = () => {
                 <NavBar/>
                 <Routes>
                     <Route path="/create" element={<FileUpload/>}/>
-                    <Route path="/edit" element={<EditorPage/>}/>
-                    <Route path="/generate" element={<GeneratorPage/>}/>
+                    <Route path="/view" element={<GeneratorPage/>}>
+                        <Route path=":id" element={<EditDialog/>}/>
+                    </Route>
                     <Route path="/robot" element={<RobotTypePage/>}/>
                     <Route path="/template" element={<TemplatePage/>}/>
                 </Routes>
