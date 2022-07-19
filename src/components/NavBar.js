@@ -18,7 +18,7 @@ const NavBar = () => {
                 </ListItem>
 
                 <ListItem>
-                    <ListItemButton component={RouterLink} to="/generate">
+                    <ListItemButton component={RouterLink} to="/view">
                         <ListItemText primary="View Project"/>
                     </ListItemButton>
                 </ListItem>

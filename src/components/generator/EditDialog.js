@@ -79,7 +79,7 @@ const EditDialog = () => {
 
     const closeEdit = () => {
         setOpen(false);
-        navigate("/generate");
+        navigate("/view");
     };
 
     return (

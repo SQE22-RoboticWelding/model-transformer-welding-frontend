@@ -25,7 +25,7 @@ const FrontPage = () => {
                 <NavBar/>
                 <Routes>
                     <Route path="/create" element={<FileUpload/>}/>
-                    <Route path="/generate" element={<GeneratorPage/>}>
+                    <Route path="/view" element={<GeneratorPage/>}>
                         <Route path=":id" element={<EditDialog/>}/>
                     </Route>
                     <Route path="/robot" element={<RobotTypePage/>}/>
