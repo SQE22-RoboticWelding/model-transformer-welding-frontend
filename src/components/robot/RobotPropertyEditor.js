@@ -170,7 +170,7 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
             </ListItem>
 
             <ListItem>
-                {projects ? (
+                {!projects ? (
                     <ListItemText>Loading...</ListItemText>
                 ) : projects.length > 0 ? (
                     <FormControl fullWidth>
