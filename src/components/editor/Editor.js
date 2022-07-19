@@ -117,20 +117,20 @@ const createWeldingPoint = (weldingPoint) => new Promise((resolve, reject) => {
 });
 
 const EMPTY_WELDING_POINT = {
-    "robot_id": null,
-    "welding_order": null,
-    "name": "Name",
-    "description": null,
-    "x_original": null,
-    "y_original": null,
-    "z_original": null,
-    "x": null,
-    "y": null,
-    "z": null,
-    "roll": null,
-    "pitch": null,
-    "yaw": null,
-    "tolerance": null
+    "robot_id": "",
+    "welding_order": "",
+    "name": "",
+    "description": "",
+    "x_original": "",
+    "y_original": "",
+    "z_original": "",
+    "x": "",
+    "y": "",
+    "z": "",
+    "roll": "",
+    "pitch": "",
+    "yaw": "",
+    "tolerance": ""
 };
 
 const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
@@ -202,12 +202,12 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                         </SortableList>
                         <PointRow>
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.name}
                                 placeholder="Name"
                                 onChange={(evt) => mergeToNewWeldingPoint({name: evt.target.value})}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.x_original}
                                 placeholder="X"
                                 onChange={(evt) => mergeToNewWeldingPoint({
                                     x: evt.target.value,
@@ -215,7 +215,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                 })}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.y_original}
                                 placeholder="Y"
                                 onChange={(evt) => mergeToNewWeldingPoint({
                                     y: evt.target.value,
@@ -223,7 +223,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                 })}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.z_original}
                                 placeholder="Z"
                                 onChange={(evt) => mergeToNewWeldingPoint({
                                     z: evt.target.value,
@@ -231,27 +231,27 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                 })}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.roll}
                                 placeholder="Roll"
                                 onChange={(evt) => mergeToNewWeldingPoint({roll: evt.target.value})}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.pitch}
                                 placeholder="Pitch"
                                 onChange={(evt) => mergeToNewWeldingPoint({pitch: evt.target.value})}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.yaw}
                                 placeholder="Yaw"
                                 onChange={(evt) => mergeToNewWeldingPoint({yaw: evt.target.value})}
                             />
                             <Cell
-                                value={undefined}
+                                value={newWeldingPoint.tolerance}
                                 placeholder="Tolerance"
                                 onChange={(evt) => mergeToNewWeldingPoint({tolerance: evt.target.value})}
                             />
                             <RobotTypeCellValue
-                                value={undefined}
+                                value={newWeldingPoint.robot_id}
                                 onChange={(evt) => mergeToNewWeldingPoint({robot_id: evt.target.value})}
                             >
                                 <option value=""/>
