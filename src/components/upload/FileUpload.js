@@ -44,7 +44,7 @@ const FileUpload = () => {
             uploadProjectFile(projectName, projectFile)
                 .then((project) => {
                     Notifications.notify("Successfully uploaded project.", "success");
-                    navigate(`/generate/${project.id}`, {replace: true});
+                    navigate(`/view/${project.id}`, {replace: true});
                 });
         } else if (!projectName && projectFile) {
             Notifications.notify(`Please enter the project name`, "error");
@@ -72,7 +72,7 @@ const FileUpload = () => {
 
                     </TextField>
                     <Button variant="contained" onClick={onSubmit} endIcon={<UploadIcon/>}>
-                        Upload file
+                        Create Project
                     </Button>
                     <div>
                         <ProjectDescription
