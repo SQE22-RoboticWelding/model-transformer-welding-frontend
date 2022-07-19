@@ -56,6 +56,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3.0.0
         with:
-          context: ./src
+          context: .
           push: true
           tags: "${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/${{ env.IMAGE_NAME }}:${{ steps.semver.outputs.version }}"

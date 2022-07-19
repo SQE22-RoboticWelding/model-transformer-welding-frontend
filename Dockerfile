@@ -9,7 +9,10 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci
 RUN npm install react-scripts@5.0.1 -g
-COPY src ./
+COPY src ./src
+COPY public ./public
+RUN ls -l
+
 RUN npm run build
 
 # start app
