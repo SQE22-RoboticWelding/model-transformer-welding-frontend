@@ -45,11 +45,15 @@ const RobotDisplay = ({robots, onRobotUpdated, projects}) => {
                                         <TableCell>{robot.id}</TableCell>
                                         <TableCell>{robot.name}</TableCell>
                                         <TableCell>{robot.description}</TableCell>
-                                        <TableCell>
-                                            {
-                                                projects?.filter((project) => project.id === robot.project_id)[0].name
-                                            }
-                                        </TableCell>
+                                        {Boolean(projects) ? (
+                                            <TableCell>
+                                                {projects.filter((project) => project.id === robot.project_id)[0].name}
+                                            </TableCell>
+                                        ) : (
+                                            <TableCell>
+                                                Loading...
+                                            </TableCell>
+                                        )}
 
                                         <TableCell>{robot.position_x}</TableCell>
                                         <TableCell>{robot.position_y}</TableCell>
@@ -60,7 +64,8 @@ const RobotDisplay = ({robots, onRobotUpdated, projects}) => {
                                         <TableCell>{robot.position_norm_vector_z}</TableCell>
 
                                         <TableCell width={1}>
-                                            <RobotEditor robot={robot} onRobotUpdated={onRobotUpdated} projects={projects}/>
+                                            <RobotEditor robot={robot} onRobotUpdated={onRobotUpdated}
+                                                         projects={projects}/>
                                         </TableCell>
                                         <TableCell width={1}>
                                             <RobotDeletor robot={robot} onRobotDeleted={onRobotUpdated}/>

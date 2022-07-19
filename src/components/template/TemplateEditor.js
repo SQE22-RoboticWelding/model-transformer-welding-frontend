@@ -8,20 +8,19 @@ import TemplatePropertyEditor from "./TemplatePropertyEditor";
 
 
 const updateTemplate = (id, template) => {
-    const urlParams = new URLSearchParams({_id: id});
     const fetchProps = {
         method: "PUT",
         body: JSON.stringify(template),
         headers: {"Content-Type": "application/json"}
     };
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.templatePath}/:id?${urlParams}`, fetchProps))
+        FetchHandler.simple(fetch(`${Settings.templatePath}/${id}`, fetchProps))
             .then(() => {
-                Notifications.notify("Updated template.", "success");
+                Notifications.notify("Saved template.", "success");
                 resolve();
             })
             .catch((err) => {
-                Notifications.notify(`Failed to update template.\n${err}`, "error");
+                Notifications.notify(`Failed to save template.\n${err}`, "error");
                 reject();
             });
     });
@@ -70,7 +69,7 @@ const RobotEditor = ({template, onTemplateUpdated}) => {
                         template={template}
                         onSubmit={onSubmit}
                         onCancel={onClose}
-                        submissionText="Update"
+                        submissionText="Save"
                     />
                 </Container>
             </Dialog>

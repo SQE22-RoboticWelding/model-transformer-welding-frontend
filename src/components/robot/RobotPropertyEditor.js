@@ -170,7 +170,9 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
             </ListItem>
 
             <ListItem>
-                {projects.length > 0 ? (
+                {!projects ? (
+                    <ListItemText>Loading...</ListItemText>
+                ) : projects.length > 0 ? (
                     <FormControl fullWidth>
                         <InputLabel id="project-for-robot">{projectHelper}</InputLabel>
                         <Select
@@ -261,14 +263,14 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
             </ListItem>
 
             <ListItemSpreadingChildren>
-                {projects.length > 0 ? (
+                {Boolean(projects?.length) ? (
                     <Button variant="outlined" onClick={onValidatedSubmit}>
                         {submitText}
                     </Button>
                 ) : (
                     <Tooltip title="Robot must be assigned to a project">
                         <DisabledButton variant="outlined">
-                            Create
+                            {submitText}
                         </DisabledButton>
                     </Tooltip>
                 )}

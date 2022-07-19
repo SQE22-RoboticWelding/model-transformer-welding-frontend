@@ -7,11 +7,13 @@ import RobotTypePropertyEditor from "./RobotTypePropertyEditor";
 import EditIcon from "@mui/icons-material/Edit";
 
 
-const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateId}) => {
+const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateId, modelFileName, modelFileContent}) => {
     const requestBody = {
         id, name, vendor,
-        capacity_load_kg: capacity === "" ? null : capacity,
-        range_m: range === "" ? null : range,
+        model_file_name: modelFileName || null,
+        model_file: modelFileContent || null,
+        capacity_load_kg: capacity === "" ? null : capacity,  // cannot use || here because 0 is valid too
+        range_m: range === "" ? null : range,  // cannot use || here because 0 is valid too
         generation_template_id: generationTemplateId === "" ? null : generationTemplateId
     };
     const fetchProps = {
@@ -19,15 +21,14 @@ const updateRobotType = ({id, name, vendor, capacity, range, generationTemplateI
         body: JSON.stringify(requestBody),
         headers: {"Content-Type": "application/json"}
     };
-    const urlParams = new URLSearchParams({_id: id});
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.robotTypePath}/:id/?${urlParams}`, fetchProps))
+        FetchHandler.simple(fetch(`${Settings.robotTypePath}/${id}`, fetchProps))
             .then(() => {
-                Notifications.notify("Updated Robot Type", "success");
+                Notifications.notify("Saved Robot Type", "success");
                 resolve();
             })
             .catch((err) => {
-                Notifications.notify(`Unable to update robot type\n${err}`, "error");
+                Notifications.notify(`Unable to save robot type\n${err}`, "error");
                 reject();
             });
     });
@@ -63,12 +64,12 @@ const RobotTypeEditor = ({onRequestRobotTypeRefresh, robotType}) => {
             </Tooltip>
 
             <Dialog open={dialogOpen} onClose={onClose}>
-                <DialogTitle>Update a Robot Type</DialogTitle>
+                <DialogTitle>Update Robot Type</DialogTitle>
 
                 <RobotTypePropertyEditor
                     onSubmit={onSubmit}
                     robotType={robotType}
-                    submissionText="Update"
+                    submissionText="Save"
                     onCancel={onClose}
                 />
             </Dialog>

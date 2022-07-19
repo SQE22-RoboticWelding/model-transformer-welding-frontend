@@ -44,7 +44,7 @@ const hasRange = (robotType) => !isNaN(robotType.range_m) && robotType.range_m !
 const hasGenerationTemplate = (robotType) => !isNaN(robotType.generation_template_id) && robotType.generation_template_id !== null;
 
 const robotHasMatchingProjectName = (robot, projects, projectNameMatch) => {
-    if (projectNameMatch) {
+    if (projectNameMatch && projects) {
         return projects
             .find((project) => robot.project_id === project.id)
             .name.toLowerCase()
@@ -56,10 +56,11 @@ const robotHasMatchingProjectName = (robot, projects, projectNameMatch) => {
 
 const RobotTypePage = () => {
     const [projectNameFilter, setProjectNameFilter] = useState("");
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState(undefined);
     const [robotTypeRetrievalState, setRobotTypeRetrievalState] = useState("idle");
     const [robotTypes, setRobotTypes] = useState([]);
     const [openedRobotTypeId, setOpenedRobotTypeId] = useState(undefined);
+
 
     const [robotRetrievalState, setRobotRetrievalState] = useState("idle");
     const [robots, setRobots] = useState([]);

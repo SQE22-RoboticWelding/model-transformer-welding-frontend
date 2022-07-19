@@ -1,11 +1,14 @@
 import {
     Button,
-    Container, FormControl,
+    Container,
+    FormControl,
+    IconButton,
     InputAdornment,
     InputLabel,
     List,
     ListItem,
-    ListItemText, MenuItem,
+    ListItemText,
+    MenuItem,
     Select,
     TextField
 } from "@mui/material";
@@ -14,6 +17,8 @@ import {ListItemSpreadingChildren} from "../common/StyledComponents";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
+import FileUtils from "../common/FileUtils";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 
 const DEFAULT_NAME_HELPER = "Name";
@@ -25,6 +30,8 @@ const DEFAULT_GENERATION_TEMPLATE_HELPER = "Generation Template";
 const EMPTY_ROBOT_TYPE = {
     name: "",
     vendor: "",
+    model_file_name: "",
+    model_file: "",
     capacity: "",
     range: "",
     generation_template_id: ""
@@ -42,6 +49,9 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
 
     const [range, setRange] = useState(robotType.range_m);
     const [rangeHelper, setRangeHelper] = useState(DEFAULT_RANGE_HELPER);
+
+    const [modelFileName, setModelFileName] = useState(robotType.model_file_name);
+    const [modelFileContent, setModelFileContent] = useState(robotType.model_file);
 
     const [generationTemplateRetrievalState, setGenerationTemplateRetrievalState] = useState("idle");
     const [generationTemplates, setGenerationTemplates] = useState([]);
@@ -92,9 +102,21 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
         }
 
         if (validated) {
-            onSubmit({name, vendor, capacity, range, generationTemplateId});
+            if (modelFileName) {
+                onSubmit({name, vendor, capacity, range, generationTemplateId, modelFileName, modelFileContent});
+            } else {
+                onSubmit({name, vendor, capacity, range, generationTemplateId});
+            }
         }
     };
+
+    const handleFileUpload = (evt) => {
+        FileUtils.handleFileUpload(evt)
+            .then(({name, content}) => {
+                setModelFileName(name);
+                setModelFileContent(content);
+            });
+    }
 
     useEffect(() => retrieveGenerationTemplates(), []);
 
@@ -175,6 +197,30 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
                     ) : (
                         <ListItemText>There are no Generation Templates yet.</ListItemText>
                     )}
+                </ListItem>
+
+                <ListItem>
+                    <Button component="label" variant="outlined" fullWidth>
+                        Upload Local Model File
+                        <input type="file" hidden onChange={handleFileUpload}/>
+                    </Button>
+                </ListItem>
+
+                <ListItem>
+                    <TextField
+                        disabled
+                        fullWidth
+                        label="File name"
+                        value={modelFileName}
+                    />
+
+                    <IconButton
+                        disabled={!modelFileContent}
+                        href={FileUtils.toDownloadableFle(modelFileName, modelFileContent)}
+                        download={modelFileName}
+                    >
+                        <FileDownloadIcon/>
+                    </IconButton>
                 </ListItem>
             </Container>
 

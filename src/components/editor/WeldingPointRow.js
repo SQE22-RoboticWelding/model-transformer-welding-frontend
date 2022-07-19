@@ -1,63 +1,57 @@
-import styled from "styled-components";
 import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
+import {Button, styled} from "@mui/material";
 
 
-const PointRow = styled.div`
-  padding: 8px;
-  margin-top: 6px;
-  background-color: #E5E5E5;
-  border-radius: 8px;
-  
-  > :not(:first-child) {
-    border-right: 2px solid #8E8E8E;
-  }
-`;
+const PointRow = styled("div")({
+    zIndex: "999999999999",
+    padding: "8px",
+    marginTop: "6px",
+    backgroundColor: "#E5E5E5",
+    borderRadius: "8px",
 
-const StyledIconDrag = styled(IconDrag)`
-  width: 14px;
-  height: 14px;
-`;
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
 
-const CellName = styled.input`
-  display: inline-block;
-  width: calc(100% * 3 / 11 - 16px);
-  border: none;
-  background: none;
+    "> :not(:nth-child(1), :nth-child(2), :last-child)": {
+        borderLeft: "2px solid #8E8E8E"
+    }
+});
 
-  :focus {
-    outline: none;
-    background-color: #F8F8F8;
-  }
-`;
-const CellValue = styled.input`
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
-  border: none;
-  background: none;
+const StyledIconDrag = styled(IconDrag)({
+    width: "14px",
+    height: "14px"
+});
 
-  :focus {
-    outline: none;
-    background-color: #F8F8F8;
-  }
-`;
+const CommonCellStyle = {
+    display: "inline-block",
+    verticalAlign: "middle",
+    width: "calc(100% * 1 / 9 - 16px)",
+    border: "none",
+    background: "none"
+};
 
-const CellKnob = styled.div`
-  display: inline-block;
-  vertical-align: middle;
-  width: 16px;
-  cursor: grab;
-`;
-const RobotTypeCellValue = styled.select`
-  display: inline-block;
-  vertical-align: middle;
-  width: calc(100% * 1 / 11 - 16px);
-  background: none;
-  border: none;
-`;
+const Cell = styled("input")({
+    ...CommonCellStyle,
+    ":focus": {
+        outline: "none",
+        backgroundColor: "#F8F8F8"
+    }
+});
 
-const WeldingPointRow = ({weldingPoint, updateValue, robots}) => {
+const CellKnob = styled("div")({
+    display: "inline-block",
+    verticalAlign: "middle",
+    width: "16px",
+    cursor: "grab"
+});
+
+const RobotTypeCellValue = styled("select")(CommonCellStyle);
+
+const WELDING_POINT_PROPERTIES = ["x", "y", "z", "roll", "pitch", "yaw", "tolerance"];
+
+const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
     return (
         <SortableItem>
             <PointRow>
@@ -67,32 +61,37 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots}) => {
                     </CellKnob>
                 </SortableKnob>
 
-                <CellName
-                    value={weldingPoint.name}
-                    onChange={(evt) => updateValue("name", evt.target.value)}
-                />
+                <Cell value={weldingPoint.name} onChange={(evt) => updateValue("name", evt.target.value)}/>
 
-                {["x", "y", "z", "roll", "pitch", "yaw", "tolerance"].map((field) => (
-                    <CellValue
+                {WELDING_POINT_PROPERTIES.map((field) => (
+                    <Cell
                         key={field}
                         value={weldingPoint[field] === null ? "" : weldingPoint[field]}
                         onChange={(evt) => updateValue(field, evt.target.value)}
                     />
                 ))}
                 <RobotTypeCellValue
-                    value={weldingPoint.robot_id}
-                    onChange={(evt) => updateValue("robot_id", evt.target.value)}
+                    value={weldingPoint.robot_id === null ? "" : weldingPoint.robot_id}
+                    onChange={(evt) => updateValue("robot_id", evt.target.value === "" ? null : evt.target.value)}
                 >
-                    <option value={-1}/>
+                    <option value=""/>
                     {robots.map((robot) => (
                         <option
                             key={robot.id}
                             value={robot.id}
                         >
-                            [{robot.id}]: {robot.description}
+                            [{robot.id}]: {robot.name}
                         </option>
                     ))}
                 </RobotTypeCellValue>
+
+                <Button
+                    key="Delete"
+                    style={{width: "84px"}}
+                    onClick={() => onDelete(weldingPoint.id)}
+                >
+                    Delete
+                </Button>
             </PointRow>
         </SortableItem>
     );

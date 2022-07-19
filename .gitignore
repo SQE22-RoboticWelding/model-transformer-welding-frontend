@@ -1,5 +1,5 @@
-# Jetbrains IDE
-.idea
+# Jetbrains
+.idea/
 
 # Mac stuff
 .DS_Store

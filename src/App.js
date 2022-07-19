@@ -14,7 +14,7 @@ const App = () => {
     return (
         <AppRoot>
             <FrontPage/>
-            <ToastContainer/>
+            <ToastContainer limit={3}/>
         </AppRoot>
     );
 };

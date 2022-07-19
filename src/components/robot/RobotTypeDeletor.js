@@ -22,9 +22,8 @@ const deleteRobotType = (id) => {
         method: "DELETE",
         headers: {"Content-Type": "application/json"}
     };
-    const urlParams = new URLSearchParams({_id: id});
     return new Promise((resolve, reject) => {
-        FetchHandler.simple(fetch(`${Settings.robotTypePath}/:id/?${urlParams}`, fetchProps))
+        FetchHandler.simple(fetch(`${Settings.robotTypePath}/${id}`, fetchProps))
             .then(() => {
                 Notifications.notify("Robot Type deleted", "success");
                 resolve();

@@ -5,6 +5,9 @@ class Settings {
 
     static projectsPath = `${Settings.backendBase}/project`;
     static uploadPath = `${Settings.projectsPath}/upload`;
+    static validateGeneratePath = (projectID) => `${Settings.projectsPath}/${projectID}/generate/validate`;
+    static generatePath = (projectID) => `${Settings.projectsPath}/${projectID}/generate`;
+    static generateValidatePath = (projectID) => `${Settings.projectsPath}/${projectID}/generate/validate`;
 
     static weldingPointsPath = `${Settings.backendBase}/weldingpoint`;
 
@@ -12,6 +15,7 @@ class Settings {
     static robotPath = `${Settings.backendBase}/robot`;
 
     static templatePath = `${Settings.backendBase}/generationtemplate`;
+    static templateLibraryPath = `${Settings.templatePath}/librarytemplates`
 }
 
 export default Settings;
