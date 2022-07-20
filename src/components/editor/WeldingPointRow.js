@@ -80,7 +80,7 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                             key={robot.id}
                             value={robot.id}
                         >
-                            [{robot.id}]: {robot.name}
+                            {robot.name}
                         </option>
                     ))}
                 </RobotTypeCellValue>
