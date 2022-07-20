@@ -1,10 +1,24 @@
 import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
-import {Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {
+    Button,
+    IconButton,
+    Paper,
+    styled,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow, Tooltip
+} from '@mui/material';
 import {Link, Outlet} from "react-router-dom";
 import GenerateDialog from "./GenerateDialog";
 import Notifications from "../common/Notifications";
+import EditIcon from "@mui/icons-material/Edit";
+import CodeIcon from "@mui/icons-material/Code";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const GeneratorPageRoot = styled('div')({
     width: '100%',
@@ -105,9 +119,7 @@ const GeneratorPage = () => {
                                 <StyledDoubleTableCell>Description</StyledDoubleTableCell>
                                 <StyledSingleTableCell>Created</StyledSingleTableCell>
                                 <StyledSingleTableCell>Last Modification</StyledSingleTableCell>
-                                <StyledSingleTableCell>Edit</StyledSingleTableCell>
-                                <StyledSingleTableCell>Generate</StyledSingleTableCell>
-                                <StyledSingleTableCell>Delete</StyledSingleTableCell>
+                                <StyledSingleTableCell>Actions</StyledSingleTableCell>
                             </StyledHeadTableRow>
                         </StyledTableHead>
 
@@ -119,21 +131,25 @@ const GeneratorPage = () => {
                                     <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                                     <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                                     <StyledSingleTableCell>
+                                        <Tooltip title="Edit project">
                                         <StyledLink to={`${project.id}`}>
-                                            <StyledButton>
-                                                Edit
-                                            </StyledButton>
+                                            <IconButton>
+                                                <EditIcon color="info"/>
+                                            </IconButton>
                                         </StyledLink>
-                                    </StyledSingleTableCell>
-                                    <StyledSingleTableCell>
-                                        <StyledButton onClick={() => onGenerate(project)}>
-                                            Generate
-                                        </StyledButton>
-                                    </StyledSingleTableCell>
-                                    <StyledSingleTableCell>
-                                        <StyledButton onClick={() => onDelete(project.id)}>
-                                            Delete
-                                        </StyledButton>
+                                        </Tooltip>
+
+                                        <Tooltip title="Generate code for project">
+                                        <IconButton onClick={() => onGenerate(project)}>
+                                            <CodeIcon color="info" />
+                                        </IconButton>
+                                        </Tooltip>
+
+                                        <Tooltip title="Delete project">
+                                        <IconButton onClick={() => onDelete(project.id)}>
+                                            <DeleteIcon color="error" />
+                                        </IconButton>
+                                        </Tooltip>
                                     </StyledSingleTableCell>
                                 </StyledBodyTableRow>
                             ))}
