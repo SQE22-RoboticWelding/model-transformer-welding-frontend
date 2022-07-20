@@ -109,7 +109,7 @@ const EditDialog = () => {
                     </DialogContent>
                     <DialogActions>
                         <StyledButton onClick={onUpdate}>
-                            Update project!
+                            Save
                         </StyledButton>
                     </DialogActions>
                 </Dialog>
