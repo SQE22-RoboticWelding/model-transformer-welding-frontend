@@ -1,7 +1,7 @@
 import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
-import {Button, styled} from "@mui/material";
-
+import {Button, IconButton, styled} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const PointRow = styled("div")({
     zIndex: "999999999999",
@@ -85,13 +85,13 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                     ))}
                 </RobotTypeCellValue>
 
-                <Button
+                <IconButton
                     key="Delete"
                     style={{width: "84px"}}
                     onClick={() => onDelete(weldingPoint.id)}
                 >
-                    Delete
-                </Button>
+                    <DeleteIcon color="error"/>
+                </IconButton>
             </PointRow>
         </SortableItem>
     );

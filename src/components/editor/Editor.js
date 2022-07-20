@@ -4,7 +4,8 @@ import Settings from "../common/settings";
 import WeldingPointRow from "./WeldingPointRow";
 import FetchHandler from "../common/FetchHandler";
 import Notifications from "../common/Notifications";
-import {Button, Container, styled} from "@mui/material";
+import {Button, Container, IconButton, styled} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 
 const PointRow = styled("div")({
@@ -185,7 +186,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                             <HeaderCell>Yaw</HeaderCell>
                             <HeaderCell>Tolerance</HeaderCell>
                             <HeaderCell>Robot</HeaderCell>
-                            <HeaderCell>Delete</HeaderCell>
+                            <HeaderCell>Actions</HeaderCell>
                         </HeaderRow>
                         <SortableList onSortEnd={onSortEnd}>
                             {weldingPoints
@@ -264,9 +265,9 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                     </option>
                                 ))}
                             </RobotTypeCellValue>
-                            <Button style={{width: "84px"}} onClick={onAdd}>
-                                Add
-                            </Button>
+                            <IconButton style={{width: "84px"}} onClick={onAdd}>
+                                <AddIcon color="success"/>
+                            </IconButton>
                         </PointRow>
                     </PointTable>
                 ) : (
