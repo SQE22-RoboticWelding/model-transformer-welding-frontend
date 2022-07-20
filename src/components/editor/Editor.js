@@ -171,6 +171,15 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
             .then((createdWeldingPoint) => setWeldingPoints([...weldingPoints, createdWeldingPoint]));
     };
 
+    const onReset = (weldingPoint) => {
+        const idx = weldingPoints.indexOf(weldingPoint);
+        setWeldingPoints([
+            ...weldingPoints.slice(0, idx),
+            {...weldingPoint, x: weldingPoint.x_original === "" ? null : weldingPoint.x_original},
+            ...weldingPoints.slice(idx + 1)
+        ]);
+    };
+
     return (
         <div>
             {pointRetrievalState === "idle" ? (
@@ -198,6 +207,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                         updateValue={(field, value) => updateValue(weldingPoint, field, value)}
                                         robots={robots}
                                         onDelete={onDelete}
+                                        onReset={onReset}
                                     />
                                 ))}
                         </SortableList>

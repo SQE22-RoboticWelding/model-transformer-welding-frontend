@@ -1,7 +1,8 @@
 import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
-import {Button, IconButton, styled} from "@mui/material";
+import {Button, IconButton, styled, Tooltip} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UndoIcon from '@mui/icons-material/Undo';
 
 const PointRow = styled("div")({
     zIndex: "999999999999",
@@ -51,7 +52,7 @@ const RobotTypeCellValue = styled("select")(CommonCellStyle);
 
 const WELDING_POINT_PROPERTIES = ["x", "y", "z", "roll", "pitch", "yaw", "tolerance"];
 
-const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
+const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete, onReset}) => {
     return (
         <SortableItem>
             <PointRow>
@@ -85,13 +86,24 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                     ))}
                 </RobotTypeCellValue>
 
+                <Tooltip title="Reset X, Y, Z to original values">
+                    <IconButton
+                        key="Reset"
+                        style={{border: "none"}}
+                        onClick={() => onReset(weldingPoint)}
+                    >
+                        <UndoIcon color="warning" />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Delete welding point">
                 <IconButton
                     key="Delete"
-                    style={{width: "84px"}}
-                    onClick={() => onDelete(weldingPoint.id)}
+                    onClick={() => onDelete(weldingPoint)}
                 >
                     <DeleteIcon color="error"/>
                 </IconButton>
+                </Tooltip>
             </PointRow>
         </SortableItem>
     );
