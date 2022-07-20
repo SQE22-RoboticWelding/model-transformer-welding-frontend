@@ -50,7 +50,7 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
     const [range, setRange] = useState(robotType.range_m);
     const [rangeHelper, setRangeHelper] = useState(DEFAULT_RANGE_HELPER);
 
-    const [modelFileName, setModelFileName] = useState(robotType.model_file_name);
+    const [modelFileName, setModelFileName] = useState(robotType.model_file ? "Downloadable" : "");
     const [modelFileContent, setModelFileContent] = useState(robotType.model_file);
 
     const [generationTemplateRetrievalState, setGenerationTemplateRetrievalState] = useState("idle");
