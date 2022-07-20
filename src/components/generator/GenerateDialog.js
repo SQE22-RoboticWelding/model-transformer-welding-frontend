@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Settings from "../common/settings";
 import { useEffect, useState } from "react";
 import FetchHandler from "../common/FetchHandler";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const GenerateDialogRoot = styled("div")({
   width: "100%",
@@ -69,13 +70,14 @@ const EditDialog = ({open, setOpen, selectedProject, setSelectedProject}) => {
                 </StyledDialogTitle>
                 <StyledDialogContent dividers>
                     {validated ? (
-                        <StyledButton download href={Settings.generatePath(selectedProject.id)}>
+                        <Button variant="contained" size="medium" endIcon={<FileDownloadIcon/>}
+                                href={Settings.generatePath(selectedProject.id)}>
                             Download
-                        </StyledButton>
+                        </Button>
                     ) : (
-                        <StyledButton disabled>
+                        <Button variant="contained" size="medium" endIcon={<FileDownloadIcon/>} disabled>
                             Download
-                        </StyledButton>
+                        </Button>
                     )}
                 </StyledDialogContent>
             </Dialog>
