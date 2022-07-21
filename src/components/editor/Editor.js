@@ -4,7 +4,7 @@ import Settings from "../common/settings";
 import WeldingPointRow from "./WeldingPointRow";
 import FetchHandler from "../common/FetchHandler";
 import Notifications from "../common/Notifications";
-import {Button, Container, IconButton, styled} from "@mui/material";
+import {Container, IconButton, styled} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 
@@ -275,7 +275,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                     </option>
                                 ))}
                             </RobotTypeCellValue>
-                            <IconButton style={{width: "84px"}} onClick={onAdd}>
+                            <IconButton onClick={onAdd}>
                                 <AddIcon color="success"/>
                             </IconButton>
                         </PointRow>
