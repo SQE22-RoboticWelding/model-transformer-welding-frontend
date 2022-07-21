@@ -6,6 +6,7 @@ import Editor from "../editor/Editor";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {Link, useNavigate, useParams} from "react-router-dom";
+import SaveIcon from '@mui/icons-material/Save';
 
 const EditDialogRoot = styled('div')({
     width: '100%',
@@ -73,9 +74,33 @@ const EditDialog = () => {
             });
     }, []);
 
-    const onUpdate = () => synchronizeProject(weldingPoints)
-        .then(() => Notifications.notify("Synchronized project", "success"))
-        .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
+
+    const onValidatedSave = () => {
+        let validated = true;
+
+        for (const wp of weldingPoints) {
+            if (wp.tolerance != null) {
+                let xDistSquare = Math.pow((wp.x - wp.x_original), 2);
+                let yDistSquare = Math.pow((wp.y - wp.y_original), 2);
+                let zDistSquare = Math.pow((wp.z - wp.z_original), 2);
+                let distanceFromOrigin = Math.pow((xDistSquare + yDistSquare + zDistSquare), 0.5);
+
+                if (distanceFromOrigin > wp.tolerance) {
+                    validated = false;
+                }
+            }
+        }
+        
+        if (validated) {
+            synchronizeProject(weldingPoints)
+                .then(() => Notifications.notify("Synchronized project", "success"))
+                .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
+        } else {
+            // ToDo: replace with proper hints
+            Notifications.notify("Tolerance not complied!");
+        }
+
+    }
 
     const closeEdit = () => {
         setOpen(false);
@@ -108,9 +133,9 @@ const EditDialog = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <StyledButton onClick={onUpdate}>
+                        <Button onClick={onValidatedSave} variant="contained" size="medium" endIcon={<SaveIcon/>}>
                             Save
-                        </StyledButton>
+                        </Button>
                     </DialogActions>
                 </Dialog>
             ) : projectRetrievalState === "success" ? (
