@@ -50,7 +50,7 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
     const [range, setRange] = useState(robotType.range_m);
     const [rangeHelper, setRangeHelper] = useState(DEFAULT_RANGE_HELPER);
 
-    const [modelFileName, setModelFileName] = useState(robotType.model_file ? "Downloadable" : "");
+    const [modelFileName, setModelFileName] = useState(robotType.model_file_name);
     const [modelFileContent, setModelFileContent] = useState(robotType.model_file);
 
     const [generationTemplateRetrievalState, setGenerationTemplateRetrievalState] = useState("idle");
@@ -218,6 +218,7 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
                         disabled={!modelFileContent}
                         href={FileUtils.toDownloadableFle(modelFileName, modelFileContent)}
                         download={modelFileName}
+                        target="_blank"
                     >
                         <FileDownloadIcon/>
                     </IconButton>
