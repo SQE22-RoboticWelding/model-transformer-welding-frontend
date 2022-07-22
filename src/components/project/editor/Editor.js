@@ -1,9 +1,9 @@
 import SortableList from "react-easy-sort";
 import {useEffect, useState} from "react";
-import Settings from "../common/settings";
+import Settings from "../../common/settings";
 import WeldingPointRow from "./WeldingPointRow";
-import FetchHandler from "../common/FetchHandler";
-import Notifications from "../common/Notifications";
+import FetchHandler from "../../common/FetchHandler";
+import Notifications from "../../common/Notifications";
 import {Button, Container, styled} from "@mui/material";
 
 

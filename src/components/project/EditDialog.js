@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
-import Editor from "../editor/Editor";
+import Editor from "./editor/Editor";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {Link, useNavigate, useParams} from "react-router-dom";
@@ -79,7 +79,7 @@ const EditDialog = () => {
 
     const closeEdit = () => {
         setOpen(false);
-        navigate("/view");
+        navigate("/project");
     };
 
     return (
@@ -93,7 +93,7 @@ const EditDialog = () => {
                 >
                     <StyledDialogTitle>
                         <b>{selectedProject.name}</b>
-                        <Link to="/view">
+                        <Link to="/project">
                             <IconButton>
                                 <CloseIcon/>
                             </IconButton>

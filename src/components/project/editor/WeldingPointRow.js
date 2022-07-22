@@ -1,4 +1,4 @@
-import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
+import {ReactComponent as IconDrag} from "../../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
 import {Button, styled} from "@mui/material";
 
