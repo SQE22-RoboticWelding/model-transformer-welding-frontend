@@ -14,7 +14,7 @@ jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/main' || 'refs/heads/pipeline'
+    if: github.ref == 'refs/heads/main'
 
     permissions:
       contents: read
@@ -42,10 +42,11 @@ jobs:
         with:
           major_pattern: "/^MAJOR:.*$/"
           minor_pattern: "/^MINOR:.*$/"
-          format: "${major}.${minor}.${patch}"
+          format: '${major}.${minor}.${patch}${{ github.ref != "refs/heads/main" && "dev-${{ github.run_id }}" }}'
 
       - name: Create GitHub release
         uses: actions/create-release@v1.1.4
+        if: github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_IO_PAT }}
         with:
