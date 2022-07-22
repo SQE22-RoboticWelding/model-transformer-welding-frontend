@@ -1,23 +1,18 @@
-import styled from "styled-components";
-import {ListItem, Typography} from "@mui/material";
+import {Grid, ListItem, styled, Typography} from "@mui/material";
 
-export const Confirmation = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 14px;
-  margin: 6px;
-  border-radius: 10px;
-`;
+export const Confirmation = (props) => (
+    <Grid container display="flex" alignItems="center" padding="14px" margin="6px" borderRadius="10px" {...props}/>
+);
 
-export const TypographyTextCentered = styled(Typography)`
-  text-align: center;
-`;
+export const TypographyTextCentered = styled(Typography)({
+    textAlign: "center"
+});
 
-export const CustomHr = styled.hr`
-  border: none;
-  height: ${props => props.height};
-  border-radius: ${props => `calc(${props.height} / 3)`};
-  background-color: rgba(0, 0, 0, 0.24);
-`;
+export const CustomHr = styled("hr")({
+    border: "none",
+    height: "3px",
+    borderRadius: "1px",
+    backgroundColor: "rgba(0, 0, 0, 0.24)"
+});
 
 export const ListItemSpreadingChildren = (props) => <ListItem {...props} style={{display: "flex", justifyContent: "space-between"}}/>;

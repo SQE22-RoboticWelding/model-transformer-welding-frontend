@@ -2,14 +2,13 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary, Divider,
-    Grid,
+    Grid, styled,
     Table,
     TableBody,
     TableCell,
     TableRow, TextField,
     Typography
 } from "@mui/material";
-import styled from "styled-components";
 import {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
@@ -22,20 +21,20 @@ import RobotCreator from "./RobotCreator";
 import RobotTypeDeletor from "./RobotTypeDeletor";
 
 
-const AccordionHeader = styled(Typography)`
-  width: 50%;
-  min-width: min-content;
-  display: flex;
-  align-items: center;
+const AccordionHeader = styled(Typography)({
+    width: "50%",
+    minWidth: "min-content",
+    display: "flex",
+    alignItems: "center",
 
-  > :first-child {
-    margin-right: 4px;
-  }
-`;
+    "> :first-child": {
+        marginRight: "4px"
+    }
+});
 
-const RobotTypeAccordion = styled(Accordion)`
-  width: 100%;
-`;
+const RobotTypeAccordion = styled(Accordion)({
+    width: "100%"
+})
 
 const StyledTableCell = (props) => <TableCell {...props} sx={{borderBottom: "none"}}/>
 
@@ -115,6 +114,7 @@ const RobotTypePage = () => {
 
     useEffect(() => {
         refreshAll();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
