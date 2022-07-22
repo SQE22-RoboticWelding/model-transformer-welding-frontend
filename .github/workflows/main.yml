@@ -40,7 +40,7 @@ jobs:
         with:
           major_pattern: "/^MAJOR:.*$/"
           minor_pattern: "/^MINOR:.*$/"
-          format: github.ref != 'refs/heads/main' && '${major}.${minor}.${patch}' || '${major}.${minor}.dev-${{ github.run_id }}'
+          format: ${{github.ref != 'refs/heads/main' && '${major}.${minor}.${patch}' || '${major}.${minor}.dev-${{ github.run_id }}'}}
 
       - name: Create GitHub release
         uses: actions/create-release@v1.1.4
