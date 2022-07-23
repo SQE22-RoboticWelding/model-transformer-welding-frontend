@@ -3,7 +3,7 @@ import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
 import Editor from "../editor/Editor";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled} from '@mui/material';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled, Tooltip} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {Link, useNavigate, useParams} from "react-router-dom";
 import SaveIcon from '@mui/icons-material/Save';
@@ -19,14 +19,6 @@ const EditDialogRoot = styled('div')({
     }
 });
 
-const StyledButton = styled(Button)({
-    width: '128px',
-
-    ':hover': {
-        backgroundColor: '#BFBFBF',
-    },
-});
-
 const StyledDialogTitle = styled(DialogTitle)({
     display: "flex",
     justifyContent: "space-between"
@@ -39,12 +31,27 @@ const synchronizeProject = (weldingPoints) => {
     ));
 };
 
+const isToleranceValid = (weldingPoint) => {
+    if (weldingPoint.tolerance == null) {
+        return true;
+    }
+
+    const xDistSquare = Math.pow((weldingPoint.x - weldingPoint.x_original), 2);
+    const yDistSquare = Math.pow((weldingPoint.y - weldingPoint.y_original), 2);
+    const zDistSquare = Math.pow((weldingPoint.z - weldingPoint.z_original), 2);
+    const distanceFromOrigin = Math.pow((xDistSquare + yDistSquare + zDistSquare), 0.5);
+
+    return distanceFromOrigin <= weldingPoint.tolerance;
+};
+
 const EditDialog = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [selectedProject, setSelectedProject] = useState(undefined);
     const [weldingPoints, setWeldingPoints] = useState([]);
     const [robots, setRobots] = useState([]);
     const [open, setOpen] = useState(true);
+    
+    const [validWeldingPoints, setValidWeldingPoints] = useState([]);
 
     let navigate = useNavigate();
     let {id} = useParams();
@@ -74,30 +81,21 @@ const EditDialog = () => {
             });
     }, []);
 
+    const setValidatedWeldingPoints = (candidateWeldingPoints) => {
+        setValidWeldingPoints(candidateWeldingPoints.filter(isToleranceValid));
+        setWeldingPoints(candidateWeldingPoints);
+    };
 
     const onValidatedSave = () => {
-        let validated = true;
-
-        for (const wp of weldingPoints) {
-            if (wp.tolerance != null) {
-                let xDistSquare = Math.pow((wp.x - wp.x_original), 2);
-                let yDistSquare = Math.pow((wp.y - wp.y_original), 2);
-                let zDistSquare = Math.pow((wp.z - wp.z_original), 2);
-                let distanceFromOrigin = Math.pow((xDistSquare + yDistSquare + zDistSquare), 0.5);
-
-                if (distanceFromOrigin > wp.tolerance) {
-                    validated = false;
-                }
-            }
-        }
+        const localValidWeldingPoints = weldingPoints.filter(isToleranceValid);
         
-        if (validated) {
+        if (localValidWeldingPoints.length === weldingPoints.length) {
+            setValidWeldingPoints([]);
             synchronizeProject(weldingPoints)
                 .then(() => Notifications.notify("Synchronized project", "success"))
-                .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`));
+                .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`, "error"));
         } else {
-            // ToDo: replace with proper hints
-            Notifications.notify("Tolerance not complied!");
+            setValidWeldingPoints(localValidWeldingPoints);
         }
 
     }
@@ -128,14 +126,23 @@ const EditDialog = () => {
                         <Editor
                             project={selectedProject}
                             weldingPoints={weldingPoints}
-                            setWeldingPoints={setWeldingPoints}
+                            validWeldingPoints={validWeldingPoints}
+                            setWeldingPoints={setValidatedWeldingPoints}
                             robots={robots}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={onValidatedSave} variant="contained" size="medium" endIcon={<SaveIcon/>}>
-                            Save
-                        </Button>
+                        {validWeldingPoints.length === weldingPoints.length ? (
+                            <Button onClick={onValidatedSave} variant="contained" size="medium" endIcon={<SaveIcon/>}>
+                                Save
+                            </Button>
+                        ) : (
+                            <Tooltip title="There are invalid welding points">
+                                <Button variant="contained" size="medium" endIcon={<SaveIcon/>} color="error">
+                                    Save
+                                </Button>
+                            </Tooltip>
+                        )}
                     </DialogActions>
                 </Dialog>
             ) : projectRetrievalState === "success" ? (

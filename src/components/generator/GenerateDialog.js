@@ -17,16 +17,6 @@ const GenerateDialogRoot = styled("div")({
   }
 });
 
-const StyledButton = styled(Button)({
-    cursor: "pointer",
-    width: "128px",
-    display: "flex",
-
-    ":hover": {
-        backgroundColor: "#BFBFBF",
-    },
-});
-
 const StyledDialogTitle = styled(DialogTitle)({
     display: "flex",
     justifyContent: "space-between"

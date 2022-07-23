@@ -1,6 +1,6 @@
 import {ReactComponent as IconDrag} from "../../icons/IconDrag.svg";
-import {SortableKnob, SortableItem} from "react-easy-sort";
-import {Button, IconButton, styled, Tooltip} from "@mui/material";
+import {SortableItem, SortableKnob} from "react-easy-sort";
+import {IconButton, styled, Tooltip} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UndoIcon from '@mui/icons-material/Undo';
 
@@ -52,10 +52,10 @@ const RobotTypeCellValue = styled("select")(CommonCellStyle);
 
 const WELDING_POINT_PROPERTIES = ["x", "y", "z", "roll", "pitch", "yaw", "tolerance"];
 
-const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete, onReset}) => {
+const WeldingPointRow = ({weldingPoint, isValid, updateValue, robots, onDelete, onReset}) => {
     return (
         <SortableItem>
-            <PointRow>
+            <PointRow style={isValid ? undefined : {boxShadow: "0 0 4px 1px red"}}>
                 <SortableKnob>
                     <CellKnob>
                         <StyledIconDrag/>

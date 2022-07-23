@@ -134,7 +134,7 @@ const EMPTY_WELDING_POINT = {
     "tolerance": ""
 };
 
-const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
+const Editor = ({project, weldingPoints, setWeldingPoints, robots, validWeldingPoints}) => {
     const [pointRetrievalState, setPointRetrievalState] = useState("idle");
     const [newWeldingPoint, setNewWeldingPoint] = useState({...EMPTY_WELDING_POINT, project_id: project.id});
 
@@ -200,11 +200,12 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                         <SortableList onSortEnd={onSortEnd}>
                             {weldingPoints
                                 .sort((a, b) => a.welding_order > b.welding_order)
-                                .map((weldingPoint) => (
+                                .map((wp) => (
                                     <WeldingPointRow
-                                        key={weldingPoint.id}
-                                        weldingPoint={weldingPoint}
-                                        updateValue={(field, value) => updateValue(weldingPoint, field, value)}
+                                        key={wp.id}
+                                        weldingPoint={wp}
+                                        isValid={!!validWeldingPoints.find((validWp) => wp.id === validWp.id)}
+                                        updateValue={(field, value) => updateValue(wp, field, value)}
                                         robots={robots}
                                         onDelete={onDelete}
                                         onReset={onReset}

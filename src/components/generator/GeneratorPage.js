@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import {
-    Button,
     IconButton,
     Paper,
     styled,
@@ -11,7 +10,8 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Tooltip
+    TableRow,
+    Tooltip
 } from '@mui/material';
 import {Link, Outlet} from "react-router-dom";
 import GenerateDialog from "./GenerateDialog";
@@ -69,15 +69,6 @@ const StyledSingleTableCell = styled(StyledTableCell)({
 });
 const StyledDoubleTableCell = styled(StyledTableCell)({
     width: 'calc(100% / 8 * 2)',
-});
-
-const StyledButton = styled(Button)({
-    cursor: 'pointer',
-    width: '128px',
-
-    ':hover': {
-        backgroundColor: '#BFBFBF',
-    },
 });
 
 const StyledLink = styled(Link)({
