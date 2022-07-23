@@ -5,7 +5,7 @@ import FileUpload from "./upload/FileUpload";
 import GeneratorPage from "./generator/GeneratorPage";
 import RobotTypePage from "./robot/RobotTypePage";
 import TemplatePage from "./template/TemplatePage";
-import EditDialog from "./generator/EditDialog";
+import ProjectDetailDialog from "./generator/ProjectDetailDialog";
 
 
 const FrontPageRoot = styled.div`
@@ -26,7 +26,7 @@ const FrontPage = () => {
                 <Routes>
                     <Route path="/create" element={<FileUpload/>}/>
                     <Route path="/view" element={<GeneratorPage/>}>
-                        <Route path=":id" element={<EditDialog/>}/>
+                        <Route path=":id" element={<ProjectDetailDialog/>}/>
                     </Route>
                     <Route path="/robot" element={<RobotTypePage/>}/>
                     <Route path="/template" element={<TemplatePage/>}/>

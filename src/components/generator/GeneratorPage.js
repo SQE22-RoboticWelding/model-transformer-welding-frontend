@@ -13,12 +13,8 @@ import {
     TableRow,
     Tooltip
 } from '@mui/material';
-import {Link, Outlet} from "react-router-dom";
-import GenerateDialog from "./GenerateDialog";
-import Notifications from "../common/Notifications";
-import EditIcon from "@mui/icons-material/Edit";
-import CodeIcon from "@mui/icons-material/Code";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {Link, Outlet, useLocation} from "react-router-dom";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const GeneratorPageRoot = styled('div')({
     width: '100%',
@@ -71,33 +67,18 @@ const StyledDoubleTableCell = styled(StyledTableCell)({
     width: 'calc(100% / 8 * 2)',
 });
 
-const StyledLink = styled(Link)({
-    textDecoration: "none",
-});
-
 const GeneratorPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
-    const [selectedProject, setSelectedProject] = useState(undefined);
-    const [open, setOpen] = useState(false);
+
+    const state = useLocation();
 
     useEffect(() => {
         setProjectRetrievalState("loading");
         FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
             .then((projects) => setAvailableProjects(projects))
             .finally(() => setProjectRetrievalState("idle"));
-    }, []);
-
-    const onGenerate = (project) => {
-        setSelectedProject(project);
-        setOpen(true);
-    };
-
-    const onDelete = (id) => {
-        FetchHandler.simple(fetch(`${Settings.projectsPath}/${id}`, {method: "DELETE"}))
-            .then(() => setAvailableProjects(availableProjects.filter(project => project.id !== id)))
-            .catch((err) => Notifications.notify(`Failed to delete project\n${err}`, "error"));
-    };
+    }, [state]);
 
     return (
         <GeneratorPageRoot>
@@ -122,24 +103,10 @@ const GeneratorPage = () => {
                                     <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                                     <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                                     <StyledSingleTableCell>
-                                        <Tooltip title="Edit project">
-                                        <StyledLink to={`${project.id}`}>
-                                            <IconButton>
-                                                <EditIcon color="info"/>
+                                        <Tooltip title="Edit/delete/generate project">
+                                            <IconButton component={Link} to={`${project.id}`}>
+                                                <SettingsIcon/>
                                             </IconButton>
-                                        </StyledLink>
-                                        </Tooltip>
-
-                                        <Tooltip title="Generate code for project">
-                                        <IconButton onClick={() => onGenerate(project)}>
-                                            <CodeIcon color="info" />
-                                        </IconButton>
-                                        </Tooltip>
-
-                                        <Tooltip title="Delete project">
-                                        <IconButton onClick={() => onDelete(project.id)}>
-                                            <DeleteIcon color="error" />
-                                        </IconButton>
                                         </Tooltip>
                                     </StyledSingleTableCell>
                                 </StyledBodyTableRow>
@@ -152,16 +119,6 @@ const GeneratorPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
-
-            {selectedProject && (
-                <GenerateDialog
-                    open={open}
-                    setOpen={setOpen}
-                    selectedProject={selectedProject}
-                    setSelectedProject={setSelectedProject}
-                />
-            )}
-
             <Outlet/>
         </GeneratorPageRoot>
     );

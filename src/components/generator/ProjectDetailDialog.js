@@ -3,10 +3,22 @@ import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
 import Editor from "../editor/Editor";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, styled, Tooltip} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle, Grid,
+    IconButton,
+    styled,
+    Tooltip
+} from '@mui/material';
 import {Link, useNavigate, useParams} from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
+import CodeIcon from "@mui/icons-material/Code";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const EditDialogRoot = styled('div')({
     width: '100%',
@@ -22,6 +34,14 @@ const EditDialogRoot = styled('div')({
 const StyledDialogTitle = styled(DialogTitle)({
     display: "flex",
     justifyContent: "space-between"
+});
+
+const ControlButton = styled(IconButton)({
+    width: "60px",
+    display: "flex",
+    flexDirection: "column",
+    fontSize: "12px",
+    fontWeight: "400"
 });
 
 const synchronizeProject = (weldingPoints) => {
@@ -44,12 +64,12 @@ const isToleranceValid = (weldingPoint) => {
     return distanceFromOrigin <= weldingPoint.tolerance;
 };
 
-const EditDialog = () => {
+const ProjectDetailDialog = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [selectedProject, setSelectedProject] = useState(undefined);
     const [weldingPoints, setWeldingPoints] = useState([]);
     const [robots, setRobots] = useState([]);
-    const [open, setOpen] = useState(true);
+    const [generateOpened, setGenerateOpened] = useState(false);
     
     const [validWeldingPoints, setValidWeldingPoints] = useState([]);
 
@@ -98,38 +118,68 @@ const EditDialog = () => {
             setValidWeldingPoints(localValidWeldingPoints);
         }
 
-    }
+    };
 
-    const closeEdit = () => {
-        setOpen(false);
+    const openGenerate = () => {
+        FetchHandler.simple(fetch(Settings.validateGeneratePath(selectedProject.id), {method: "GET"}))
+            .then(() => setGenerateOpened(true))
+            .catch((err) => Notifications.notify(`Generation validation failed\n${err}`, "error"));
+    };
+
+    const closeDialog = () => {
         navigate("/view");
+    };
+
+    const onDelete = () => {
+        FetchHandler.simple(fetch(`${Settings.projectsPath}/${id}`, {method: "DELETE"}))
+            .then(() => navigate("/view", {state: "refreshProjects"}))
+            .catch((err) => Notifications.notify(`Failed to delete project\n${err}`, "error"));
     };
 
     return (
         <EditDialogRoot>
             {(projectRetrievalState === "success" && selectedProject !== undefined) ? (
                 <Dialog
-                    open={open}
-                    onClose={closeEdit}
-                    maxWidth="lg"
-                    fullWidth={true}
+                    open={Boolean(id) || id === 0}
+                    onClose={closeDialog}
+                    fullScreen
                 >
                     <StyledDialogTitle>
                         <b>{selectedProject.name}</b>
-                        <Link to="/view">
-                            <IconButton>
-                                <CloseIcon/>
-                            </IconButton>
-                        </Link>
+                        <Grid item display="flex">
+                            <ControlButton component={Link} to="/view">
+                                <ArrowBackIcon/>
+                                <div>
+                                    Back
+                                </div>
+                            </ControlButton>
+
+                            <ControlButton onClick={openGenerate}>
+                                <CodeIcon color="info"/>
+                                Code
+                            </ControlButton>
+
+                            <ControlButton onClick={onDelete}>
+                                <DeleteIcon color="error"/>
+                                Delete
+                            </ControlButton>
+                        </Grid>
                     </StyledDialogTitle>
                     <DialogContent dividers>
-                        <Editor
-                            project={selectedProject}
-                            weldingPoints={weldingPoints}
-                            validWeldingPoints={validWeldingPoints}
-                            setWeldingPoints={setValidatedWeldingPoints}
-                            robots={robots}
-                        />
+                        {generateOpened ? (
+                            <Button variant="contained" size="medium" endIcon={<FileDownloadIcon/>}
+                                    href={Settings.generatePath(selectedProject.id)}>
+                                Download
+                            </Button>
+                        ) : (
+                            <Editor
+                                project={selectedProject}
+                                weldingPoints={weldingPoints}
+                                validWeldingPoints={validWeldingPoints}
+                                setWeldingPoints={setValidatedWeldingPoints}
+                                robots={robots}
+                            />
+                        )}
                     </DialogContent>
                     <DialogActions>
                         {validWeldingPoints.length === weldingPoints.length ? (
@@ -158,4 +208,4 @@ const EditDialog = () => {
     );
 };
 
-export default EditDialog;
+export default ProjectDetailDialog;
