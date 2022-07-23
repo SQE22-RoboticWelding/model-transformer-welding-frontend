@@ -110,7 +110,7 @@ const ProjectDetailDialog = () => {
         const localValidWeldingPoints = weldingPoints.filter(isToleranceValid);
         
         if (localValidWeldingPoints.length === weldingPoints.length) {
-            setValidWeldingPoints([]);
+            setValidWeldingPoints(weldingPoints);
             synchronizeProject(weldingPoints)
                 .then(() => Notifications.notify("Synchronized project", "success"))
                 .catch((err) => Notifications.notify(`Failed to synchronize project\n${err}`, "error"));
