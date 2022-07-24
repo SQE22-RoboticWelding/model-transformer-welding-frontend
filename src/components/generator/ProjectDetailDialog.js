@@ -145,15 +145,16 @@ const ProjectDetailDialog = () => {
                     fullScreen
                 >
                     <StyledDialogTitle>
+                        <Grid item display="flex" gap="50px" >
+                        <ControlButton component={Link} to="/view">
+                            <ArrowBackIcon/>
+                            <div>
+                                Back
+                            </div>
+                        </ControlButton>
                         <b>{selectedProject.name}</b>
+                        </Grid>
                         <Grid item display="flex">
-                            <ControlButton component={Link} to="/view">
-                                <ArrowBackIcon/>
-                                <div>
-                                    Back
-                                </div>
-                            </ControlButton>
-
                             <ControlButton onClick={openGenerate}>
                                 <CodeIcon color="info"/>
                                 Code
