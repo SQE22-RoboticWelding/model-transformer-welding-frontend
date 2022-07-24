@@ -154,15 +154,15 @@ const ProjectDetailDialog = () => {
                         </ControlButton>
                         <b>{selectedProject.name}</b>
                         </Grid>
-                        <Grid item display="flex">
+                        <Grid item display="flex" gap="30px">
                             <ControlButton onClick={openGenerate}>
                                 <CodeIcon color="info"/>
-                                Code
+                                Generate Code
                             </ControlButton>
 
                             <ControlButton onClick={onDelete}>
                                 <DeleteIcon color="error"/>
-                                Delete
+                                Delete Project
                             </ControlButton>
                         </Grid>
                     </StyledDialogTitle>
