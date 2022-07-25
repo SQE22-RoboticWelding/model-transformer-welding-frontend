@@ -1,5 +1,5 @@
 import {SortableKnob, SortableItem} from "react-easy-sort";
-import {IconButton, styled, Tooltip} from "@mui/material";
+import {IconButton, styled, Tooltip, Typography} from "@mui/material";
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import DeleteIcon from "@mui/icons-material/Delete";
 import UndoIcon from '@mui/icons-material/Undo';
@@ -7,7 +7,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 
 const PointRow = styled("div")({
     zIndex: "999999999999",
-    padding: "8px",
+    padding: "8px 8px 24px 8px",
     marginTop: "6px",
     backgroundColor: "#E5E5E5",
     borderRadius: "8px",
@@ -29,6 +29,15 @@ const CommonCellStyle = {
     background: "none"
 };
 
+const CoordinateCell = styled("div")({
+    position: "relative"
+});
+
+const CoordinateLabel = styled(Typography)({
+    position: "absolute",
+    top: "100%"
+});
+
 const Cell = styled("input")({
     ...CommonCellStyle,
     ":focus": {
@@ -45,7 +54,8 @@ const CellKnob = styled("div")({
 
 const RobotTypeCellValue = styled("select")(CommonCellStyle);
 
-const WELDING_POINT_PROPERTIES = ["x", "y", "z", "roll", "pitch", "yaw", "tolerance"];
+const COORDINATE_PROPERTIES = ["x", "y", "z"];
+const OTHER_PROPERTIES = ["roll", "pitch", "yaw", "tolerance"];
 
 const WeldingPointRow = ({weldingPoint, isValid, updateValue, robots, onDelete, onReset}) => {
     return (
@@ -59,13 +69,29 @@ const WeldingPointRow = ({weldingPoint, isValid, updateValue, robots, onDelete, 
 
                 <Cell value={weldingPoint.name} onChange={(evt) => updateValue("name", evt.target.value)}/>
 
-                {WELDING_POINT_PROPERTIES.map((field) => (
+                {COORDINATE_PROPERTIES.map((field) => (
+                    <CoordinateCell key={field}>
+                        <Cell
+                            value={weldingPoint[field] === null ? "" : weldingPoint[field]}
+                            onChange={(evt) => updateValue(field, evt.target.value)}
+                            style={{width: "100%"}}
+                        />
+                        <CoordinateLabel fontSize="xx-small">
+                            Originally:<br/>
+                            {weldingPoint[`${field}_original`]}
+                        </CoordinateLabel>
+                    </CoordinateCell>
+                ))}
+
+
+                {OTHER_PROPERTIES.map((field) => (
                     <Cell
                         key={field}
                         value={weldingPoint[field] === null ? "" : weldingPoint[field]}
                         onChange={(evt) => updateValue(field, evt.target.value)}
                     />
                 ))}
+
                 <RobotTypeCellValue
                     value={weldingPoint.robot_id === null ? "" : weldingPoint.robot_id}
                     onChange={(evt) => updateValue("robot_id", evt.target.value === "" ? null : evt.target.value)}
