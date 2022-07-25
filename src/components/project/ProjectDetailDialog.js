@@ -127,12 +127,12 @@ const ProjectDetailDialog = () => {
     };
 
     const closeDialog = () => {
-        navigate("/view");
+        navigate("/project");
     };
 
     const onDelete = () => {
         FetchHandler.simple(fetch(`${Settings.projectsPath}/${id}`, {method: "DELETE"}))
-            .then(() => navigate("/view", {state: "refreshProjects"}))
+            .then(() => navigate("/project", {state: "refreshProjects"}))
             .catch((err) => Notifications.notify(`Failed to delete project\n${err}`, "error"));
     };
 
@@ -146,7 +146,7 @@ const ProjectDetailDialog = () => {
                 >
                     <StyledDialogTitle>
                         <Grid item display="flex" gap="50px" >
-                        <ControlButton component={Link} to="/view">
+                        <ControlButton component={Link} to="/project">
                             <ArrowBackIcon/>
                             <div style={{lineHeight: "2"}}>
                                 Back
