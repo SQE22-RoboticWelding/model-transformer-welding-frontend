@@ -4,7 +4,7 @@ import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
 import Editor from "./editor/Editor";
 import {
-    Button,
+    Button, Container,
     Dialog,
     DialogActions,
     DialogContent,
@@ -19,6 +19,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import CodeIcon from "@mui/icons-material/Code";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import DescriptionIcon from '@mui/icons-material/Description';
+import ModelFilePropertyEditor from "./modelfile/ModelFilePropertyEditor";
+
 
 const EditDialogRoot = styled('div')({
     width: '100%',
@@ -69,15 +72,14 @@ const ProjectDetailDialog = () => {
     const [selectedProject, setSelectedProject] = useState(undefined);
     const [weldingPoints, setWeldingPoints] = useState([]);
     const [robots, setRobots] = useState([]);
-    const [generateOpened, setGenerateOpened] = useState(false);
-    
+    const [openDialog, setOpenDialog] = useState("");
+
     const [validWeldingPoints, setValidWeldingPoints] = useState([]);
 
     let navigate = useNavigate();
     let {id} = useParams();
 
-    useEffect(() => {
-        setProjectRetrievalState("loading");
+    const refreshProject = () => {
         FetchHandler.readingJson(fetch(`${Settings.projectsPath}/${id}`, {method: "GET"}))
             .then((project) => {
                 setSelectedProject(project);
@@ -87,6 +89,12 @@ const ProjectDetailDialog = () => {
                 Notifications.notify(`Failed to retrieve projects\n${err}`, "error");
                 setProjectRetrievalState("failed");
             });
+    };
+
+    useEffect(() => {
+        setProjectRetrievalState("loading");
+        refreshProject();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     useEffect(() => {
@@ -108,7 +116,7 @@ const ProjectDetailDialog = () => {
 
     const onValidatedSave = () => {
         const localValidWeldingPoints = weldingPoints.filter(isToleranceValid);
-        
+
         if (localValidWeldingPoints.length === weldingPoints.length) {
             setValidWeldingPoints(weldingPoints);
             synchronizeProject(weldingPoints)
@@ -120,11 +128,17 @@ const ProjectDetailDialog = () => {
 
     };
 
-    const openGenerate = () => {
-        FetchHandler.simple(fetch(Settings.validateGeneratePath(selectedProject.id), {method: "GET"}))
-            .then(() => setGenerateOpened(true))
-            .catch((err) => Notifications.notify(`Generation validation failed\n${err}`, "error"));
+    const toggleGenerate = () => {
+        if (openDialog === "generator") {
+            setOpenDialog("");
+        } else {
+            FetchHandler.simple(fetch(Settings.validateGeneratePath(selectedProject.id), {method: "GET"}))
+                .then(() => setOpenDialog("generator"))
+                .catch((err) => Notifications.notify(`Generation validation failed\n${err}`, "error"));
+        }
     };
+
+    const toggleModel = () => setOpenDialog(openDialog === "model" ? "" : "model");
 
     const closeDialog = () => {
         navigate("/project");
@@ -145,17 +159,22 @@ const ProjectDetailDialog = () => {
                     fullScreen
                 >
                     <StyledDialogTitle>
-                        <Grid item display="flex" gap="50px" >
-                        <ControlButton component={Link} to="/project">
-                            <ArrowBackIcon/>
-                            <div style={{lineHeight: "2"}}>
-                                Back
-                            </div>
-                        </ControlButton>
-                        <b>{selectedProject.name}</b>
+                        <Grid item display="flex" gap="50px">
+                            <ControlButton component={Link} to="/project">
+                                <ArrowBackIcon/>
+                                <div style={{lineHeight: "2"}}>
+                                    Back
+                                </div>
+                            </ControlButton>
+                            <b>{selectedProject.name}</b>
                         </Grid>
                         <Grid item display="flex" gap="30px">
-                            <ControlButton onClick={openGenerate}>
+                            <ControlButton onClick={toggleModel}>
+                                <DescriptionIcon color="action"/>
+                                Edit Workpiece
+                            </ControlButton>
+
+                            <ControlButton onClick={toggleGenerate}>
                                 <CodeIcon color="info"/>
                                 Generate Code
                             </ControlButton>
@@ -167,20 +186,36 @@ const ProjectDetailDialog = () => {
                         </Grid>
                     </StyledDialogTitle>
                     <DialogContent dividers>
-                        {generateOpened ? (
-                            <Button variant="contained" size="medium" endIcon={<FileDownloadIcon/>}
-                                    href={Settings.generatePath(selectedProject.id)}>
-                                Download
-                            </Button>
-                        ) : (
-                            <Editor
-                                project={selectedProject}
-                                weldingPoints={weldingPoints}
-                                validWeldingPoints={validWeldingPoints}
-                                setWeldingPoints={setValidatedWeldingPoints}
-                                robots={robots}
-                            />
-                        )}
+                        <Editor
+                            project={selectedProject}
+                            weldingPoints={weldingPoints}
+                            validWeldingPoints={validWeldingPoints}
+                            setWeldingPoints={setValidatedWeldingPoints}
+                            robots={robots.filter((robot) => robot.project_id === selectedProject.id)}
+                        />
+
+                        <Dialog open={Boolean(openDialog)} onClose={() => setOpenDialog("")}>
+                            {openDialog === "generator" ? (
+                                <>
+                                    <DialogTitle>Generated code</DialogTitle>
+                                    <DialogActions>
+                                        <Container>
+                                            <Button variant="contained" size="medium" endIcon={<FileDownloadIcon/>}
+                                                    href={Settings.generatePath(selectedProject.id)}>
+                                                Download
+                                            </Button>
+                                        </Container>
+                                    </DialogActions>
+                                </>
+                            ) : openDialog === "model" && (
+                                <>
+                                    <DialogTitle>Edit Workpiece</DialogTitle>
+                                    <DialogContent>
+                                        <ModelFilePropertyEditor project={selectedProject} onUpdate={refreshProject}/>
+                                    </DialogContent>
+                                </>
+                            )}
+                        </Dialog>
                     </DialogContent>
                     <DialogActions>
                         {validWeldingPoints.length === weldingPoints.length ? (

@@ -216,7 +216,7 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
 
                     <IconButton
                         disabled={!modelFileContent}
-                        href={FileUtils.toDownloadableFle(modelFileName, modelFileContent)}
+                        href={FileUtils.toDownloadableFile(modelFileName, modelFileContent)}
                         download={modelFileName}
                         target="_blank"
                     >
