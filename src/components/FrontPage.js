@@ -3,9 +3,10 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ProjectPage from "./project/ProjectPage";
 import RobotTypePage from "./robot/RobotTypePage";
 import TemplatePage from "./template/TemplatePage";
-import EditDialog from "./project/EditDialog";
+import ProjectDetailDialog from "./project/ProjectDetailDialog";
 import FileUpload from "./project/upload/FileUpload";
 import {Grid} from "@mui/material";
+
 
 const FrontPage = () => (
     <Grid
@@ -22,7 +23,7 @@ const FrontPage = () => (
             <Routes>
                 <Route path="/create" element={<FileUpload/>}/>
                 <Route path="/project" element={<ProjectPage/>}>
-                    <Route path=":id" element={<EditDialog/>}/>
+                    <Route path=":id" element={<ProjectDetailDialog/>}/>
                 </Route>
                 <Route path="/robot" element={<RobotTypePage/>}/>
                 <Route path="/template" element={<TemplatePage/>}/>

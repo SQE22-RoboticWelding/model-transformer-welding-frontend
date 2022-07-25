@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import {
-    Button,
+    IconButton,
     Grid,
     Paper,
     styled,
@@ -11,12 +11,12 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow,
+    Tooltip
 } from '@mui/material';
-import {Link, Outlet} from "react-router-dom";
-import GenerateDialog from "./GenerateDialog";
-import Notifications from "../common/Notifications";
+import {Link, Outlet, useLocation} from "react-router-dom";
 import ProjectCreator from "./upload/ProjectCreator";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const StyledTable = styled(Table)({
     width: '100%',
@@ -58,35 +58,11 @@ const StyledDoubleTableCell = styled(StyledTableCell)({
     width: 'calc(100% / 8 * 2)',
 });
 
-const StyledButton = styled(Button)({
-    cursor: 'pointer',
-    width: '128px',
-
-    ':hover': {
-        backgroundColor: '#BFBFBF',
-    },
-});
-
-const StyledLink = styled(Link)({
-    textDecoration: "none",
-});
-
 const ProjectPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
-    const [selectedProject, setSelectedProject] = useState(undefined);
-    const [open, setOpen] = useState(false);
 
-    const onGenerate = (project) => {
-        setSelectedProject(project);
-        setOpen(true);
-    };
-
-    const onDelete = (id) => {
-        FetchHandler.simple(fetch(`${Settings.projectsPath}/${id}`, {method: "DELETE"}))
-            .then(() => setAvailableProjects(availableProjects.filter(project => project.id !== id)))
-            .catch((err) => Notifications.notify(`Failed to delete project\n${err}`, "error"));
-    };
+    const state = useLocation();
 
     const refreshProjects = () => {
         FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
@@ -97,7 +73,7 @@ const ProjectPage = () => {
     useEffect(() => {
         setProjectRetrievalState("loading");
         refreshProjects("loading")
-    }, []);
+    }, [state]);
 
     return (
         <Grid container direction="column" alignItems="center" rowGap="24px">
@@ -112,9 +88,7 @@ const ProjectPage = () => {
                                 <StyledDoubleTableCell>Description</StyledDoubleTableCell>
                                 <StyledSingleTableCell>Created</StyledSingleTableCell>
                                 <StyledSingleTableCell>Last Modification</StyledSingleTableCell>
-                                <StyledSingleTableCell>Edit</StyledSingleTableCell>
-                                <StyledSingleTableCell>Generate</StyledSingleTableCell>
-                                <StyledSingleTableCell>Delete</StyledSingleTableCell>
+                                <StyledSingleTableCell>Actions</StyledSingleTableCell>
                             </StyledHeadTableRow>
                         </StyledTableHead>
 
@@ -126,21 +100,11 @@ const ProjectPage = () => {
                                     <StyledSingleTableCell>{new Date(project.created_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                                     <StyledSingleTableCell>{new Date(project.modified_at).toLocaleString("de-DE")}</StyledSingleTableCell>
                                     <StyledSingleTableCell>
-                                        <StyledLink to={`${project.id}`}>
-                                            <StyledButton>
-                                                Edit
-                                            </StyledButton>
-                                        </StyledLink>
-                                    </StyledSingleTableCell>
-                                    <StyledSingleTableCell>
-                                        <StyledButton onClick={() => onGenerate(project)}>
-                                            Generate
-                                        </StyledButton>
-                                    </StyledSingleTableCell>
-                                    <StyledSingleTableCell>
-                                        <StyledButton onClick={() => onDelete(project.id)}>
-                                            Delete
-                                        </StyledButton>
+                                        <Tooltip title="Edit/delete/generate project">
+                                            <IconButton component={Link} to={`${project.id}`}>
+                                                <SettingsIcon/>
+                                            </IconButton>
+                                        </Tooltip>
                                     </StyledSingleTableCell>
                                 </StyledBodyTableRow>
                             ))}
@@ -152,16 +116,6 @@ const ProjectPage = () => {
             ) : projectRetrievalState === "loading" &&
                 <p>Loading...</p>
             }
-
-            {selectedProject && (
-                <GenerateDialog
-                    open={open}
-                    setOpen={setOpen}
-                    selectedProject={selectedProject}
-                    setSelectedProject={setSelectedProject}
-                />
-            )}
-
             <Outlet/>
         </Grid>
     );

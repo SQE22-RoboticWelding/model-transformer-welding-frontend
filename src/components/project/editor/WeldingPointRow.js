@@ -1,6 +1,8 @@
 import {SortableKnob, SortableItem} from "react-easy-sort";
-import {Button, styled} from "@mui/material";
+import {IconButton, styled, Tooltip} from "@mui/material";
 import DragHandleIcon from '@mui/icons-material/DragHandle';
+import DeleteIcon from "@mui/icons-material/Delete";
+import UndoIcon from '@mui/icons-material/Undo';
 
 
 const PointRow = styled("div")({
@@ -45,10 +47,10 @@ const RobotTypeCellValue = styled("select")(CommonCellStyle);
 
 const WELDING_POINT_PROPERTIES = ["x", "y", "z", "roll", "pitch", "yaw", "tolerance"];
 
-const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
+const WeldingPointRow = ({weldingPoint, isValid, updateValue, robots, onDelete, onReset}) => {
     return (
         <SortableItem>
-            <PointRow>
+            <PointRow style={isValid ? undefined : {boxShadow: "0 0 4px 1px red"}}>
                 <SortableKnob>
                     <CellKnob>
                         <DragHandleIcon transform="scale(0.8)"/>
@@ -74,18 +76,29 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
                             key={robot.id}
                             value={robot.id}
                         >
-                            [{robot.id}]: {robot.name}
+                            {robot.name}
                         </option>
                     ))}
                 </RobotTypeCellValue>
 
-                <Button
+                <Tooltip title="Reset X, Y, Z to original values">
+                    <IconButton
+                        key="Reset"
+                        style={{border: "none"}}
+                        onClick={() => onReset(weldingPoint)}
+                    >
+                        <UndoIcon color="warning" />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Delete welding point">
+                <IconButton
                     key="Delete"
-                    style={{width: "84px"}}
-                    onClick={() => onDelete(weldingPoint.id)}
+                    onClick={() => onDelete(weldingPoint)}
                 >
-                    Delete
-                </Button>
+                    <DeleteIcon color="error"/>
+                </IconButton>
+                </Tooltip>
             </PointRow>
         </SortableItem>
     );

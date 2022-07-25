@@ -4,7 +4,8 @@ import Settings from "../../common/settings";
 import WeldingPointRow from "./WeldingPointRow";
 import FetchHandler from "../../common/FetchHandler";
 import Notifications from "../../common/Notifications";
-import {Button, Container, styled} from "@mui/material";
+import {Container, IconButton, styled} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 
 const PointRow = styled("div")({
@@ -133,7 +134,7 @@ const EMPTY_WELDING_POINT = {
     "tolerance": ""
 };
 
-const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
+const Editor = ({project, weldingPoints, setWeldingPoints, robots, validWeldingPoints}) => {
     const [pointRetrievalState, setPointRetrievalState] = useState("idle");
     const [newWeldingPoint, setNewWeldingPoint] = useState({...EMPTY_WELDING_POINT, project_id: project.id});
 
@@ -171,6 +172,15 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
             .then((createdWeldingPoint) => setWeldingPoints([...weldingPoints, createdWeldingPoint]));
     };
 
+    const onReset = (weldingPoint) => {
+        const idx = weldingPoints.indexOf(weldingPoint);
+        setWeldingPoints([
+            ...weldingPoints.slice(0, idx),
+            {...weldingPoint, x: weldingPoint.x_original === "" ? null : weldingPoint.x_original},
+            ...weldingPoints.slice(idx + 1)
+        ]);
+    };
+
     return (
         <div>
             {pointRetrievalState === "idle" ? (
@@ -186,18 +196,20 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                             <HeaderCell>Yaw</HeaderCell>
                             <HeaderCell>Tolerance</HeaderCell>
                             <HeaderCell>Robot</HeaderCell>
-                            <HeaderCell>Delete</HeaderCell>
+                            <HeaderCell>Actions</HeaderCell>
                         </HeaderRow>
                         <SortableList onSortEnd={onSortEnd}>
                             {weldingPoints
                                 .sort((a, b) => a.welding_order > b.welding_order)
-                                .map((weldingPoint) => (
+                                .map((wp) => (
                                     <WeldingPointRow
-                                        key={weldingPoint.id}
-                                        weldingPoint={weldingPoint}
-                                        updateValue={(field, value) => updateValue(weldingPoint, field, value)}
+                                        key={wp.id}
+                                        weldingPoint={wp}
+                                        isValid={!!validWeldingPoints.find((validWp) => wp.id === validWp.id)}
+                                        updateValue={(field, value) => updateValue(wp, field, value)}
                                         robots={robots}
                                         onDelete={onDelete}
+                                        onReset={onReset}
                                     />
                                 ))}
                         </SortableList>
@@ -265,9 +277,9 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
                                     </option>
                                 ))}
                             </RobotTypeCellValue>
-                            <Button style={{width: "84px"}} onClick={onAdd}>
-                                Add
-                            </Button>
+                            <IconButton onClick={onAdd}>
+                                <AddIcon color="success"/>
+                            </IconButton>
                         </PointRow>
                     </PointTable>
                 ) : (
