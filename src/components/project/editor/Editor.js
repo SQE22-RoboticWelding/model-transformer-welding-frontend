@@ -146,6 +146,7 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots}) => {
         retrieveWeldingPoints(project.id)
             .then(setWeldingPoints)
             .finally(() => setPointRetrievalState("idle"));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [project.id]);
 
     const onSortEnd = (oldIndex, newIndex) => setWeldingPoints(arrayMove(oldIndex, newIndex, weldingPoints));

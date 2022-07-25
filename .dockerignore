@@ -1,5 +1,4 @@
 Dockerfile
 *.test.js
-setupTests.js
 /build/
 /node_modules/

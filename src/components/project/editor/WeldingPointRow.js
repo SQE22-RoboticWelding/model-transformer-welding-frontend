@@ -1,6 +1,6 @@
-import {ReactComponent as IconDrag} from "../../../icons/IconDrag.svg";
 import {SortableKnob, SortableItem} from "react-easy-sort";
 import {Button, styled} from "@mui/material";
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 
 const PointRow = styled("div")({
@@ -17,11 +17,6 @@ const PointRow = styled("div")({
     "> :not(:nth-child(1), :nth-child(2), :last-child)": {
         borderLeft: "2px solid #8E8E8E"
     }
-});
-
-const StyledIconDrag = styled(IconDrag)({
-    width: "14px",
-    height: "14px"
 });
 
 const CommonCellStyle = {
@@ -41,9 +36,8 @@ const Cell = styled("input")({
 });
 
 const CellKnob = styled("div")({
-    display: "inline-block",
+    display: "flex",
     verticalAlign: "middle",
-    width: "16px",
     cursor: "grab"
 });
 
@@ -57,7 +51,7 @@ const WeldingPointRow = ({weldingPoint, updateValue, robots, onDelete}) => {
             <PointRow>
                 <SortableKnob>
                     <CellKnob>
-                        <StyledIconDrag/>
+                        <DragHandleIcon transform="scale(0.8)"/>
                     </CellKnob>
                 </SortableKnob>
 
