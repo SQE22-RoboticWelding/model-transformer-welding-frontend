@@ -19,9 +19,6 @@ const DEFAULT_DESCRIPTION_HELPER = "Description";
 const DEFAULT_POSITION_X_HELPER = "x";
 const DEFAULT_POSITION_Y_HELPER = "y";
 const DEFAULT_POSITION_Z_HELPER = "z";
-const DEFAULT_POSITION_NORM_VECTOR_X_HELPER = "x";
-const DEFAULT_POSITION_NORM_VECTOR_Y_HELPER = "y";
-const DEFAULT_POSITION_NORM_VECTOR_Z_HELPER = "z";
 
 const EMPTY_ROBOT = {
     name: "",
@@ -54,18 +51,12 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
     const [positionX, setPositionX] = useState(robot.position_x);
     const [positionY, setPositionY] = useState(robot.position_y);
     const [positionZ, setPositionZ] = useState(robot.position_z);
-    const [positionNormVectorX, setPositionNormVectorX] = useState(robot.position_norm_vector_x);
-    const [positionNormVectorY, setPositionNormVectorY] = useState(robot.position_norm_vector_y);
-    const [positionNormVectorZ, setPositionNormVectorZ] = useState(robot.position_norm_vector_z);
 
     const [nameHelper, setNameHelper] = useState(DEFAULT_NAME_HELPER);
     const [projectHelper, setProjectHelper] = useState(DEFAULT_PROJECT_HELPER);
     const [positionXHelper, setPositionXHelper] = useState(DEFAULT_POSITION_X_HELPER);
     const [positionYHelper, setPositionYHelper] = useState(DEFAULT_POSITION_Y_HELPER);
     const [positionZHelper, setPositionZHelper] = useState(DEFAULT_POSITION_Z_HELPER);
-    const [positionNormVectorXHelper, setPositionNormVectorXHelper] = useState(DEFAULT_POSITION_NORM_VECTOR_X_HELPER);
-    const [positionNormVectorYHelper, setPositionNormVectorYHelper] = useState(DEFAULT_POSITION_NORM_VECTOR_Y_HELPER);
-    const [positionNormVectorZHelper, setPositionNormVectorZHelper] = useState(DEFAULT_POSITION_NORM_VECTOR_Z_HELPER);
 
     const stopBubble = (evt) => {
         evt.stopPropagation();
@@ -109,27 +100,6 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
             setPositionZHelper(DEFAULT_POSITION_Z_HELPER);
         }
 
-        if (isNaN(Number(positionNormVectorX)) || positionNormVectorX === "") {
-            setPositionNormVectorXHelper("x must be a floating point number");
-            validated = false;
-        } else {
-            setPositionNormVectorXHelper(DEFAULT_POSITION_NORM_VECTOR_X_HELPER);
-        }
-
-        if (isNaN(Number(positionNormVectorY)) || positionNormVectorY === "") {
-            setPositionNormVectorYHelper("y must be a floating point number");
-            validated = false;
-        } else {
-            setPositionNormVectorYHelper(DEFAULT_POSITION_NORM_VECTOR_Y_HELPER);
-        }
-
-        if (isNaN(Number(positionNormVectorZ)) || positionNormVectorZ === "") {
-            setPositionNormVectorZHelper("z must be a floating point number");
-            validated = false;
-        } else {
-            setPositionNormVectorZHelper(DEFAULT_POSITION_NORM_VECTOR_Z_HELPER);
-        }
-
         if (validated) {
             onSubmit({
                 name, description,
@@ -137,9 +107,9 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
                 position_x: positionX,
                 position_y: positionY,
                 position_z: positionZ,
-                position_norm_vector_x: positionNormVectorX,
-                position_norm_vector_y: positionNormVectorY,
-                position_norm_vector_z: positionNormVectorZ
+                position_norm_vector_x: 0,
+                position_norm_vector_y: 0,
+                position_norm_vector_z: 1
             });
         }
     };
@@ -229,38 +199,6 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
             </ListItem>
 
             <Divider orientation="horizontal"/>
-
-            <ListItem>
-                <ListItemText>
-                    Normal vector of the robot at its position
-                </ListItemText>
-            </ListItem>
-
-            <ListItem>
-                <CoordinateInput
-                    variant="outlined"
-                    error={DEFAULT_POSITION_NORM_VECTOR_X_HELPER !== positionNormVectorXHelper}
-                    helperText={positionNormVectorXHelper}
-                    value={positionNormVectorX}
-                    onChange={(evt) => setPositionNormVectorX(evt.target.value)}
-                />
-
-                <CoordinateInput
-                    variant="outlined"
-                    error={DEFAULT_POSITION_NORM_VECTOR_Y_HELPER !== positionNormVectorYHelper}
-                    helperText={positionNormVectorYHelper}
-                    value={positionNormVectorY}
-                    onChange={(evt) => setPositionNormVectorY(evt.target.value)}
-                />
-
-                <CoordinateInput
-                    variant="outlined"
-                    error={DEFAULT_POSITION_NORM_VECTOR_Z_HELPER !== positionNormVectorZHelper}
-                    helperText={positionNormVectorZHelper}
-                    value={positionNormVectorZ}
-                    onChange={(evt) => setPositionNormVectorZ(evt.target.value)}
-                />
-            </ListItem>
 
             <ListItemSpreadingChildren>
                 {Boolean(projects?.length) ? (

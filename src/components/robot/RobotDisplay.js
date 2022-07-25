@@ -21,16 +21,11 @@ const RobotDisplay = ({robots, onRobotUpdated, projects}) => {
                                     <TableCell rowSpan={2}>Project</TableCell>
 
                                     <TableCell colSpan={3}>Position</TableCell>
-                                    <TableCell colSpan={3}>Normal Vector</TableCell>
 
                                     <TableCell width={1}/>
                                     <TableCell width={1}/>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell>x</TableCell>
-                                    <TableCell>y</TableCell>
-                                    <TableCell>z</TableCell>
-
                                     <TableCell>x</TableCell>
                                     <TableCell>y</TableCell>
                                     <TableCell>z</TableCell>
@@ -58,10 +53,6 @@ const RobotDisplay = ({robots, onRobotUpdated, projects}) => {
                                         <TableCell>{robot.position_x}</TableCell>
                                         <TableCell>{robot.position_y}</TableCell>
                                         <TableCell>{robot.position_z}</TableCell>
-
-                                        <TableCell>{robot.position_norm_vector_x}</TableCell>
-                                        <TableCell>{robot.position_norm_vector_y}</TableCell>
-                                        <TableCell>{robot.position_norm_vector_z}</TableCell>
 
                                         <TableCell width={1}>
                                             <RobotEditor robot={robot} onRobotUpdated={onRobotUpdated}

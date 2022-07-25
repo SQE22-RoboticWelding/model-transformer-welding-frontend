@@ -210,7 +210,7 @@ const RobotTypePropertyEditor = ({onSubmit, submissionText, onCancel, robotType 
                     <TextField
                         disabled
                         fullWidth
-                        label="File name"
+                        label={modelFileName ? undefined : "File name"}
                         value={modelFileName}
                     />
 
