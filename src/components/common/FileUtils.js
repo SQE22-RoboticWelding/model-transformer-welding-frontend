@@ -17,9 +17,11 @@ class FileUtils {
         }
     });
 
-    static toDownloadableFle = (name, content) => window.URL.createObjectURL(
-        new File([content], name, {type: "text/plain"})
-    );
+    static toDownloadableFile = (name, content) => {
+        return window.URL.createObjectURL(
+            new File([content], name, {type: "text/plain"})
+        );
+    };
 }
 
 export default FileUtils;

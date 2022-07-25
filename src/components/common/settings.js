@@ -9,6 +9,9 @@ class Settings {
     static generatePath = (projectID) => `${Settings.projectsPath}/${projectID}/generate`;
     static generateValidatePath = (projectID) => `${Settings.projectsPath}/${projectID}/generate/validate`;
 
+    static workpiecePath = `${Settings.backendBase}/workpiece`;
+    static workPieceModelPath = (workPieceID) => `${Settings.workpiecePath}/${workPieceID}/model`;
+
     static weldingPointsPath = `${Settings.backendBase}/weldingpoint`;
 
     static robotTypePath = `${Settings.backendBase}/robottype`;
