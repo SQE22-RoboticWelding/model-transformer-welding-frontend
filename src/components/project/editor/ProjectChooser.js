@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import Settings from "../common/settings";
-import {Confirmation} from "../common/StyledComponents";
+import Settings from "../../common/settings";
+import {Confirmation} from "../../common/StyledComponents";
 import styled from "styled-components";
-import FetchHandler from "../common/FetchHandler";
-import Notifications from "../common/Notifications";
+import FetchHandler from "../../common/FetchHandler";
+import Notifications from "../../common/Notifications";
 
 
 const ProjectChooserRoot = styled(Confirmation)`

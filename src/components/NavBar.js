@@ -12,14 +12,8 @@ const NavBar = () => {
         <Drawer anchor="left" variant="permanent">
             <StyledDrawer>
                 <ListItem>
-                    <ListItemButton component={RouterLink} to="/create">
-                        <ListItemText primary="Create Projects"/>
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem>
-                    <ListItemButton component={RouterLink} to="/view">
-                        <ListItemText primary="View Project"/>
+                    <ListItemButton component={RouterLink} to="/project">
+                        <ListItemText primary="Projects"/>
                     </ListItemButton>
                 </ListItem>
 

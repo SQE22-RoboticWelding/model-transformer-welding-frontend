@@ -1,28 +1,18 @@
 import FileDropZone from "./FileDropZone";
-import Settings from "../common/settings";
-import {Confirmation} from "../common/StyledComponents";
-import FetchHandler from "../common/FetchHandler";
+import Settings from "../../common/settings";
+import FetchHandler from "../../common/FetchHandler";
 import {styled} from '@mui/system';
 import UploadIcon from '@mui/icons-material/Upload';
+import * as React from "react";
 import {useState} from "react";
-import Box from '@mui/material/Box';
-import * as React from 'react';
-import {Button, TextField} from '@mui/material';
-import Notifications from "../common/Notifications";
+import {Button, Container, List, ListItem, TextField} from '@mui/material';
+import Notifications from "../../common/Notifications";
 import {useNavigate} from "react-router-dom";
 
-const FileUploadRoot = styled('div')({
-    boxShadow: '0 3px 5px 2px',
-    padding: '0 20px',
-});
 const ProjectDescription = styled(TextField)({
     marginTop: '20px',
     required: true,
     width: '450px'
-});
-
-const UploadBox = styled(Box)({
-    '& > :not(style)': {m: 1, width: '25ch'}
 });
 
 const uploadProjectFile = (projectName, projectFile) => {
@@ -34,7 +24,7 @@ const uploadProjectFile = (projectName, projectFile) => {
     );
 };
 
-const FileUpload = () => {
+const FileUpload = ({onCreated}) => {
     const [projectFile, setProjectFile] = useState();
     const [projectName, setProjectName] = useState("");
     const navigate = useNavigate();
@@ -43,8 +33,9 @@ const FileUpload = () => {
         if (projectName && projectFile) {
             uploadProjectFile(projectName, projectFile)
                 .then((project) => {
+                    onCreated();
                     Notifications.notify("Successfully uploaded project.", "success");
-                    navigate(`/view/${project.id}`, {replace: true});
+                    navigate(`/project/${project.id}`, {replace: true});
                 });
         } else if (!projectName && projectFile) {
             Notifications.notify(`Please enter the project name`, "error");
@@ -58,31 +49,40 @@ const FileUpload = () => {
         setProjectName(e.target.value);
     };
     return (
-        <FileUploadRoot>
-            <FileDropZone
-                file={projectFile}
-                onFile={setProjectFile}
-            />
+        <Container>
+            <List>
+                <ListItem>
+                    <FileDropZone
+                        file={projectFile}
+                        onFile={setProjectFile}
+                    />
+                </ListItem>
 
-            <Confirmation>
-                <UploadBox>
-                    <TextField label="Project name" variant="standard" placeholder="Project name"
-                               value={projectName}
-                               onChange={handleInputChange}>
+                <ListItem>
+                    <TextField
+                        label="Project name"
+                        required
+                        variant="standard"
+                        fullWidth
+                        placeholder="Project name"
+                        value={projectName}
+                        onChange={handleInputChange}/>
+                </ListItem>
 
-                    </TextField>
+                <ListItem>
+                    <ProjectDescription
+                        label="Project Description"
+                        multiline
+                        rows={4}/>
+                </ListItem>
+
+                <ListItem>
                     <Button variant="contained" onClick={onSubmit} endIcon={<UploadIcon/>}>
                         Create Project
                     </Button>
-                    <div>
-                        <ProjectDescription
-                            label="Project Description"
-                            multiline
-                            rows={4}/>
-                    </div>
-                </UploadBox>
-            </Confirmation>
-        </FileUploadRoot>
+                </ListItem>
+            </List>
+        </Container>
     );
 };
 

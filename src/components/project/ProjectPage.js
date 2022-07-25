@@ -3,6 +3,7 @@ import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import {
     IconButton,
+    Grid,
     Paper,
     styled,
     Table,
@@ -14,18 +15,8 @@ import {
     Tooltip
 } from '@mui/material';
 import {Link, Outlet, useLocation} from "react-router-dom";
+import ProjectCreator from "./upload/ProjectCreator";
 import SettingsIcon from '@mui/icons-material/Settings';
-
-const GeneratorPageRoot = styled('div')({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-
-    '> *': {
-        marginBottom: '16px',
-    }
-});
 
 const StyledTable = styled(Table)({
     width: '100%',
@@ -67,21 +58,27 @@ const StyledDoubleTableCell = styled(StyledTableCell)({
     width: 'calc(100% / 8 * 2)',
 });
 
-const GeneratorPage = () => {
+const ProjectPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
 
     const state = useLocation();
 
-    useEffect(() => {
-        setProjectRetrievalState("loading");
+    const refreshProjects = () => {
         FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
             .then((projects) => setAvailableProjects(projects))
             .finally(() => setProjectRetrievalState("idle"));
+    };
+
+    useEffect(() => {
+        setProjectRetrievalState("loading");
+        refreshProjects("loading")
     }, [state]);
 
     return (
-        <GeneratorPageRoot>
+        <Grid container direction="column" alignItems="center" rowGap="24px">
+            <ProjectCreator onCreated={refreshProjects}/>
+
             {(projectRetrievalState === "idle" && availableProjects.length > 0) ? (
                 <TableContainer component={Paper}>
                     <StyledTable>
@@ -120,8 +117,8 @@ const GeneratorPage = () => {
                 <p>Loading...</p>
             }
             <Outlet/>
-        </GeneratorPageRoot>
+        </Grid>
     );
 };
 
-export default GeneratorPage;
+export default ProjectPage;

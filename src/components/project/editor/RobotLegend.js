@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import FetchHandler from "../common/FetchHandler";
-import Settings from "../common/settings";
+import FetchHandler from "../../common/FetchHandler";
+import Settings from "../../common/settings";
 import {useEffect} from "react";
-import Notifications from "../common/Notifications";
+import Notifications from "../../common/Notifications";
 
 const RobotLegendTable = styled.table`
   border-collapse: collapse;

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
 import Notifications from "../common/Notifications";
-import Editor from "../editor/Editor";
+import Editor from "./editor/Editor";
 import {
     Button,
     Dialog,
@@ -148,7 +148,7 @@ const ProjectDetailDialog = () => {
                         <Grid item display="flex" gap="50px" >
                         <ControlButton component={Link} to="/view">
                             <ArrowBackIcon/>
-                            <div>
+                            <div style={{lineHeight: "2"}}>
                                 Back
                             </div>
                         </ControlButton>

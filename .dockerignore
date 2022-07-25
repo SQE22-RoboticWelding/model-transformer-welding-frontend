@@ -1,0 +1,4 @@
+Dockerfile
+*.test.js
+/build/
+/node_modules/
