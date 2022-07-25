@@ -106,7 +106,10 @@ const RobotPropertyEditor = ({onSubmit, submitText, onClose, projects, robot = E
                 project_id: projectId,
                 position_x: positionX,
                 position_y: positionY,
-                position_z: positionZ
+                position_z: positionZ,
+                position_norm_vector_x: 0,
+                position_norm_vector_y: 0,
+                position_norm_vector_z: 1
             });
         }
     };
