@@ -3,7 +3,7 @@ name: Build & Publish
 on:
   push:
     branches:
-      - '**'
+      - 'main'
 
 env:
   REGISTRY: ghcr.io
@@ -13,8 +13,6 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-
-    if: github.ref == 'refs/heads/main' || 'refs/heads/pipeline'
 
     permissions:
       contents: read
