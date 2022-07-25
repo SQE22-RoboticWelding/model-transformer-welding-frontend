@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from "react";
 import FetchHandler from "../common/FetchHandler";
 import Settings from "../common/settings";
-import {Button, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {
+    Button,
+    Grid,
+    Paper,
+    styled,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from '@mui/material';
 import {Link, Outlet} from "react-router-dom";
 import GenerateDialog from "./GenerateDialog";
 import Notifications from "../common/Notifications";
-
-const GeneratorPageRoot = styled('div')({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-
-    '> *': {
-        marginBottom: '16px',
-    }
-});
+import ProjectCreator from "./upload/ProjectCreator";
 
 const StyledTable = styled(Table)({
     width: '100%',
@@ -70,18 +71,11 @@ const StyledLink = styled(Link)({
     textDecoration: "none",
 });
 
-const GeneratorPage = () => {
+const ProjectPage = () => {
     const [projectRetrievalState, setProjectRetrievalState] = useState("idle");
     const [availableProjects, setAvailableProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(undefined);
     const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        setProjectRetrievalState("loading");
-        FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
-            .then((projects) => setAvailableProjects(projects))
-            .finally(() => setProjectRetrievalState("idle"));
-    }, []);
 
     const onGenerate = (project) => {
         setSelectedProject(project);
@@ -94,8 +88,21 @@ const GeneratorPage = () => {
             .catch((err) => Notifications.notify(`Failed to delete project\n${err}`, "error"));
     };
 
+    const refreshProjects = () => {
+        FetchHandler.readingJson(fetch(Settings.projectsPath, {method: "GET"}))
+            .then((projects) => setAvailableProjects(projects))
+            .finally(() => setProjectRetrievalState("idle"));
+    };
+
+    useEffect(() => {
+        setProjectRetrievalState("loading");
+        refreshProjects("loading")
+    }, []);
+
     return (
-        <GeneratorPageRoot>
+        <Grid container direction="column" alignItems="center" rowGap="24px">
+            <ProjectCreator onCreated={refreshProjects}/>
+
             {(projectRetrievalState === "idle" && availableProjects.length > 0) ? (
                 <TableContainer component={Paper}>
                     <StyledTable>
@@ -156,8 +163,8 @@ const GeneratorPage = () => {
             )}
 
             <Outlet/>
-        </GeneratorPageRoot>
+        </Grid>
     );
 };
 
-export default GeneratorPage;
+export default ProjectPage;

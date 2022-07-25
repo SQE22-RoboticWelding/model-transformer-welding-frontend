@@ -38,7 +38,6 @@ const Cell = styled("input")({
 const CellKnob = styled("div")({
     display: "flex",
     verticalAlign: "middle",
-    //width: "16px",
     cursor: "grab"
 });
 

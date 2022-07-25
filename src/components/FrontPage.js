@@ -1,10 +1,10 @@
 import NavBar from "./NavBar";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import FileUpload from "./upload/FileUpload";
-import GeneratorPage from "./generator/GeneratorPage";
+import ProjectPage from "./project/ProjectPage";
 import RobotTypePage from "./robot/RobotTypePage";
 import TemplatePage from "./template/TemplatePage";
-import EditDialog from "./generator/EditDialog";
+import EditDialog from "./project/EditDialog";
+import FileUpload from "./project/upload/FileUpload";
 import {Grid} from "@mui/material";
 
 const FrontPage = () => (
@@ -21,7 +21,7 @@ const FrontPage = () => (
             <NavBar/>
             <Routes>
                 <Route path="/create" element={<FileUpload/>}/>
-                <Route path="/view" element={<GeneratorPage/>}>
+                <Route path="/project" element={<ProjectPage/>}>
                     <Route path=":id" element={<EditDialog/>}/>
                 </Route>
                 <Route path="/robot" element={<RobotTypePage/>}/>
