@@ -176,7 +176,11 @@ const Editor = ({project, weldingPoints, setWeldingPoints, robots, validWeldingP
         const idx = weldingPoints.indexOf(weldingPoint);
         setWeldingPoints([
             ...weldingPoints.slice(0, idx),
-            {...weldingPoint, x: weldingPoint.x_original === "" ? null : weldingPoint.x_original},
+            {
+                ...weldingPoint, x: weldingPoint.x_original === "" ? null : weldingPoint.x_original,
+                y: weldingPoint.y_original === "" ? null : weldingPoint.y_original,
+                z: weldingPoint.z_original === "" ? null : weldingPoint.z_original
+            },
             ...weldingPoints.slice(idx + 1)
         ]);
     };
